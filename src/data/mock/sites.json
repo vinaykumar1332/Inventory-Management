@@ -1,0 +1,50 @@
+[
+  {
+    "id": "s1",
+    "companyId": "c1",
+    "companyName": "AquaShield Waterproofing Solutions Pvt. Ltd.",
+    "name": "Green Valley Apartments",
+    "code": "GVA-HYD-01",
+    "city": "Hyderabad",
+    "address": "Survey No. 118, Gachibowli, Hyderabad 500032",
+    "managerId": "u4",
+    "storekeeperId": "u3",
+    "startDate": "2026-02-20",
+    "endDate": "2027-03-17",
+    "storeName": "Block A Basement Store",
+    "status": "active",
+    "progress": 62
+  },
+  {
+    "id": "s2",
+    "companyId": "c1",
+    "companyName": "AquaShield Waterproofing Solutions Pvt. Ltd.",
+    "name": "Skyline Towers",
+    "code": "SKT-VJA-02",
+    "city": "Vijayawada",
+    "address": "MG Road, near Benz Circle, Vijayawada 520010",
+    "managerId": "u4",
+    "storekeeperId": "u5",
+    "startDate": "2026-05-21",
+    "endDate": "2027-07-15",
+    "storeName": "Tower 1 Ground Floor Store",
+    "status": "active",
+    "progress": 38
+  },
+  {
+    "id": "s3",
+    "companyId": "c1",
+    "companyName": "AquaShield Waterproofing Solutions Pvt. Ltd.",
+    "name": "Metro Commercial Complex",
+    "code": "MCC-VSP-03",
+    "city": "Visakhapatnam",
+    "address": "Dwaraka Nagar Main Road, Visakhapatnam 530016",
+    "managerId": "u7",
+    "storekeeperId": "u6",
+    "startDate": "2025-12-02",
+    "endDate": "2026-12-17",
+    "storeName": "Podium Level Site Store",
+    "status": "active",
+    "progress": 81
+  }
+]

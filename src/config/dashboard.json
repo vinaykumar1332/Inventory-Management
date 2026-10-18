@@ -1,0 +1,33 @@
+{
+  "kpis": [
+    { "id": "totalStockValue", "labelKey": "kpi.totalStockValue", "icon": "IndianRupee", "tone": "primary", "to": "/inventory" },
+    { "id": "availableQty", "labelKey": "kpi.availableQty", "icon": "Boxes", "tone": "info", "to": "/inventory" },
+    { "id": "expiringIn30", "labelKey": "kpi.expiring30", "icon": "AlarmClock", "tone": "warning", "to": "/alerts?filter=expiring_30" },
+    { "id": "expiredBatches", "labelKey": "kpi.expiredBatches", "icon": "CalendarX2", "tone": "danger", "to": "/alerts?filter=expired" },
+    { "id": "lowStockItems", "labelKey": "kpi.lowStock", "icon": "PackageX", "tone": "warning", "to": "/inventory?stock=low" },
+    { "id": "toolsIssued", "labelKey": "kpi.toolsIssued", "icon": "Wrench", "tone": "navy", "to": "/tools" }
+  ],
+  "quantityUnitsOrder": ["kg", "litre", "m2", "piece"],
+  "quickActions": [
+    { "id": "upload", "labelKey": "quick.uploadBill", "icon": "FileUp", "permission": "upload_bills", "action": "navigate", "to": "/upload", "primary": true },
+    { "id": "receive", "labelKey": "quick.receiveStock", "icon": "PackagePlus", "permission": "receive_stock", "action": "stock", "mode": "receive" },
+    { "id": "issue", "labelKey": "quick.issueMaterial", "icon": "PackageMinus", "permission": "issue_material", "action": "stock", "mode": "issue" },
+    { "id": "site", "labelKey": "quick.addSite", "icon": "Building2", "permission": "manage_sites", "action": "navigate", "to": "/sites?create=1" },
+    { "id": "report", "labelKey": "quick.downloadReport", "icon": "Download", "permission": "view_reports", "action": "navigate", "to": "/reports" }
+  ],
+  "widgets": {
+    "expiryTimeline": true,
+    "consumptionTrend": true,
+    "categoryMix": true,
+    "stockBySite": true,
+    "topMaterials": true,
+    "recentActivity": true
+  },
+  "limits": {
+    "trendMonths": 6,
+    "topMaterials": 5,
+    "recentActivity": 6,
+    "expiryItemsPerLane": 4,
+    "categorySlices": 4
+  }
+}

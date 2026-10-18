@@ -1,0 +1,98 @@
+{
+  "categories": ["cementitious", "liquid_membrane", "sheet_membrane", "primer", "sealant", "admixture", "accessories", "safety"],
+  "units": ["kg", "litre", "m2", "piece", "bag", "bucket", "roll"],
+  "productIcons": {
+    "bucket": { "icon": "PaintBucket", "tint": "orange" },
+    "bag": { "icon": "ShoppingBag", "tint": "stone" },
+    "can": { "icon": "Container", "tint": "sky" },
+    "roll": { "icon": "ScrollText", "tint": "slate" },
+    "mesh": { "icon": "Grid3x3", "tint": "teal" },
+    "brush": { "icon": "Brush", "tint": "amber" },
+    "roller": { "icon": "PaintRoller", "tint": "violet" },
+    "safety": { "icon": "HardHat", "tint": "yellow" },
+    "tube": { "icon": "Pipette", "tint": "rose" }
+  },
+  "stockStatus": {
+    "order": ["expired", "out", "low", "expiring", "healthy"],
+    "tones": { "healthy": "success", "low": "warning", "out": "danger", "expiring": "warning", "expired": "danger" }
+  },
+  "expiryTones": { "expired": "danger", "d7": "danger", "d15": "warning", "d30": "warning", "ok": "neutral", "none": "neutral" },
+  "expiryLanes": [
+    { "key": "expired", "tint": "red", "dot": "danger" },
+    { "key": "d7", "tint": "red", "dot": "danger" },
+    { "key": "d15", "tint": "orange", "dot": "warning" },
+    { "key": "d30", "tint": "amber", "dot": "amber" }
+  ],
+  "billStatus": {
+    "order": ["draft", "processing", "needs_review", "approved", "rejected"],
+    "meta": {
+      "draft": { "tone": "neutral", "icon": "CircleDashed" },
+      "processing": { "tone": "info", "icon": "Loader2" },
+      "needs_review": { "tone": "warning", "icon": "TriangleAlert" },
+      "approved": { "tone": "success", "icon": "CircleCheck" },
+      "rejected": { "tone": "danger", "icon": "XCircle" }
+    }
+  },
+  "uploadTypes": {
+    "excel": { "icon": "FileSpreadsheet", "tint": "emerald" },
+    "pdf": { "icon": "FileText", "tint": "red" },
+    "image": { "icon": "Image", "tint": "indigo" }
+  },
+  "movementTypes": {
+    "order": ["receipt", "issue", "return", "transfer", "damage", "adjustment"],
+    "meta": {
+      "receipt": { "tone": "success", "icon": "ArrowDownLeft" },
+      "issue": { "tone": "info", "icon": "ArrowUpRight" },
+      "return": { "tone": "primary", "icon": "Undo2" },
+      "transfer": { "tone": "neutral", "icon": "ArrowRightLeft" },
+      "damage": { "tone": "danger", "icon": "TriangleAlert" },
+      "adjustment": { "tone": "warning", "icon": "SlidersHorizontal" }
+    }
+  },
+  "damageKinds": ["damage", "wastage", "expired_disposal"],
+  "tools": {
+    "categories": {
+      "power_tool": { "icon": "Drill" },
+      "hand_tool": { "icon": "Hammer" },
+      "equipment": { "icon": "Settings2" },
+      "safety_equipment": { "icon": "HardHat" }
+    },
+    "conditions": ["new", "good", "fair", "needs_repair", "damaged"],
+    "conditionTones": { "new": "primary", "good": "success", "fair": "neutral", "needs_repair": "warning", "damaged": "danger" },
+    "statusFilters": ["available", "issued", "maintenance"],
+    "statusTones": { "available": "success", "issued": "info", "maintenance": "warning", "lost": "danger" }
+  },
+  "siteStatus": {
+    "active": { "labelKey": "sites.statusActive", "tone": "success" },
+    "on_hold": { "labelKey": "sites.statusOnHold", "tone": "warning" },
+    "completed": { "labelKey": "sites.statusCompleted", "tone": "neutral" }
+  },
+  "alerts": {
+    "filters": ["all", "expired", "expiring_7", "expiring_15", "expiring_30", "low_stock", "tool_overdue", "pending_approval"],
+    "types": {
+      "expired": { "icon": "CalendarX2", "tint": "red" },
+      "expiring_7": { "icon": "AlarmClock", "tint": "red" },
+      "expiring_15": { "icon": "AlarmClock", "tint": "orange" },
+      "expiring_30": { "icon": "AlarmClock", "tint": "amber" },
+      "low_stock": { "icon": "PackageX", "tint": "orange" },
+      "tool_overdue": { "icon": "Wrench", "tint": "indigo" },
+      "pending_approval": { "icon": "FileClock", "tint": "teal" }
+    },
+    "severityTones": { "critical": "danger", "warning": "warning", "info": "info" },
+    "remindable": ["tool_overdue", "low_stock", "pending_approval"]
+  },
+  "reports": {
+    "items": [
+      { "id": "stock_by_site", "money": true },
+      { "id": "batch_expiry", "labelNamespace": "expiry" },
+      { "id": "usage_vs_expected", "series": ["reports.expected", "reports.actual"] },
+      { "id": "wastage", "money": true },
+      { "id": "cost_per_m2", "money": true },
+      { "id": "vendor_price", "money": true },
+      { "id": "tool_issue", "series": ["dashboard.issued", "reports.returned"] },
+      { "id": "stock_value", "money": true, "labelNamespace": "categories", "translateFirstColumn": "categories" }
+    ],
+    "siteReports": ["batch_expiry", "usage_vs_expected", "wastage", "cost_per_m2"],
+    "previewBars": 8
+  }
+}

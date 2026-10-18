@@ -1,0 +1,552 @@
+[
+  {
+    "id": "p1",
+    "sku": "FOS-BBR-A10",
+    "name": "Brushbond RFX – Part A (Powder)",
+    "brand": "Fosroc",
+    "manufacturer": "Fosroc Chemicals (India) Pvt. Ltd.",
+    "category": "cementitious",
+    "packSize": 10,
+    "packUnit": "bucket",
+    "baseUnit": "kg",
+    "shelfLifeMonths": 12,
+    "coveragePerM2": 1,
+    "recommendedCoats": 2,
+    "costPerBaseUnit": 608.6,
+    "reorderLevel": 100,
+    "icon": "bucket",
+    "description": "Polymer-modified cementitious waterproof coating. Powder component, use with Part B liquid.",
+    "documents": [
+      {
+        "id": "FOS-BBR-A10-tds",
+        "name": "FOS-BBR-A10 Technical Data Sheet.pdf",
+        "kind": "tds",
+        "sizeKb": 412
+      },
+      {
+        "id": "FOS-BBR-A10-msds",
+        "name": "FOS-BBR-A10 Safety Data Sheet.pdf",
+        "kind": "msds",
+        "sizeKb": 286
+      },
+      {
+        "id": "FOS-BBR-A10-ms",
+        "name": "Brushbond Method Statement.pdf",
+        "kind": "method_statement",
+        "sizeKb": 655
+      }
+    ]
+  },
+  {
+    "id": "p2",
+    "sku": "FOS-BBR-B05",
+    "name": "Brushbond RFX – Part B (Liquid)",
+    "brand": "Fosroc",
+    "manufacturer": "Fosroc Chemicals (India) Pvt. Ltd.",
+    "category": "cementitious",
+    "packSize": 5,
+    "packUnit": "bucket",
+    "baseUnit": "litre",
+    "shelfLifeMonths": 12,
+    "coveragePerM2": 0.35,
+    "recommendedCoats": 2,
+    "costPerBaseUnit": 420,
+    "reorderLevel": 25,
+    "icon": "can",
+    "description": "Acrylic polymer liquid component for Brushbond RFX.",
+    "documents": [
+      {
+        "id": "FOS-BBR-B05-tds",
+        "name": "FOS-BBR-B05 Technical Data Sheet.pdf",
+        "kind": "tds",
+        "sizeKb": 412
+      },
+      {
+        "id": "FOS-BBR-B05-msds",
+        "name": "FOS-BBR-B05 Safety Data Sheet.pdf",
+        "kind": "msds",
+        "sizeKb": 286
+      }
+    ]
+  },
+  {
+    "id": "p3",
+    "sku": "DRF-PDF2K-30",
+    "name": "Pidifin 2K",
+    "brand": "Dr. Fixit",
+    "manufacturer": "Pidilite Industries Ltd.",
+    "category": "cementitious",
+    "packSize": 30,
+    "packUnit": "bucket",
+    "baseUnit": "kg",
+    "shelfLifeMonths": 12,
+    "coveragePerM2": 0.75,
+    "recommendedCoats": 2,
+    "costPerBaseUnit": 185,
+    "reorderLevel": 120,
+    "icon": "bucket",
+    "description": "Two-component acrylic polymer modified cementitious coating for wet areas and terraces.",
+    "documents": [
+      {
+        "id": "DRF-PDF2K-30-tds",
+        "name": "DRF-PDF2K-30 Technical Data Sheet.pdf",
+        "kind": "tds",
+        "sizeKb": 412
+      },
+      {
+        "id": "DRF-PDF2K-30-msds",
+        "name": "DRF-PDF2K-30 Safety Data Sheet.pdf",
+        "kind": "msds",
+        "sizeKb": 286
+      }
+    ]
+  },
+  {
+    "id": "p4",
+    "sku": "SIK-TS107-25",
+    "name": "SikaTop Seal-107",
+    "brand": "Sika",
+    "manufacturer": "Sika India Pvt. Ltd.",
+    "category": "cementitious",
+    "packSize": 25,
+    "packUnit": "bucket",
+    "baseUnit": "kg",
+    "shelfLifeMonths": 6,
+    "coveragePerM2": 1,
+    "recommendedCoats": 2,
+    "costPerBaseUnit": 210,
+    "reorderLevel": 50,
+    "icon": "bucket",
+    "description": "Polymer-modified cementitious slurry for water tanks, basements and wet areas.",
+    "documents": [
+      {
+        "id": "SIK-TS107-25-tds",
+        "name": "SIK-TS107-25 Technical Data Sheet.pdf",
+        "kind": "tds",
+        "sizeKb": 412
+      },
+      {
+        "id": "SIK-TS107-25-msds",
+        "name": "SIK-TS107-25 Safety Data Sheet.pdf",
+        "kind": "msds",
+        "sizeKb": 286
+      }
+    ]
+  },
+  {
+    "id": "p5",
+    "sku": "DRF-PRS-20",
+    "name": "Primeseal Bituminous Primer",
+    "brand": "Dr. Fixit",
+    "manufacturer": "Pidilite Industries Ltd.",
+    "category": "primer",
+    "packSize": 20,
+    "packUnit": "bucket",
+    "baseUnit": "litre",
+    "shelfLifeMonths": 24,
+    "coveragePerM2": 0.25,
+    "recommendedCoats": 1,
+    "costPerBaseUnit": 155,
+    "reorderLevel": 80,
+    "icon": "can",
+    "description": "Solvent-based bituminous primer for APP/SBS membranes.",
+    "documents": [
+      {
+        "id": "DRF-PRS-20-tds",
+        "name": "DRF-PRS-20 Technical Data Sheet.pdf",
+        "kind": "tds",
+        "sizeKb": 412
+      },
+      {
+        "id": "DRF-PRS-20-msds",
+        "name": "DRF-PRS-20 Safety Data Sheet.pdf",
+        "kind": "msds",
+        "sizeKb": 286
+      }
+    ]
+  },
+  {
+    "id": "p6",
+    "sku": "FOS-NP600-20",
+    "name": "Nitoproof 600 PF",
+    "brand": "Fosroc",
+    "manufacturer": "Fosroc Chemicals (India) Pvt. Ltd.",
+    "category": "liquid_membrane",
+    "packSize": 20,
+    "packUnit": "bucket",
+    "baseUnit": "kg",
+    "shelfLifeMonths": 12,
+    "coveragePerM2": 0.75,
+    "recommendedCoats": 2,
+    "costPerBaseUnit": 520,
+    "reorderLevel": 100,
+    "icon": "bucket",
+    "description": "Single-component polyurethane liquid membrane for exposed roofs.",
+    "documents": [
+      {
+        "id": "FOS-NP600-20-tds",
+        "name": "FOS-NP600-20 Technical Data Sheet.pdf",
+        "kind": "tds",
+        "sizeKb": 412
+      },
+      {
+        "id": "FOS-NP600-20-msds",
+        "name": "FOS-NP600-20 Safety Data Sheet.pdf",
+        "kind": "msds",
+        "sizeKb": 286
+      }
+    ]
+  },
+  {
+    "id": "p7",
+    "sku": "DRF-NWC-20",
+    "name": "Newcoat Elastomeric Coating",
+    "brand": "Dr. Fixit",
+    "manufacturer": "Pidilite Industries Ltd.",
+    "category": "liquid_membrane",
+    "packSize": 20,
+    "packUnit": "bucket",
+    "baseUnit": "litre",
+    "shelfLifeMonths": 24,
+    "coveragePerM2": 0.4,
+    "recommendedCoats": 2,
+    "costPerBaseUnit": 310,
+    "reorderLevel": 80,
+    "icon": "can",
+    "description": "Fibre-reinforced elastomeric roof coating with high solar reflectance.",
+    "documents": [
+      {
+        "id": "DRF-NWC-20-tds",
+        "name": "DRF-NWC-20 Technical Data Sheet.pdf",
+        "kind": "tds",
+        "sizeKb": 412
+      },
+      {
+        "id": "DRF-NWC-20-msds",
+        "name": "DRF-NWC-20 Safety Data Sheet.pdf",
+        "kind": "msds",
+        "sizeKb": 286
+      }
+    ]
+  },
+  {
+    "id": "p8",
+    "sku": "DRF-TSH-3MM",
+    "name": "Torchshield APP Membrane 3 mm",
+    "brand": "Dr. Fixit",
+    "manufacturer": "Pidilite Industries Ltd.",
+    "category": "sheet_membrane",
+    "packSize": 10,
+    "packUnit": "roll",
+    "baseUnit": "m2",
+    "shelfLifeMonths": null,
+    "coveragePerM2": 1.15,
+    "recommendedCoats": 1,
+    "costPerBaseUnit": 165,
+    "reorderLevel": 100,
+    "icon": "roll",
+    "description": "Torch-applied APP modified bituminous membrane, 1 m × 10 m roll.",
+    "documents": [
+      {
+        "id": "DRF-TSH-3MM-tds",
+        "name": "DRF-TSH-3MM Technical Data Sheet.pdf",
+        "kind": "tds",
+        "sizeKb": 412
+      },
+      {
+        "id": "DRF-TSH-3MM-msds",
+        "name": "DRF-TSH-3MM Safety Data Sheet.pdf",
+        "kind": "msds",
+        "sizeKb": 286
+      }
+    ]
+  },
+  {
+    "id": "p9",
+    "sku": "GEO-DMP-8MM",
+    "name": "HDPE Dimple Drainage Membrane 8 mm",
+    "brand": "Supreme",
+    "manufacturer": "The Supreme Industries Ltd.",
+    "category": "sheet_membrane",
+    "packSize": 20,
+    "packUnit": "roll",
+    "baseUnit": "m2",
+    "shelfLifeMonths": null,
+    "coveragePerM2": 1.1,
+    "recommendedCoats": 1,
+    "costPerBaseUnit": 95,
+    "reorderLevel": 120,
+    "icon": "roll",
+    "description": "Studded HDPE drainage and protection board for retaining walls and podiums.",
+    "documents": [
+      {
+        "id": "GEO-DMP-8MM-tds",
+        "name": "GEO-DMP-8MM Technical Data Sheet.pdf",
+        "kind": "tds",
+        "sizeKb": 412
+      }
+    ]
+  },
+  {
+    "id": "p10",
+    "sku": "ADF-FGM-50",
+    "name": "Alkali-Resistant Fibreglass Mesh",
+    "brand": "Saint-Gobain ADFORS",
+    "manufacturer": "Saint-Gobain India Pvt. Ltd.",
+    "category": "accessories",
+    "packSize": 50,
+    "packUnit": "roll",
+    "baseUnit": "m2",
+    "shelfLifeMonths": null,
+    "coveragePerM2": 1.1,
+    "recommendedCoats": 1,
+    "costPerBaseUnit": 28,
+    "reorderLevel": 100,
+    "icon": "mesh",
+    "description": "60 g/m² reinforcement mesh for corners, cracks and junctions.",
+    "documents": [
+      {
+        "id": "ADF-FGM-50-tds",
+        "name": "ADF-FGM-50 Technical Data Sheet.pdf",
+        "kind": "tds",
+        "sizeKb": 412
+      }
+    ]
+  },
+  {
+    "id": "p11",
+    "sku": "FOS-TF600-4",
+    "name": "Thioflex 600 Gun Grade",
+    "brand": "Fosroc",
+    "manufacturer": "Fosroc Chemicals (India) Pvt. Ltd.",
+    "category": "sealant",
+    "packSize": 4,
+    "packUnit": "bucket",
+    "baseUnit": "kg",
+    "shelfLifeMonths": 12,
+    "coveragePerM2": null,
+    "recommendedCoats": null,
+    "costPerBaseUnit": 780,
+    "reorderLevel": 16,
+    "icon": "tube",
+    "description": "Two-part polysulphide sealant for expansion and construction joints.",
+    "documents": [
+      {
+        "id": "FOS-TF600-4-tds",
+        "name": "FOS-TF600-4 Technical Data Sheet.pdf",
+        "kind": "tds",
+        "sizeKb": 412
+      },
+      {
+        "id": "FOS-TF600-4-msds",
+        "name": "FOS-TF600-4 Safety Data Sheet.pdf",
+        "kind": "msds",
+        "sizeKb": 286
+      }
+    ]
+  },
+  {
+    "id": "p12",
+    "sku": "DRF-LWP-05",
+    "name": "LW+ Integral Waterproofing",
+    "brand": "Dr. Fixit",
+    "manufacturer": "Pidilite Industries Ltd.",
+    "category": "admixture",
+    "packSize": 5,
+    "packUnit": "bucket",
+    "baseUnit": "litre",
+    "shelfLifeMonths": 24,
+    "coveragePerM2": null,
+    "recommendedCoats": null,
+    "costPerBaseUnit": 160,
+    "reorderLevel": 50,
+    "icon": "can",
+    "description": "Integral liquid waterproofing compound for concrete and plaster.",
+    "documents": [
+      {
+        "id": "DRF-LWP-05-tds",
+        "name": "DRF-LWP-05 Technical Data Sheet.pdf",
+        "kind": "tds",
+        "sizeKb": 412
+      },
+      {
+        "id": "DRF-LWP-05-msds",
+        "name": "DRF-LWP-05 Safety Data Sheet.pdf",
+        "kind": "msds",
+        "sizeKb": 286
+      }
+    ]
+  },
+  {
+    "id": "p13",
+    "sku": "SIK-LTP-05",
+    "name": "Sika Latex Power",
+    "brand": "Sika",
+    "manufacturer": "Sika India Pvt. Ltd.",
+    "category": "admixture",
+    "packSize": 5,
+    "packUnit": "bucket",
+    "baseUnit": "litre",
+    "shelfLifeMonths": 12,
+    "coveragePerM2": null,
+    "recommendedCoats": null,
+    "costPerBaseUnit": 350,
+    "reorderLevel": 20,
+    "icon": "can",
+    "description": "SBR latex bonding agent and repair mortar admixture.",
+    "documents": [
+      {
+        "id": "SIK-LTP-05-tds",
+        "name": "SIK-LTP-05 Technical Data Sheet.pdf",
+        "kind": "tds",
+        "sizeKb": 412
+      },
+      {
+        "id": "SIK-LTP-05-msds",
+        "name": "SIK-LTP-05 Safety Data Sheet.pdf",
+        "kind": "msds",
+        "sizeKb": 286
+      }
+    ]
+  },
+  {
+    "id": "p14",
+    "sku": "ULT-OPC53-50",
+    "name": "OPC 53 Grade Cement",
+    "brand": "UltraTech",
+    "manufacturer": "UltraTech Cement Ltd.",
+    "category": "cementitious",
+    "packSize": 50,
+    "packUnit": "bag",
+    "baseUnit": "kg",
+    "shelfLifeMonths": 3,
+    "coveragePerM2": null,
+    "recommendedCoats": null,
+    "costPerBaseUnit": 7.8,
+    "reorderLevel": 1000,
+    "icon": "bag",
+    "description": "Ordinary Portland Cement 53 grade for screeds and protection layers.",
+    "documents": [
+      {
+        "id": "ULT-OPC53-50-tds",
+        "name": "ULT-OPC53-50 Technical Data Sheet.pdf",
+        "kind": "tds",
+        "sizeKb": 412
+      }
+    ]
+  },
+  {
+    "id": "p15",
+    "sku": "ACC-RLR-09",
+    "name": "Paint Roller 9\" (Medium Nap)",
+    "brand": "Asian Paints",
+    "manufacturer": "Asian Paints Ltd.",
+    "category": "accessories",
+    "packSize": 1,
+    "packUnit": "piece",
+    "baseUnit": "piece",
+    "shelfLifeMonths": null,
+    "coveragePerM2": null,
+    "recommendedCoats": null,
+    "costPerBaseUnit": 180,
+    "reorderLevel": 10,
+    "icon": "roller",
+    "description": "Roller for applying liquid membranes and coatings.",
+    "documents": []
+  },
+  {
+    "id": "p16",
+    "sku": "ACC-BRS-04",
+    "name": "Synthetic Flat Brush 4\"",
+    "brand": "Asian Paints",
+    "manufacturer": "Asian Paints Ltd.",
+    "category": "accessories",
+    "packSize": 1,
+    "packUnit": "piece",
+    "baseUnit": "piece",
+    "shelfLifeMonths": null,
+    "coveragePerM2": null,
+    "recommendedCoats": null,
+    "costPerBaseUnit": 95,
+    "reorderLevel": 15,
+    "icon": "brush",
+    "description": "Stiff brush for slurry coats and cementitious coatings.",
+    "documents": []
+  },
+  {
+    "id": "p17",
+    "sku": "BOS-SDS-10",
+    "name": "SDS Plus Drill Bit 10 mm",
+    "brand": "Bosch",
+    "manufacturer": "Robert Bosch Power Tools",
+    "category": "accessories",
+    "packSize": 1,
+    "packUnit": "piece",
+    "baseUnit": "piece",
+    "shelfLifeMonths": null,
+    "coveragePerM2": null,
+    "recommendedCoats": null,
+    "costPerBaseUnit": 240,
+    "reorderLevel": 10,
+    "icon": "tube",
+    "description": "Consumable drill bit for injection packers and anchor holes.",
+    "documents": []
+  },
+  {
+    "id": "p18",
+    "sku": "SAF-HLM-01",
+    "name": "Safety Helmet (ISI)",
+    "brand": "Karam",
+    "manufacturer": "Karam Industries",
+    "category": "safety",
+    "packSize": 1,
+    "packUnit": "piece",
+    "baseUnit": "piece",
+    "shelfLifeMonths": null,
+    "coveragePerM2": null,
+    "recommendedCoats": null,
+    "costPerBaseUnit": 220,
+    "reorderLevel": 15,
+    "icon": "safety",
+    "description": "ISI-marked HDPE safety helmet with ratchet harness.",
+    "documents": []
+  },
+  {
+    "id": "p19",
+    "sku": "SAF-GLV-NIT",
+    "name": "Nitrile Coated Gloves",
+    "brand": "Karam",
+    "manufacturer": "Karam Industries",
+    "category": "safety",
+    "packSize": 1,
+    "packUnit": "piece",
+    "baseUnit": "piece",
+    "shelfLifeMonths": null,
+    "coveragePerM2": null,
+    "recommendedCoats": null,
+    "costPerBaseUnit": 65,
+    "reorderLevel": 40,
+    "icon": "safety",
+    "description": "Chemical-resistant gloves for handling coatings and primers.",
+    "documents": []
+  },
+  {
+    "id": "p20",
+    "sku": "SAF-VST-RF",
+    "name": "Reflective Safety Vest",
+    "brand": "Karam",
+    "manufacturer": "Karam Industries",
+    "category": "safety",
+    "packSize": 1,
+    "packUnit": "piece",
+    "baseUnit": "piece",
+    "shelfLifeMonths": null,
+    "coveragePerM2": null,
+    "recommendedCoats": null,
+    "costPerBaseUnit": 150,
+    "reorderLevel": 10,
+    "icon": "safety",
+    "description": "High-visibility vest with reflective tape.",
+    "documents": []
+  }
+]

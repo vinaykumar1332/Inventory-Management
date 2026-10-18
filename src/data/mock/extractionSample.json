@@ -1,0 +1,10 @@
+{
+  "description": "Canned extraction result returned for PDF and photo bills (the demo has no OCR). Excel bills are parsed for real.",
+  "freight": 1200,
+  "lines": [
+    { "name": "Brushbond RFX Part A Powder", "brand": "Fosroc", "batchNo": "IN1MF01152230L", "mfgDate": "2026-09-24", "packs": 15, "packSize": 10, "unitCost": 608.6 },
+    { "name": "Pidifin 2K", "brand": "Dr. Fixit", "batchNo": "PIL26093318", "mfgDate": "2026-09-08", "packs": 6, "packSize": 30, "unitCost": 188 },
+    { "name": "Fibreglass Mesh Alkali Resistant", "brand": "Saint-Gobain ADFORS", "batchNo": "ADF-6612", "packs": 3, "packSize": 50, "unitCost": 28 },
+    { "name": "Renderoc RG Repair Mortar", "brand": "Fosroc", "batchNo": "IN1MF01149981B", "mfgDate": "2026-09-18", "expiryDate": "2027-09-18", "packs": 8, "packSize": 25, "unitCost": 96, "unit": "kg" }
+  ]
+}

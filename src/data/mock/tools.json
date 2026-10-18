@@ -1,0 +1,396 @@
+[
+  {
+    "id": "t1",
+    "code": "TL-001",
+    "name": "Demolition Hammer 11 kg",
+    "brand": "Bosch GSH 11 E",
+    "category": "power_tool",
+    "condition": "good",
+    "siteId": "s1",
+    "status": "issued",
+    "assignedTo": "Ravi (Mason team A)",
+    "issuedDate": "2026-10-12",
+    "expectedReturnDate": "2026-10-20",
+    "maintenanceDue": "2026-11-03",
+    "purchaseCost": 68000,
+    "maintenanceHistory": [
+      {
+        "id": "t1-m1",
+        "date": "2026-05-22",
+        "note": "Carbon brushes replaced, cable checked",
+        "cost": 650
+      },
+      {
+        "id": "t1-m2",
+        "date": "2026-09-04",
+        "note": "Routine service and lubrication",
+        "cost": 400
+      }
+    ]
+  },
+  {
+    "id": "t2",
+    "code": "TL-002",
+    "name": "Rotary Hammer Drill 26 mm",
+    "brand": "DCA Z1C-FF-26",
+    "category": "power_tool",
+    "condition": "good",
+    "siteId": "s1",
+    "status": "issued",
+    "assignedTo": "Mahesh (Injection crew)",
+    "issuedDate": "2026-10-06",
+    "expectedReturnDate": "2026-10-15",
+    "maintenanceDue": "2026-11-09",
+    "purchaseCost": 14500,
+    "maintenanceHistory": [
+      {
+        "id": "t2-m1",
+        "date": "2026-05-23",
+        "note": "Carbon brushes replaced, cable checked",
+        "cost": 650
+      },
+      {
+        "id": "t2-m2",
+        "date": "2026-09-05",
+        "note": "Routine service and lubrication",
+        "cost": 400
+      }
+    ]
+  },
+  {
+    "id": "t3",
+    "code": "TL-003",
+    "name": "Angle Grinder 4\"",
+    "brand": "Bosch GWS 600",
+    "category": "power_tool",
+    "condition": "fair",
+    "siteId": "s1",
+    "status": "available",
+    "assignedTo": null,
+    "issuedDate": null,
+    "expectedReturnDate": null,
+    "maintenanceDue": "2026-11-15",
+    "purchaseCost": 3900,
+    "maintenanceHistory": [
+      {
+        "id": "t3-m1",
+        "date": "2026-05-24",
+        "note": "Carbon brushes replaced, cable checked",
+        "cost": 650
+      },
+      {
+        "id": "t3-m2",
+        "date": "2026-09-06",
+        "note": "Routine service and lubrication",
+        "cost": 400
+      }
+    ]
+  },
+  {
+    "id": "t4",
+    "code": "TL-004",
+    "name": "Angle Grinder 4\"",
+    "brand": "Bosch GWS 600",
+    "category": "power_tool",
+    "condition": "good",
+    "siteId": "s1",
+    "status": "issued",
+    "assignedTo": "Imran (Surface prep)",
+    "issuedDate": "2026-10-16",
+    "expectedReturnDate": "2026-10-23",
+    "maintenanceDue": "2026-11-21",
+    "purchaseCost": 3900,
+    "maintenanceHistory": [
+      {
+        "id": "t4-m1",
+        "date": "2026-05-25",
+        "note": "Carbon brushes replaced, cable checked",
+        "cost": 650
+      },
+      {
+        "id": "t4-m2",
+        "date": "2026-09-07",
+        "note": "Routine service and lubrication",
+        "cost": 400
+      }
+    ]
+  },
+  {
+    "id": "t5",
+    "code": "TL-005",
+    "name": "Angle Grinder 5\"",
+    "brand": "DCA ASM125",
+    "category": "power_tool",
+    "condition": "needs_repair",
+    "siteId": "s2",
+    "status": "maintenance",
+    "assignedTo": null,
+    "issuedDate": null,
+    "expectedReturnDate": null,
+    "maintenanceDue": "2026-10-16",
+    "purchaseCost": 4600,
+    "maintenanceHistory": [
+      {
+        "id": "t5-m1",
+        "date": "2026-05-26",
+        "note": "Carbon brushes replaced, cable checked",
+        "cost": 650
+      },
+      {
+        "id": "t5-m2",
+        "date": "2026-09-08",
+        "note": "Routine service and lubrication",
+        "cost": 400
+      }
+    ]
+  },
+  {
+    "id": "t6",
+    "code": "TL-006",
+    "name": "Paddle Mixer Drill",
+    "brand": "Makita UT1305",
+    "category": "power_tool",
+    "condition": "good",
+    "siteId": "s2",
+    "status": "issued",
+    "assignedTo": "Srinu (Coating team)",
+    "issuedDate": "2026-10-14",
+    "expectedReturnDate": "2026-10-21",
+    "maintenanceDue": "2026-12-03",
+    "purchaseCost": 21500,
+    "maintenanceHistory": [
+      {
+        "id": "t6-m1",
+        "date": "2026-05-27",
+        "note": "Carbon brushes replaced, cable checked",
+        "cost": 650
+      },
+      {
+        "id": "t6-m2",
+        "date": "2026-09-09",
+        "note": "Routine service and lubrication",
+        "cost": 400
+      }
+    ]
+  },
+  {
+    "id": "t7",
+    "code": "TL-007",
+    "name": "LPG Torch Burner Kit",
+    "brand": "Rexon TB-60",
+    "category": "equipment",
+    "condition": "good",
+    "siteId": "s2",
+    "status": "issued",
+    "assignedTo": "Prakash (Membrane crew)",
+    "issuedDate": "2026-10-09",
+    "expectedReturnDate": "2026-10-17",
+    "maintenanceDue": "2026-12-09",
+    "purchaseCost": 5200,
+    "maintenanceHistory": [
+      {
+        "id": "t7-m1",
+        "date": "2026-05-28",
+        "note": "Carbon brushes replaced, cable checked",
+        "cost": 650
+      },
+      {
+        "id": "t7-m2",
+        "date": "2026-09-10",
+        "note": "Routine service and lubrication",
+        "cost": 400
+      }
+    ]
+  },
+  {
+    "id": "t8",
+    "code": "TL-008",
+    "name": "Airless Spray Machine",
+    "brand": "Graco Ultra 395",
+    "category": "equipment",
+    "condition": "good",
+    "siteId": "s3",
+    "status": "available",
+    "assignedTo": null,
+    "issuedDate": null,
+    "expectedReturnDate": null,
+    "maintenanceDue": "2026-12-15",
+    "purchaseCost": 185000,
+    "maintenanceHistory": [
+      {
+        "id": "t8-m1",
+        "date": "2026-05-29",
+        "note": "Carbon brushes replaced, cable checked",
+        "cost": 650
+      },
+      {
+        "id": "t8-m2",
+        "date": "2026-09-11",
+        "note": "Routine service and lubrication",
+        "cost": 400
+      }
+    ]
+  },
+  {
+    "id": "t9",
+    "code": "TL-009",
+    "name": "Pressure Washer",
+    "brand": "Kärcher K3",
+    "category": "equipment",
+    "condition": "fair",
+    "siteId": "s3",
+    "status": "issued",
+    "assignedTo": "Naresh (Surface prep)",
+    "issuedDate": "2026-10-15",
+    "expectedReturnDate": "2026-10-22",
+    "maintenanceDue": "2026-12-21",
+    "purchaseCost": 12900,
+    "maintenanceHistory": [
+      {
+        "id": "t9-m1",
+        "date": "2026-05-30",
+        "note": "Carbon brushes replaced, cable checked",
+        "cost": 650
+      },
+      {
+        "id": "t9-m2",
+        "date": "2026-09-12",
+        "note": "Routine service and lubrication",
+        "cost": 400
+      }
+    ]
+  },
+  {
+    "id": "t10",
+    "code": "TL-010",
+    "name": "Concrete Moisture Meter",
+    "brand": "Protimeter Mini",
+    "category": "equipment",
+    "condition": "new",
+    "siteId": "s3",
+    "status": "available",
+    "assignedTo": null,
+    "issuedDate": null,
+    "expectedReturnDate": null,
+    "maintenanceDue": "2026-12-27",
+    "purchaseCost": 26500,
+    "maintenanceHistory": [
+      {
+        "id": "t10-m1",
+        "date": "2026-05-31",
+        "note": "Carbon brushes replaced, cable checked",
+        "cost": 650
+      },
+      {
+        "id": "t10-m2",
+        "date": "2026-09-13",
+        "note": "Routine service and lubrication",
+        "cost": 400
+      }
+    ]
+  },
+  {
+    "id": "t11",
+    "code": "TL-011",
+    "name": "Breaker 1000-AVR",
+    "brand": "Hilti TE 1000",
+    "category": "power_tool",
+    "condition": "good",
+    "siteId": "s3",
+    "status": "issued",
+    "assignedTo": "Ganesh (Demolition)",
+    "issuedDate": "2026-10-03",
+    "expectedReturnDate": "2026-10-12",
+    "maintenanceDue": "2027-01-02",
+    "purchaseCost": 142000,
+    "maintenanceHistory": [
+      {
+        "id": "t11-m1",
+        "date": "2026-06-01",
+        "note": "Carbon brushes replaced, cable checked",
+        "cost": 650
+      },
+      {
+        "id": "t11-m2",
+        "date": "2026-09-14",
+        "note": "Routine service and lubrication",
+        "cost": 400
+      }
+    ]
+  },
+  {
+    "id": "t12",
+    "code": "TL-012",
+    "name": "Chisel & Pointer Set (5 pcs)",
+    "brand": "Taparia",
+    "category": "hand_tool",
+    "condition": "fair",
+    "siteId": "s1",
+    "status": "available",
+    "assignedTo": null,
+    "issuedDate": null,
+    "expectedReturnDate": null,
+    "maintenanceDue": "2027-01-08",
+    "purchaseCost": 1850,
+    "maintenanceHistory": [
+      {
+        "id": "t12-m1",
+        "date": "2026-08-19",
+        "note": "Visual inspection passed",
+        "cost": 0
+      }
+    ]
+  },
+  {
+    "id": "t13",
+    "code": "TL-013",
+    "name": "Full Body Safety Harness",
+    "brand": "Karam PN-56",
+    "category": "safety_equipment",
+    "condition": "good",
+    "siteId": "s2",
+    "status": "issued",
+    "assignedTo": "Prakash (Membrane crew)",
+    "issuedDate": "2026-10-09",
+    "expectedReturnDate": "2026-10-23",
+    "maintenanceDue": "2027-01-14",
+    "purchaseCost": 3400,
+    "maintenanceHistory": [
+      {
+        "id": "t13-m1",
+        "date": "2026-08-19",
+        "note": "Visual inspection passed",
+        "cost": 0
+      }
+    ]
+  },
+  {
+    "id": "t14",
+    "code": "TL-014",
+    "name": "Aluminium Ladder 12 ft",
+    "brand": "Bathla",
+    "category": "equipment",
+    "condition": "good",
+    "siteId": "s1",
+    "status": "available",
+    "assignedTo": null,
+    "issuedDate": null,
+    "expectedReturnDate": null,
+    "maintenanceDue": "2027-01-20",
+    "purchaseCost": 7800,
+    "maintenanceHistory": [
+      {
+        "id": "t14-m1",
+        "date": "2026-06-04",
+        "note": "Carbon brushes replaced, cable checked",
+        "cost": 650
+      },
+      {
+        "id": "t14-m2",
+        "date": "2026-09-17",
+        "note": "Routine service and lubrication",
+        "cost": 400
+      }
+    ]
+  }
+]

@@ -1,0 +1,30 @@
+[
+  {
+    "id": "v1",
+    "name": "Sri Sai Waterproofing Traders",
+    "gstin": "36ABMFS7712Q1Z3",
+    "city": "Hyderabad",
+    "phone": "+91 40 2311 4567"
+  },
+  {
+    "id": "v2",
+    "name": "Deccan Construction Chemicals",
+    "gstin": "37AAJFD5521M1Z8",
+    "city": "Vijayawada",
+    "phone": "+91 866 247 8890"
+  },
+  {
+    "id": "v3",
+    "name": "Coastal Building Solutions",
+    "gstin": "37AACCC9081H1Z2",
+    "city": "Visakhapatnam",
+    "phone": "+91 891 255 6612"
+  },
+  {
+    "id": "v4",
+    "name": "Bharat Safety & Tools",
+    "gstin": "36AAPFB3345E1Z6",
+    "city": "Hyderabad",
+    "phone": "+91 40 2780 1144"
+  }
+]

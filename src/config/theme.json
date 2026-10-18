@@ -1,0 +1,80 @@
+{
+  "colors": {
+    "light": {
+      "background": "#f5f7fa",
+      "surface": "#ffffff",
+      "foreground": "#0f172a",
+      "muted": "#f1f5f9",
+      "muted-foreground": "#5b6779",
+      "border": "#e2e8f0",
+      "input": "#cbd5e1",
+      "ring": "#0f766e",
+      "primary": "#0f766e",
+      "primary-hover": "#115e59",
+      "primary-foreground": "#ffffff",
+      "primary-soft": "#e6f4f2",
+      "sidebar": "#0f1f3a",
+      "sidebar-foreground": "#d7deea",
+      "sidebar-accent": "#2dd4bf",
+      "navy": "#0f1f3a",
+      "success": "#15803d",
+      "success-soft": "#eaf6ee",
+      "warning": "#c2410c",
+      "warning-soft": "#fff4eb",
+      "danger": "#b91c1c",
+      "danger-soft": "#fdeeee",
+      "info": "#1d4ed8",
+      "info-soft": "#eef3fe",
+      "skeleton": "#e2e8f0",
+      "overlay": "rgb(15 31 58 / 0.45)"
+    },
+    "dark": {
+      "background": "#0b1220",
+      "surface": "#111a2b",
+      "foreground": "#e6ebf2",
+      "muted": "#1a2436",
+      "muted-foreground": "#9aa7ba",
+      "border": "#243045",
+      "input": "#34425a",
+      "ring": "#2dd4bf",
+      "primary": "#14b8a6",
+      "primary-hover": "#2dd4bf",
+      "primary-foreground": "#042f2e",
+      "primary-soft": "#0f2e2c",
+      "sidebar": "#070d18",
+      "sidebar-foreground": "#c9d3e2",
+      "sidebar-accent": "#2dd4bf",
+      "navy": "#1e2d47",
+      "success": "#4ade80",
+      "success-soft": "#0f2a1b",
+      "warning": "#fb923c",
+      "warning-soft": "#2e1a0c",
+      "danger": "#f87171",
+      "danger-soft": "#2d1414",
+      "info": "#60a5fa",
+      "info-soft": "#10203b",
+      "skeleton": "#243045",
+      "overlay": "rgb(0 0 0 / 0.6)"
+    }
+  },
+  "chart": {
+    "light": {
+      "primary": "#0f766e",
+      "primaryFill": "#14b8a6",
+      "grid": "#e2e8f0",
+      "axis": "#64748b",
+      "surface": "#ffffff",
+      "categorical": ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#6250d6"],
+      "other": "#94a3b8"
+    },
+    "dark": {
+      "primary": "#2dd4bf",
+      "primaryFill": "#14b8a6",
+      "grid": "#243045",
+      "axis": "#94a3b8",
+      "surface": "#111a2b",
+      "categorical": ["#3987e5", "#d95926", "#199e70", "#c98500", "#d55181", "#9085e9"],
+      "other": "#64748b"
+    }
+  }
+}
