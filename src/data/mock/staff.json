@@ -1,0 +1,110 @@
+[
+  {
+    "id": "st1",
+    "name": "Rajesh Kumar",
+    "phone": "+91 98765 43210",
+    "role": "foreman",
+    "siteIds": ["s1"],
+    "startDate": "2026-02-20",
+    "status": "active"
+  },
+  {
+    "id": "st2",
+    "name": "Mohammed Ali",
+    "phone": "+91 97654 32109",
+    "role": "supervisor",
+    "siteIds": ["s1"],
+    "startDate": "2026-02-22",
+    "status": "active"
+  },
+  {
+    "id": "st3",
+    "name": "Gopal Singh",
+    "phone": "+91 96543 21098",
+    "role": "worker",
+    "siteIds": ["s1"],
+    "startDate": "2026-03-01",
+    "status": "active"
+  },
+  {
+    "id": "st4",
+    "name": "Vikram Patel",
+    "phone": "+91 95432 10987",
+    "role": "worker",
+    "siteIds": ["s1"],
+    "startDate": "2026-03-05",
+    "status": "active"
+  },
+  {
+    "id": "st5",
+    "name": "Harish Reddy",
+    "phone": "+91 94321 09876",
+    "role": "quality_checker",
+    "siteIds": ["s1"],
+    "startDate": "2026-03-10",
+    "status": "active"
+  },
+  {
+    "id": "st6",
+    "name": "Naresh Kumar",
+    "phone": "+91 93210 98765",
+    "role": "foreman",
+    "siteIds": ["s2"],
+    "startDate": "2026-05-21",
+    "status": "active"
+  },
+  {
+    "id": "st7",
+    "name": "Ashok Verma",
+    "phone": "+91 92109 87654",
+    "role": "supervisor",
+    "siteIds": ["s2"],
+    "startDate": "2026-05-25",
+    "status": "active"
+  },
+  {
+    "id": "st8",
+    "name": "Ravi Kumar",
+    "phone": "+91 91098 76543",
+    "role": "worker",
+    "siteIds": ["s2"],
+    "startDate": "2026-06-01",
+    "status": "active"
+  },
+  {
+    "id": "st9",
+    "name": "Sandeep Kumar",
+    "phone": "+91 90987 65432",
+    "role": "worker",
+    "siteIds": ["s2"],
+    "startDate": "2026-06-05",
+    "status": "active"
+  },
+  {
+    "id": "st10",
+    "name": "Ajay Singh",
+    "phone": "+91 89876 54321",
+    "role": "foreman",
+    "siteIds": ["s3"],
+    "startDate": "2026-07-01",
+    "status": "active"
+  },
+  {
+    "id": "st11",
+    "name": "Prakash Kumar",
+    "phone": "+91 88765 43210",
+    "role": "worker",
+    "siteIds": ["s3"],
+    "startDate": "2026-07-05",
+    "status": "active"
+  },
+  {
+    "id": "st12",
+    "name": "Sunil Kumar",
+    "phone": "+91 87654 32109",
+    "role": "worker",
+    "siteIds": ["s3"],
+    "startDate": "2026-07-10",
+    "status": "active"
+  }
+]
