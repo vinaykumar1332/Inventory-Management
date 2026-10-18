@@ -904,6 +904,42 @@
     },
     "footer": "Client demo with mock data. No real data is stored."
   },
+  "notifications": {
+    "title": "Notifications",
+    "settingsTitle": "Notification Preferences",
+    "settings": "Notification Preferences",
+    "settingsHint": "Control how you receive alerts about stock, expiry and bills",
+    "empty": "No notifications yet",
+    "markAllRead": "Mark all as read",
+    "viewAll": "View all alerts",
+    "date": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "earlier": "Earlier"
+    },
+    "category": {
+      "expiry": "Expiry Alert",
+      "low_stock": "Low Stock",
+      "bill": "Bill Approval",
+      "tool": "Tool Return",
+      "system": "System"
+    },
+    "permission": {
+      "default": "Permission not requested",
+      "granted": "Notifications enabled",
+      "denied": "Notifications disabled",
+      "unsupported": "Not supported on this browser"
+    },
+    "permissionStatus": "Current Permission",
+    "permissionDenied": "You have denied notification permissions. Update your browser settings to enable notifications.",
+    "enableNotifications": "Enable Notifications",
+    "sendTestNotification": "Send Test Notification",
+    "simulateCriticalAlert": "Simulate Critical Alert",
+    "unsupported": "Push notifications are not supported on this browser.",
+    "demoMode": "Push delivery is in demo mode. In-app alerts are active. When connected to a backend with VAPID keys, real notifications will be delivered.",
+    "iPhoneInstallation": "iPhone/iPad Installation",
+    "iPhoneInstructions": "To receive notifications on iPhone/iPad, open this site in Safari, tap Share, select ‘Add to Home Screen’, then open the installed app and enable notifications."
+  },
   "notFound": {
     "code": "404",
     "title": "We couldn’t find that page",

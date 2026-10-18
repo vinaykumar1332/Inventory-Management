@@ -274,3 +274,134 @@ This demo enforces roles **only in the browser**; that is not security. Before p
 ---
 
 _SiteSeal Inventory — client demo build. Mock data only; no real data is stored._
+
+---
+
+## PWA Notification Foundation
+
+The app includes a production-ready PWA notification system with these features:
+
+### For Users
+
+**Notification Bell**
+- Shows unread notification count (9+ when exceeding 9)
+- Click to open a professional notification panel
+- Notifications grouped by date (Today, Yesterday, Earlier)
+- Mark individual notifications or all as read
+- Click notification to navigate to related alert
+- Direct access to full alerts page
+
+**Notification Preferences**
+- Enable/disable notifications via browser permission
+- Send test notification
+- Simulate demo alerts
+- iPhone/iPad installation guidance
+
+**App Icon Badge** (where supported)
+- System app badge shows unread count
+- Automatically updates on read/unread changes
+- Falls back to in-app bell when not supported
+
+### For Developers
+
+**Architecture**
+```
+src/
+  features/notifications/
+    components/           # React UI components
+      NotificationBell.tsx
+      NotificationPanel.tsx
+      NotificationSettings.tsx
+    hooks/               # React Query hooks
+      useNotifications.ts
+    services/            # Business logic
+      notificationService.ts
+    types.ts             # TypeScript types
+    mockNotifications.ts # Demo data
+  pwa/
+    badge.ts             # App badge helper
+src/sw.ts                # Custom service worker (push events, offline)
+```
+
+**Mock Notifications** (current demo state)
+- Expiry alerts (7, 15, 30 days)
+- Low stock alerts
+- Bill approval alerts
+- Tool return reminders
+- All persisted in localStorage
+
+**Real Push Notifications** (future backend integration)
+1. Client registers service worker
+2. User grants notification permission
+3. Service worker subscribes with `pushManager.subscribe(VAPID_KEY)`
+4. Subscription sent to backend at `POST /api/push-subscriptions`
+5. Backend stores subscription per user/device
+6. Backend sends push events using private VAPID key
+7. Service worker receives push and shows native notification
+
+### Configuration
+
+**Environment Variables** (in `.env`)
+```env
+VITE_VAPID_PUBLIC_KEY=   # Optional: web-push VAPID public key
+VITE_PUSH_API_BASE_URL=  # Optional: backend push subscription endpoint
+```
+
+The feature works in **demo mode** without these keys (in-app notifications only).
+
+### Testing
+
+1. **Enable notifications**: Click Settings → Notification Preferences → Enable Notifications
+2. **Send test**: Settings → Send Test Notification
+3. **Simulate demo**: Settings → Simulate Critical Alert
+4. **View notifications**: Click bell icon in header
+5. **Native push** (when backend connected): Enable notifications + VAPID keys
+
+### Service Worker
+
+The custom service worker (`src/sw.ts`) handles:
+- **Push events**: Shows native OS notifications with icon/badge
+- **Notification clicks**: Navigates to relevant page, focuses existing window
+- **App badge updates**: `navigator.setAppBadge(count)` when supported
+- **Offline support**: Precaches app shell and static assets
+- **Font caching**: Stale-while-revalidate for Google Fonts
+
+**Never cache:**
+- Sensitive API responses (bills, invoices)
+- Authenticated user data
+- Private documents
+
+### Production Checklist
+
+Before deploying with real push:
+
+- [ ] Generate VAPID keys: `npx web-push generate-vapid-keys`
+- [ ] Store private key securely on backend (never expose to frontend)
+- [ ] Set `VITE_VAPID_PUBLIC_KEY` env var in build
+- [ ] Implement backend endpoints:
+  - `POST /api/push-subscriptions` (save subscription)
+  - `DELETE /api/push-subscriptions/:id` (remove subscription)
+- [ ] Validate all push payloads server-side
+- [ ] Test push on iOS Safari (requires installed PWA)
+- [ ] Document allowed notification actions (click URL validation)
+
+### Browser Support
+
+| Feature | Chrome | Firefox | Safari | Edge |
+|---------|--------|---------|--------|------|
+| Install | ✅ | ✅ | ✅ | ✅ |
+| Push notifications | ✅ | ✅ | ⚠️ (app) | ✅ |
+| App badge | ✅ | ✅ | ❌ | ✅ |
+| Service worker | ✅ | ✅ | ✅ | ✅ |
+
+⚠️ = iOS Safari requires installing as PWA first  
+❌ = Not supported on this browser
+
+### Security Notes
+
+- Payloads validated before rendering (no HTML injection)
+- Notification URLs restricted to same-origin paths
+- No sensitive data in localStorage (read/unread state only)
+- Service worker never caches authenticated responses
+- Push validation happens on backend (private VAPID key)
+
