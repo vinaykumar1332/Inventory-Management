@@ -307,8 +307,10 @@ const PHASES = ['reading', 'vendor', 'lines', 'matching', 'ready'] as const
 
 export function ProcessingStep({ phase }: { phase: number }) {
   const { t } = useTranslation()
+  const steps = PHASES.slice(0, 4)
+  const pct = Math.round((Math.min(phase, 4) / 4) * 100)
   return (
-    <div className="mx-auto flex max-w-md flex-col items-center py-8 text-center md:py-12" aria-live="polite" aria-busy={phase < 4}>
+    <div className="mx-auto flex w-full max-w-sm flex-col items-center px-4 py-8 text-center md:py-12" aria-live="polite" aria-busy={phase < 4}>
       <div className="relative flex size-20 items-center justify-center">
         <span className="absolute inset-0 rounded-full bg-primary-soft" />
         {phase < 4 ? (
@@ -319,14 +321,14 @@ export function ProcessingStep({ phase }: { phase: number }) {
           </m.span>
         )}
       </div>
-      <div className="mt-5 h-7">
-        <AnimatePresence mode="wait">
+      <div className="mt-5 flex min-h-7 w-full items-center justify-center">
+        <AnimatePresence mode="wait" initial={false}>
           <m.p
             key={phase}
-            initial={{ opacity: 0, y: 6 }}
+            initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.2 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.15 }}
             className="text-lg font-semibold"
           >
             {t(`upload.processing.${PHASES[Math.min(phase, 4)]}`)}
@@ -334,20 +336,33 @@ export function ProcessingStep({ phase }: { phase: number }) {
         </AnimatePresence>
       </div>
       <p className="mt-1 text-sm text-muted-foreground">{t('upload.processingHint')}</p>
-      <ol className="mt-6 w-full space-y-2 text-left">
-        {PHASES.slice(0, 4).map((p, i) => (
-          <li key={p} className="flex items-center gap-3 text-sm">
-            <span
-              className={cn(
-                'flex size-6 items-center justify-center rounded-full border transition-colors',
-                i < phase ? 'border-primary bg-primary text-primary-foreground' : i === phase ? 'border-primary text-primary' : 'text-muted-foreground',
-              )}
-            >
-              {i < phase ? <Check className="size-3.5" aria-hidden /> : <span className="size-1.5 rounded-full bg-current" />}
-            </span>
-            <span className={i <= phase ? 'text-foreground' : 'text-muted-foreground'}>{t(`upload.processing.${p}`)}</span>
-          </li>
-        ))}
+      <Progress value={pct} className="mt-5 h-1.5" label={t('upload.steps.processing')} />
+
+      {/* Checklist: full-width panel centred under the heading */}
+      <ol className="mt-5 w-full divide-y rounded-lg border bg-muted/40 text-left">
+        {steps.map((p, i) => {
+          const done = i < phase
+          const current = i === phase
+          return (
+            <li key={p} className="flex items-center gap-3 px-4 py-3 text-sm">
+              <span
+                className={cn(
+                  'flex size-6 shrink-0 items-center justify-center rounded-full border transition-colors',
+                  done ? 'border-primary bg-primary text-primary-foreground' : current ? 'border-primary text-primary' : 'border-border text-muted-foreground',
+                )}
+              >
+                {done ? (
+                  <Check className="size-3.5" aria-hidden />
+                ) : current ? (
+                  <Loader2 className="size-3.5 animate-spin motion-reduce:animate-none" aria-hidden />
+                ) : (
+                  <span className="size-1.5 rounded-full bg-current" />
+                )}
+              </span>
+              <span className={cn('min-w-0 flex-1', done || current ? 'font-medium text-foreground' : 'text-muted-foreground')}>{t(`upload.processing.${p}`)}</span>
+            </li>
+          )
+        })}
       </ol>
     </div>
   )

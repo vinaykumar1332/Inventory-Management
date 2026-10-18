@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Check, LogOut, MapPin, RotateCcw } from 'lucide-react'
 import { appConfig } from '@/config'
-import { useAuth, useUser } from '@/features/auth/AuthProvider'
+import { ROUTES } from '@/app/routes'
+import { useUser } from '@/features/auth/AuthProvider'
 import { ResetDemoDialog } from '@/features/admin/ResetDemo'
 import { useSites } from '@/hooks/queries'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui'
@@ -20,7 +21,6 @@ export function initials(name: string) {
 export function UserMenu() {
   const { t } = useTranslation()
   const user = useUser()
-  const { logout } = useAuth()
   const navigate = useNavigate()
   const { data: sites } = useSites()
   const [confirmReset, setConfirmReset] = React.useState(false)
@@ -67,10 +67,7 @@ export function UserMenu() {
           )}
           <DropdownMenuItem
             danger
-            onSelect={() => {
-              logout()
-              navigate('/login')
-            }}
+            onSelect={() => navigate(ROUTES.logout)}
           >
             <LogOut />
             {t('auth.signOut')}

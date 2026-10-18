@@ -1135,3 +1135,15 @@ export async function getSiteDirectory(): Promise<{ id: string; name: string; ci
   authorize(db)
   return db.sites.map((s) => ({ id: s.id, name: s.name, city: s.city }))
 }
+
+/** Public, unauthenticated figures for the home page. */
+export async function getPublicSummary(): Promise<{ sites: number; products: number; batches: number; languages: number }> {
+  await delay(150, 300)
+  const db = getDb()
+  return {
+    sites: db.sites.length,
+    products: db.products.length,
+    batches: db.batches.filter((b) => b.qtyAvailable > 0).length,
+    languages: appConfig.locale.languages.length,
+  }
+}

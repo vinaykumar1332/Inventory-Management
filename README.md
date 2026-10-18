@@ -34,7 +34,7 @@ Login → Dashboard → Select / create site → Upload bill (Excel / PDF / phot
 | **Tools & machinery** | Kept separate from consumables. Status summary, filters, detail drawer, issue / return, damage report, maintenance history, mark serviced |
 | **Reports** | Date / site / category / product filters, chart previews and **real `.xlsx` downloads** for 8 reports: stock by site, batch expiry, usage vs expected coverage, wastage, cost per m², vendor price comparison, tool issue/return, stock value |
 | **Languages** | English, हिन्दी (Hindi), తెలుగు (Telugu) — all fixed UI text, with localised month names. Product names, brands, batch and invoice numbers are not translated |
-| **Responsive** | Desktop sidebar (collapsible), collapsed rail on tablet, top bar + bottom navigation on phones, two-column KPI cards and stacked list cards on phones, sticky primary actions, 44 px touch targets, no horizontal page scroll down to 360 px |
+| **Responsive** | Desktop sidebar (collapsible), collapsed rail on tablet with overlay drawer (tap to expand, Esc to close), top bar + bottom navigation on phones, two-column KPI cards and stacked list cards on phones, sticky primary actions, 44 px touch targets, no horizontal page scroll down to 360 px |
 | **Light / dark theme** | Light, dark or follow-the-system, switchable from the header (and the login page and the phone *More* menu); remembered per browser. All colours come from `src/config/theme.json` |
 | **Installable PWA** | Web app manifest, icons and an offline-ready service worker (whole app shell precached). *Install app* button when the browser offers it, update prompt for new versions, offline banner |
 | **Configurable** | Labels, branding, business rules, navigation, dashboard widgets, roles, catalog lists and colours live in `src/config/*.json` — see [Configuration](#configuration) |
@@ -97,6 +97,66 @@ Tip: uploading a file whose name contains `duplicate` triggers the duplicate-inv
 | PWA | `vite-plugin-pwa` (Workbox) — manifest and icons generated from `src/config/app.json` and `public/favicon.svg` |
 
 SheetJS is installed from the official SheetJS CDN tarball (`xlsx-0.20.3`) because the npm registry copy is outdated and has known advisories.
+
+## Routes and navigation
+
+The app includes a public landing page, login flow, and role-based access control:
+
+| Route | What it shows | Auth required |
+|---|---|---|
+| `/` | Public home page with stats, features and demo role carousel. Signed-in users see a shortcut to the dashboard | No |
+| `/login` | Login page. Signed-in users are redirected to the dashboard. Accepts an optional `?redirect=` param to return users after sign-in (misspelled URLs, for example) | No |
+| `/logout` | Clears the session and redirects to `/login` | Yes |
+| `/dashboard` | Main dashboard with KPIs, stock summary and quick actions | Yes |
+| `/sites`, `/sites/:siteId` | Site list and detail page (tabs: Overview, Stock, Batches, Bills, Usage, Tools, Reports) | Yes (Super Admin + Admin see all; Storekeeper sees assigned; Manager sees assigned) |
+| `/inventory` | Searchable stock table by product and site, with filters and Excel export | Yes (Super Admin + Admin + Storekeeper) |
+| `/upload` | 5-step bill upload flow (site → file → extraction → review → confirm) | Yes (upload_bills permission) |
+| `/bills` | List of uploaded bills (Super Admin + Admin + Storekeeper can view; view_bills permission) | Yes |
+| `/movements` | Stock movement history (issues, returns, transfers, damage, adjustments) | Yes |
+| `/alerts` | Alert center (expiry, low stock, overdue tools, pending approvals) | Yes |
+| `/tools` | Tools and machinery inventory (status, maintenance, issue/return/damage) | Yes |
+| `/reports` | Data export (8 report types with filters and live `.xlsx` download) | Yes (view_reports permission) |
+| `/admin` | Users & settings (Super Admin only) | Yes (manage_users permission) |
+| `/*` | 404 page with search suggestion, did-you-mean link, and popular pages | No |
+
+### Route aliases
+
+Misspelled URLs are automatically corrected:
+
+```json
+{
+  "/dashbord": "/dashboard",
+  "/dashboad": "/dashboard",
+  "/dasboard": "/dashboard",
+  "/home": "/",
+  "/app": "/dashboard",
+  "/signin": "/login",
+  "/sign-in": "/login",
+  "/signout": "/logout",
+  "/stock": "/inventory",
+  "/inventry": "/inventory",
+  "/bill": "/bills",
+  "/uploads": "/upload",
+  "/alert": "/alerts",
+  "/report": "/reports",
+  "/tool": "/tools",
+  "/site": "/sites",
+  "/settings": "/admin",
+  "/users": "/admin"
+}
+```
+
+If the URL doesn't match an alias, the 404 page uses Levenshtein distance to suggest the nearest path.
+
+### SPA fallbacks
+
+For hosting platforms that don't natively support single-page routing (and to keep the app indexable at various URIs):
+
+| File | Purpose |
+|---|---|
+| `public/_redirects` | Netlify / Vercel rewrite config |
+| `vercel.json` | Explicit Vercel rewrite (ignores asset and file extensions) |
+| `dist/404.html` | Copy of `index.html` (created during build); serves the SPA when a route is not found at static hosting |
 
 ## Getting started
 

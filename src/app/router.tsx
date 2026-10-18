@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { Navigate, Outlet, createBrowserRouter, useLocation } from 'react-router-dom'
+import { Link, Navigate, Outlet, createBrowserRouter, useLocation, useNavigate, type RouteObject } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
+import { toast } from 'sonner'
 import { ShieldAlert } from 'lucide-react'
 import { useAuth } from '@/features/auth/AuthProvider'
 import type { Permission } from '@/lib/permissions'
@@ -9,8 +9,11 @@ import { AppLayout } from '@/components/layout/AppLayout'
 import { EmptyState } from '@/components/common'
 import { Button, Skeleton } from '@/components/ui'
 import LoginPage from '@/pages/LoginPage'
+import { ROUTES, locationToString } from './routes'
 
 // Route-level code splitting: chart-heavy pages and the Excel feature load on demand.
+const HomePage = React.lazy(() => import('@/pages/HomePage'))
+const NotFoundPage = React.lazy(() => import('@/pages/NotFoundPage'))
 const DashboardPage = React.lazy(() => import('@/pages/DashboardPage'))
 const SitesPage = React.lazy(() => import('@/pages/SitesPage'))
 const SiteDetailPage = React.lazy(() => import('@/pages/SiteDetailPage'))
@@ -27,8 +30,8 @@ function PageFallback() {
   return (
     <div aria-busy="true" className="space-y-4">
       <Skeleton className="h-8 w-56" />
-      <Skeleton className="h-4 w-80" />
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <Skeleton className="h-4 w-80 max-w-full" />
+      <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
         {Array.from({ length: 4 }, (_, i) => (
           <Skeleton key={i} className="h-28" />
         ))}
@@ -38,10 +41,13 @@ function PageFallback() {
   )
 }
 
+const Lazy = ({ children }: { children: React.ReactNode }) => <React.Suspense fallback={<PageFallback />}>{children}</React.Suspense>
+
+/** Protected area: unauthenticated visitors go to /login and come back to the exact link afterwards. */
 function RequireAuth() {
   const { user } = useAuth()
   const location = useLocation()
-  if (!user) return <Navigate to="/login" replace state={{ from: location.pathname }} />
+  if (!user) return <Navigate to={ROUTES.login} replace state={{ from: locationToString(location) }} />
   return <Outlet />
 }
 
@@ -57,55 +63,71 @@ function Guard({ permission, children }: { permission?: Permission; children: Re
         description={t('auth.accessDeniedBody', { role: t(`roles.${user?.role ?? 'storekeeper'}`) })}
         action={
           <Button asChild>
-            <Link to="/dashboard">{t('auth.goToDashboard')}</Link>
+            <Link to={ROUTES.afterLogin}>{t('auth.goToDashboard')}</Link>
           </Button>
         }
         className="py-24"
       />
     )
   }
-  return <React.Suspense fallback={<PageFallback />}>{children}</React.Suspense>
+  return <Lazy>{children}</Lazy>
 }
 
-function NotFound() {
+function LogoutRoute() {
   const { t } = useTranslation()
-  return (
-    <EmptyState
-      title={t('errors.pageNotFound')}
-      description={t('errors.pageNotFoundHint')}
-      action={
-        <Button asChild>
-          <Link to="/dashboard">{t('auth.goToDashboard')}</Link>
-        </Button>
-      }
-      className="py-24"
-    />
-  )
+  const { user, logout } = useAuth()
+  const navigate = useNavigate()
+  React.useEffect(() => {
+    if (user) {
+      logout()
+      toast.success(t('auth.signedOut'))
+    }
+    navigate(ROUTES.login, { replace: true })
+  }, [user, logout, navigate, t])
+  return null
 }
+
+/** Old / misspelt links (navigation.json → routes.aliases) keep their query string. */
+function AliasRedirect({ to }: { to: string }) {
+  const { search, hash } = useLocation()
+  return <Navigate to={`${to}${search}${hash}`} replace />
+}
+
+const page = (path: string, element: React.ReactNode, permission?: Permission): RouteObject => ({
+  path,
+  element: <Guard permission={permission}>{element}</Guard>,
+})
 
 export const router = createBrowserRouter([
-  { path: '/login', element: <LoginPage /> },
+  /* Public */
+  { path: ROUTES.home, element: <Lazy><HomePage /></Lazy> },
+  { path: ROUTES.login, element: <LoginPage /> },
+  { path: ROUTES.logout, element: <LogoutRoute /> },
+  ...Object.entries(ROUTES.aliases).map(([from, to]) => ({ path: from, element: <AliasRedirect to={to} /> })),
+
+  /* Protected app */
   {
     element: <RequireAuth />,
     children: [
       {
         element: <AppLayout />,
         children: [
-          { index: true, element: <Navigate to="/dashboard" replace /> },
-          { path: 'dashboard', element: <Guard><DashboardPage /></Guard> },
-          { path: 'sites', element: <Guard><SitesPage /></Guard> },
-          { path: 'sites/:siteId', element: <Guard><SiteDetailPage /></Guard> },
-          { path: 'inventory', element: <Guard><InventoryPage /></Guard> },
-          { path: 'bills', element: <Guard permission="view_bills"><BillsPage /></Guard> },
-          { path: 'upload', element: <Guard permission="upload_bills"><UploadBillPage /></Guard> },
-          { path: 'movements', element: <Guard><MovementsPage /></Guard> },
-          { path: 'alerts', element: <Guard><AlertsPage /></Guard> },
-          { path: 'tools', element: <Guard><ToolsPage /></Guard> },
-          { path: 'reports', element: <Guard permission="view_reports"><ReportsPage /></Guard> },
-          { path: 'admin', element: <Guard permission="manage_users"><AdminPage /></Guard> },
-          { path: '*', element: <NotFound /> },
+          page('dashboard', <DashboardPage />),
+          page('sites', <SitesPage />),
+          page('sites/:siteId', <SiteDetailPage />),
+          page('inventory', <InventoryPage />),
+          page('bills', <BillsPage />, 'view_bills'),
+          page('upload', <UploadBillPage />, 'upload_bills'),
+          page('movements', <MovementsPage />),
+          page('alerts', <AlertsPage />),
+          page('tools', <ToolsPage />),
+          page('reports', <ReportsPage />, 'view_reports'),
+          page('admin', <AdminPage />, 'manage_users'),
         ],
       },
     ],
   },
+
+  /* Anything else: standalone 404 (signed in or not) */
+  { path: '*', element: <Lazy><NotFoundPage /></Lazy> },
 ])
