@@ -88,7 +88,8 @@
     "collapseSidebar": "Collapse sidebar",
     "expandSidebar": "Expand sidebar",
     "sectionOperations": "Operations",
-    "sectionInsights": "Insights"
+    "sectionInsights": "Insights",
+    "home": "Home"
   },
   "roles": {
     "super_admin": "Super Admin",
@@ -121,7 +122,12 @@
     "signedInAs": "Signed in as {{name}}",
     "accessDenied": "Access restricted",
     "accessDeniedBody": "Your role ({{role}}) does not have access to this page. In this demo, permissions are simulated in the browser.",
-    "goToDashboard": "Go to dashboard"
+    "goToDashboard": "Go to dashboard",
+    "signInToContinue": "Please sign in to continue to {{path}}",
+    "signedOut": "You have been signed out",
+    "sessionEnded": "Your session ended. Please sign in again.",
+    "backHome": "Back to home",
+    "openDashboard": "Open dashboard"
   },
   "header": {
     "language": "Language",
@@ -860,5 +866,54 @@
     "reload": "Update now",
     "offlineReady": "App is ready to work offline",
     "offline": "You are offline — the demo keeps working with saved data."
+  },
+  "home": {
+    "eyebrow": "Waterproofing inventory, simplified",
+    "title": "Every bucket, batch and tool — accounted for, at every site.",
+    "subtitle": "Upload vendor bills, receive stock by batch, issue material expiry-first and see cost, coverage and alerts across all your construction sites.",
+    "ctaSignIn": "Sign in",
+    "ctaDashboard": "Go to dashboard",
+    "ctaTryDemo": "Try the demo",
+    "signedInAs": "Signed in as {{name}} · {{role}}",
+    "featuresTitle": "Built for site stores and project teams",
+    "features": {
+      "bills": {
+        "title": "Bill to stock in minutes",
+        "body": "Upload Excel, PDF or a phone photo. Review the extracted lines and approve straight into inventory."
+      },
+      "fefo": {
+        "title": "Expiry-first issue",
+        "body": "The batch that expires soonest is always suggested, with 7 / 15 / 30-day alerts before material is wasted."
+      },
+      "coverage": {
+        "title": "Usage vs coverage",
+        "body": "Area × coverage × coats shows expected consumption, so over-issue stands out immediately."
+      },
+      "sites": {
+        "title": "Every site, one view",
+        "body": "Stock value, low stock, tools and reports per site — in English, हिन्दी and తెలుగు."
+      }
+    },
+    "rolesTitle": "Explore by role",
+    "rolesHint": "Each demo role sees different sites, pages and actions.",
+    "stats": {
+      "sites": "Sites",
+      "products": "Products",
+      "batches": "Batches tracked",
+      "languages": "Languages"
+    },
+    "footer": "Client demo with mock data. No real data is stored."
+  },
+  "notFound": {
+    "code": "404",
+    "title": "We couldn’t find that page",
+    "body": "The address may be mistyped, or the page may have moved.",
+    "requested": "Requested address",
+    "didYouMean": "Did you mean",
+    "goHome": "Go to home",
+    "goBack": "Go back",
+    "goDashboard": "Go to dashboard",
+    "signIn": "Sign in",
+    "popular": "Popular pages"
   }
 }

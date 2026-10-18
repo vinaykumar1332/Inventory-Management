@@ -109,3 +109,5 @@ export function useApiMutation<TVars, TResult>(
 export const useDemoAccounts = () => useQuery({ queryKey: ['demoAccounts'], queryFn: api.getDemoAccounts, staleTime: Infinity })
 
 export const useCompany = () => useQuery({ queryKey: ['company'], queryFn: api.getCompany, staleTime: 5 * 60_000 })
+
+export const usePublicSummary = () => useQuery({ queryKey: ['publicSummary'], queryFn: api.getPublicSummary, staleTime: 60_000 })

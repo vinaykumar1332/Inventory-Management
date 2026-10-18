@@ -16,20 +16,25 @@ function BottomNavLink({ item }: { item: NavItem }) {
     <NavLink
       to={item.to}
       className={({ isActive }) =>
-        cn('relative flex min-h-16 flex-col items-center justify-center gap-1 text-[11px] font-medium', isActive ? 'text-primary' : 'text-muted-foreground')
+        cn('flex h-16 flex-col items-center justify-center gap-1 text-[11px] font-medium', isActive ? 'text-primary' : 'text-muted-foreground')
       }
     >
-      {highlight ? (
-        <span className="-mt-5 flex size-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg ring-4 ring-surface">
+      {/* Same-height icon slot for every item so all labels share one baseline */}
+      <span className="relative flex h-6 w-full items-center justify-center">
+        {highlight ? (
+          <span className="absolute bottom-0 left-1/2 flex size-12 -translate-x-1/2 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg ring-4 ring-surface">
+            <item.Icon className="size-5" aria-hidden />
+          </span>
+        ) : (
           <item.Icon className="size-5" aria-hidden />
-        </span>
-      ) : (
-        <item.Icon className="size-5" aria-hidden />
-      )}
-      <span className="max-w-full truncate px-1">{t(item.shortLabelKey ?? item.labelKey)}</span>
-      {badge !== null && (
-        <span className="tabular absolute left-1/2 top-2 ml-1.5 rounded-full bg-danger px-1.5 text-[10px] font-semibold leading-4 text-white">{badge}</span>
-      )}
+        )}
+        {badge !== null && (
+          <span className="tabular absolute -top-1.5 left-1/2 ml-1 min-w-4 rounded-full bg-danger px-1 text-center text-[10px] font-semibold leading-4 text-white">
+            {badge}
+          </span>
+        )}
+      </span>
+      <span className="max-w-full truncate px-1 leading-4">{t(item.shortLabelKey ?? item.labelKey)}</span>
     </NavLink>
   )
 }
@@ -47,9 +52,11 @@ export function BottomNav({ onMore }: { onMore: () => void }) {
           </li>
         ))}
         <li>
-          <button type="button" onClick={onMore} className="flex min-h-16 w-full flex-col items-center justify-center gap-1 text-[11px] font-medium text-muted-foreground">
-            <MenuIcon className="size-5" aria-hidden />
-            {t('nav.more')}
+          <button type="button" onClick={onMore} className="flex h-16 w-full flex-col items-center justify-center gap-1 text-[11px] font-medium text-muted-foreground">
+            <span className="flex h-6 items-center justify-center">
+              <MenuIcon className="size-5" aria-hidden />
+            </span>
+            <span className="leading-4">{t('nav.more')}</span>
           </button>
         </li>
       </ul>

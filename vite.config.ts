@@ -2,11 +2,20 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
+import fs from 'node:fs'
 import path from 'node:path'
 import appConfig from './src/config/app.json' with { type: 'json' }
 
 export default defineConfig({
   plugins: [
+    // Static hosts without SPA rewrites (e.g. GitHub Pages) serve 404.html for deep links like /dashboard
+    {
+      name: 'spa-404-fallback',
+      closeBundle() {
+        const dist = path.resolve(import.meta.dirname, 'dist')
+        if (fs.existsSync(path.join(dist, 'index.html'))) fs.copyFileSync(path.join(dist, 'index.html'), path.join(dist, '404.html'))
+      },
+    },
     react(),
     tailwindcss(),
     VitePWA({

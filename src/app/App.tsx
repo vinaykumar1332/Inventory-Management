@@ -1,15 +1,22 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { RouterProvider } from 'react-router-dom'
 import { LazyMotion, MotionConfig, domAnimation } from 'motion/react'
 import { Toaster } from 'sonner'
 import { appConfig } from '@/config'
-import { AuthProvider } from '@/features/auth/AuthProvider'
+import { AuthProvider, SESSION_EXPIRED_EVENT } from '@/features/auth/AuthProvider'
+import { ApiError } from '@/services/mockApi'
 import { PwaUpdatePrompt } from '@/pwa/pwa'
 import { ThemeProvider, useTheme } from '@/theme/ThemeProvider'
 import { TooltipProvider } from '@/components/ui'
 import { router } from './router'
 
+const onApiError = (error: unknown) => {
+  if (error instanceof ApiError && error.key === 'errors.sessionExpired') window.dispatchEvent(new Event(SESSION_EXPIRED_EVENT))
+}
+
 const queryClient = new QueryClient({
+  queryCache: new QueryCache({ onError: onApiError }),
+  mutationCache: new MutationCache({ onError: onApiError }),
   defaultOptions: {
     queries: { staleTime: appConfig.ui.queryStaleTimeMs, retry: 1, refetchOnWindowFocus: false },
   },

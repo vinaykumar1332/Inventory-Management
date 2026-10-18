@@ -51,20 +51,40 @@ export function AppLayout() {
   const [collapsed, setCollapsed] = usePersistentState(storageKeys.sidebarCollapsed, false)
   const [moreOpen, setMoreOpen] = React.useState(false)
   const isLg = useMediaQuery('(min-width: 1024px)')
-  const compact = collapsed || !isLg
+  const [tabletOpen, setTabletOpen] = React.useState(false)
+  // Desktop: persisted collapse pushes content. Tablet: rail that opens as an overlay.
+  const compact = isLg ? collapsed : !tabletOpen
+  const contentCompact = isLg ? collapsed : true
   const location = useLocation()
 
   React.useEffect(() => {
     window.scrollTo({ top: 0 })
+    setTabletOpen(false)
   }, [location.pathname])
+
+  React.useEffect(() => {
+    if (isLg) setTabletOpen(false)
+  }, [isLg])
+
+  React.useEffect(() => {
+    if (!tabletOpen) return
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setTabletOpen(false)
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [tabletOpen])
 
   return (
     <StockActionsProvider>
       <a href="#main" className="sr-only z-50 rounded-md bg-primary px-4 py-2 text-primary-foreground focus:not-sr-only focus:fixed focus:left-3 focus:top-3">
         {t('common.skipToContent')}
       </a>
-      <Sidebar collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} />
-      <div className={cn('flex min-h-dvh min-w-0 flex-col transition-[padding] duration-200', compact ? 'md:pl-[72px]' : 'md:pl-64')}>
+      <Sidebar
+        compact={compact}
+        overlay={!isLg && tabletOpen}
+        onToggle={() => (isLg ? setCollapsed((c) => !c) : setTabletOpen((o) => !o))}
+        onNavigate={() => setTabletOpen(false)}
+      />
+      <div className={cn('flex min-h-dvh min-w-0 flex-col transition-[padding] duration-200', contentCompact ? 'md:pl-[72px]' : 'md:pl-64')}>
         <TopBar />
         <main id="main" tabIndex={-1} className="min-w-0 flex-1 px-4 pb-28 pt-5 outline-none md:px-6 md:pb-10 md:pt-6 xl:px-8">
           <div className="mx-auto w-full min-w-0 max-w-[1440px]">

@@ -92,6 +92,16 @@ export interface NavigationConfig {
   sections: { id: NavItemConfig['section']; labelKey?: string }[]
   items: NavItemConfig[]
   mobileBottomNav: { items: string[]; highlight: string; fallbacks: Record<string, string> }
+  routes: {
+    home: string
+    login: string
+    logout: string
+    afterLogin: string
+    /** Misspellings / old links → real route (keeps query string) */
+    aliases: Record<string, string>
+    /** Shown on the 404 page */
+    popular: string[]
+  }
 }
 
 export type KpiId = 'totalStockValue' | 'availableQty' | 'expiringIn30' | 'expiredBatches' | 'lowStockItems' | 'toolsIssued'
