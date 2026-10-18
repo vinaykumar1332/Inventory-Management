@@ -1,0 +1,44 @@
+{
+  "inventory": {
+    "wastageAllowance": 1.1,
+    "expiryWindowsDays": { "critical": 7, "warning": 15, "notice": 30 },
+    "fefo": true
+  },
+  "bills": {
+    "defaultTaxRate": 0.18,
+    "defaultFreight": 1200,
+    "amountTolerance": 1,
+    "duplicateDemoKeyword": "duplicate",
+    "productMatchThreshold": 0.6
+  },
+  "upload": {
+    "maxFileMb": 15,
+    "acceptedTypes": {
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [".xlsx"],
+      "application/vnd.ms-excel": [".xls"],
+      "application/pdf": [".pdf"],
+      "image/jpeg": [".jpg", ".jpeg"],
+      "image/png": [".png"]
+    },
+    "badges": ["XLSX", "XLS", "PDF", "JPG", "PNG"],
+    "extractionStepMs": 380,
+    "excelHeaderAliases": {
+      "name": ["product", "material", "item", "description", "product name", "item description"],
+      "brand": ["brand", "make", "manufacturer"],
+      "batchNo": ["batch", "batch no", "batch no.", "batch number", "lot", "lot no"],
+      "mfgDate": ["mfg", "mfg date", "manufacture date", "date of manufacture"],
+      "expiryDate": ["expiry", "expiry date", "exp", "exp date", "best before"],
+      "packs": ["packs", "qty", "quantity", "no of packs", "pack qty"],
+      "packSize": ["pack size", "pack", "size"],
+      "unitCost": ["rate", "unit cost", "price", "rate per kg", "rate per unit", "unit price"]
+    },
+    "excelTableHeaderHints": ["product", "material", "item", "description"]
+  },
+  "tools": {
+    "defaultIssueDays": 7,
+    "serviceIntervalDays": 90
+  },
+  "reports": {
+    "defaultRangeDays": 180
+  }
+}

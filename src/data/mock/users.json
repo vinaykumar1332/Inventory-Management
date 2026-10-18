@@ -1,0 +1,69 @@
+[
+  {
+    "id": "u1",
+    "name": "Ramesh Reddy",
+    "email": "superadmin@demo.com",
+    "role": "super_admin",
+    "phone": "+91 98480 11223",
+    "siteIds": []
+  },
+  {
+    "id": "u2",
+    "name": "Priya Sharma",
+    "email": "admin@demo.com",
+    "role": "admin",
+    "phone": "+91 99890 44556",
+    "siteIds": []
+  },
+  {
+    "id": "u3",
+    "name": "Suresh Kumar",
+    "email": "storekeeper@demo.com",
+    "role": "storekeeper",
+    "phone": "+91 90000 77881",
+    "siteIds": [
+      "s1"
+    ]
+  },
+  {
+    "id": "u4",
+    "name": "Anil Varma",
+    "email": "manager@demo.com",
+    "role": "site_manager",
+    "phone": "+91 97010 33442",
+    "siteIds": [
+      "s1",
+      "s2"
+    ]
+  },
+  {
+    "id": "u5",
+    "name": "Lakshmi Prasad",
+    "email": "lakshmi.p@demo.com",
+    "role": "storekeeper",
+    "phone": "+91 94400 21877",
+    "siteIds": [
+      "s2"
+    ]
+  },
+  {
+    "id": "u6",
+    "name": "Kiran Rao",
+    "email": "kiran.r@demo.com",
+    "role": "storekeeper",
+    "phone": "+91 96760 55129",
+    "siteIds": [
+      "s3"
+    ]
+  },
+  {
+    "id": "u7",
+    "name": "Venkat Naidu",
+    "email": "venkat.n@demo.com",
+    "role": "site_manager",
+    "phone": "+91 98660 90314",
+    "siteIds": [
+      "s3"
+    ]
+  }
+]

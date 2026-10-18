@@ -1,0 +1,98 @@
+[
+  {
+    "id": "ti1",
+    "toolId": "t1",
+    "siteId": "s1",
+    "issuedTo": "Ravi (Mason team A)",
+    "issuedBy": "u3",
+    "issuedDate": "2026-10-12",
+    "expectedReturnDate": "2026-10-20",
+    "returnedDate": null,
+    "conditionOnReturn": null,
+    "notes": ""
+  },
+  {
+    "id": "ti2",
+    "toolId": "t2",
+    "siteId": "s1",
+    "issuedTo": "Mahesh (Injection crew)",
+    "issuedBy": "u3",
+    "issuedDate": "2026-10-06",
+    "expectedReturnDate": "2026-10-15",
+    "returnedDate": null,
+    "conditionOnReturn": null,
+    "notes": ""
+  },
+  {
+    "id": "ti3",
+    "toolId": "t4",
+    "siteId": "s1",
+    "issuedTo": "Imran (Surface prep)",
+    "issuedBy": "u3",
+    "issuedDate": "2026-10-16",
+    "expectedReturnDate": "2026-10-23",
+    "returnedDate": null,
+    "conditionOnReturn": null,
+    "notes": ""
+  },
+  {
+    "id": "ti4",
+    "toolId": "t6",
+    "siteId": "s2",
+    "issuedTo": "Srinu (Coating team)",
+    "issuedBy": "u5",
+    "issuedDate": "2026-10-14",
+    "expectedReturnDate": "2026-10-21",
+    "returnedDate": null,
+    "conditionOnReturn": null,
+    "notes": ""
+  },
+  {
+    "id": "ti5",
+    "toolId": "t7",
+    "siteId": "s2",
+    "issuedTo": "Prakash (Membrane crew)",
+    "issuedBy": "u5",
+    "issuedDate": "2026-10-09",
+    "expectedReturnDate": "2026-10-17",
+    "returnedDate": null,
+    "conditionOnReturn": null,
+    "notes": ""
+  },
+  {
+    "id": "ti6",
+    "toolId": "t9",
+    "siteId": "s3",
+    "issuedTo": "Naresh (Surface prep)",
+    "issuedBy": "u6",
+    "issuedDate": "2026-10-15",
+    "expectedReturnDate": "2026-10-22",
+    "returnedDate": null,
+    "conditionOnReturn": null,
+    "notes": ""
+  },
+  {
+    "id": "ti7",
+    "toolId": "t11",
+    "siteId": "s3",
+    "issuedTo": "Ganesh (Demolition)",
+    "issuedBy": "u6",
+    "issuedDate": "2026-10-03",
+    "expectedReturnDate": "2026-10-12",
+    "returnedDate": null,
+    "conditionOnReturn": null,
+    "notes": ""
+  },
+  {
+    "id": "ti8",
+    "toolId": "t13",
+    "siteId": "s2",
+    "issuedTo": "Prakash (Membrane crew)",
+    "issuedBy": "u5",
+    "issuedDate": "2026-10-09",
+    "expectedReturnDate": "2026-10-23",
+    "returnedDate": null,
+    "conditionOnReturn": null,
+    "notes": ""
+  }
+]

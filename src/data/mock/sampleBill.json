@@ -1,0 +1,19 @@
+{
+  "description": "Sample vendor bill offered for download on the Upload Bill screen, so clients can try real Excel parsing.",
+  "fileName": "Sample_Vendor_Bill_SiteSeal.xlsx",
+  "meta": [
+    ["Vendor", "Sri Sai Waterproofing Traders"],
+    ["Invoice No", "SSWT/26-27/0611"],
+    ["Invoice Date", "16/10/2026"],
+    ["GSTIN", "36ABMFS7712Q1Z3"],
+    ["Freight", 1500]
+  ],
+  "header": ["Product", "Brand", "Batch No", "Mfg Date", "Expiry Date", "Packs", "Pack Size", "Rate"],
+  "rows": [
+    ["Brushbond RFX Part A Powder", "Fosroc", "IN1MF01160045M", "02/10/2026", "02/10/2027", 25, 10, 608.6],
+    ["Brushbond RFX Part B Liquid", "Fosroc", "IN1MF01160046M", "02/10/2026", "02/10/2027", 12, 5, 420],
+    ["SikaTop Seal-107", "Sika", "SK26100481", "20/09/2026", "20/03/2027", 8, 25, 214],
+    ["Primeseal Bituminous Primer", "Dr. Fixit", "PIL26094410", "15/09/2026", "15/09/2028", 4, 20, 152],
+    ["Polyurethane Joint Filler PU-40", "Generic", "PU40-7781", "01/09/2026", "01/09/2027", 10, 0.6, 410]
+  ]
+}

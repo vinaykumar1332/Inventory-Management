@@ -1,0 +1,24 @@
+{
+  "sections": [
+    { "id": "main" },
+    { "id": "operations", "labelKey": "nav.sectionOperations" },
+    { "id": "insights", "labelKey": "nav.sectionInsights" }
+  ],
+  "items": [
+    { "to": "/dashboard", "labelKey": "nav.dashboard", "icon": "LayoutDashboard", "section": "main" },
+    { "to": "/sites", "labelKey": "nav.sites", "icon": "Building2", "section": "main" },
+    { "to": "/inventory", "labelKey": "nav.inventory", "icon": "Boxes", "section": "main" },
+    { "to": "/upload", "labelKey": "nav.upload", "shortLabelKey": "nav.uploadShort", "icon": "FileUp", "permission": "upload_bills", "section": "operations" },
+    { "to": "/bills", "labelKey": "nav.bills", "icon": "Receipt", "permission": "view_bills", "section": "operations" },
+    { "to": "/movements", "labelKey": "nav.movements", "icon": "History", "section": "operations" },
+    { "to": "/tools", "labelKey": "nav.tools", "icon": "Wrench", "section": "operations" },
+    { "to": "/alerts", "labelKey": "nav.alerts", "icon": "Bell", "section": "insights", "badge": "unreadAlerts" },
+    { "to": "/reports", "labelKey": "nav.reports", "icon": "BarChart3", "permission": "view_reports", "section": "insights" },
+    { "to": "/admin", "labelKey": "nav.admin", "icon": "Settings", "permission": "manage_users", "section": "insights" }
+  ],
+  "mobileBottomNav": {
+    "items": ["/dashboard", "/inventory", "/upload", "/alerts"],
+    "highlight": "/upload",
+    "fallbacks": { "/upload": "/sites" }
+  }
+}

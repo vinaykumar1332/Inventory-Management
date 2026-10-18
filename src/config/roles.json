@@ -1,0 +1,63 @@
+{
+  "roles": ["super_admin", "admin", "storekeeper", "site_manager"],
+  "permissions": {
+    "super_admin": [
+      "view_all_sites",
+      "manage_sites",
+      "manage_users",
+      "manage_settings",
+      "view_bills",
+      "upload_bills",
+      "approve_bills",
+      "receive_stock",
+      "issue_material",
+      "return_material",
+      "transfer_stock",
+      "report_damage",
+      "stock_adjustment",
+      "expiry_override",
+      "manage_tools",
+      "view_reports",
+      "manage_products"
+    ],
+    "admin": [
+      "view_all_sites",
+      "manage_sites",
+      "view_bills",
+      "upload_bills",
+      "approve_bills",
+      "receive_stock",
+      "issue_material",
+      "return_material",
+      "transfer_stock",
+      "report_damage",
+      "manage_tools",
+      "view_reports",
+      "manage_products"
+    ],
+    "storekeeper": [
+      "view_bills",
+      "upload_bills",
+      "approve_bills",
+      "receive_stock",
+      "issue_material",
+      "return_material",
+      "transfer_stock",
+      "report_damage",
+      "manage_tools"
+    ],
+    "site_manager": ["issue_material", "report_damage", "view_reports"]
+  },
+  "permissionMatrixRows": [
+    "view_all_sites",
+    "manage_sites",
+    "manage_users",
+    "upload_bills",
+    "approve_bills",
+    "issue_material",
+    "transfer_stock",
+    "stock_adjustment",
+    "expiry_override",
+    "view_reports"
+  ]
+}

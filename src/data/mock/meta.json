@@ -1,0 +1,6 @@
+{
+  "description": "Mock dataset for the SiteSeal Inventory client demo. Shapes match src/types and are the reference contract for the backend API.",
+  "referenceDate": "2026-10-18",
+  "dateShift": "At load time every date is shifted by (today - referenceDate) so expiry and overdue demo cases stay current.",
+  "version": 5
+}

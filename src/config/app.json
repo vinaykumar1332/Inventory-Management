@@ -1,0 +1,47 @@
+{
+  "app": {
+    "name": "SiteSeal Inventory",
+    "shortName": "SiteSeal",
+    "description": "Multi-site waterproofing inventory: materials, batches, expiry, bills, tools and reports.",
+    "themeColor": "#0f1f3a",
+    "backgroundColor": "#f5f7fa"
+  },
+  "locale": {
+    "numberLocale": "en-IN",
+    "currency": "INR",
+    "currencySymbol": "₹",
+    "dateFormat": "dd MMM yyyy",
+    "dateTimeFormat": "dd MMM yyyy, hh:mm a",
+    "monthFormat": "MMM yy",
+    "defaultLanguage": "en",
+    "languages": [
+      { "code": "en", "label": "English", "short": "EN", "dateLocale": "enIN" },
+      { "code": "hi", "label": "हिन्दी", "short": "हि", "dateLocale": "hi" },
+      { "code": "te", "label": "తెలుగు", "short": "తె", "dateLocale": "te" }
+    ]
+  },
+  "theme": {
+    "default": "system",
+    "modes": ["light", "dark", "system"]
+  },
+  "features": {
+    "demoBadge": true,
+    "themeToggle": true,
+    "languageSwitch": true,
+    "cameraUpload": true,
+    "sampleBillDownload": true,
+    "pwaInstallPrompt": true,
+    "resetDemoData": true
+  },
+  "demo": {
+    "quickLoginEmails": ["superadmin@demo.com", "admin@demo.com", "storekeeper@demo.com", "manager@demo.com"],
+    "apiDelayMs": { "min": 300, "max": 700 },
+    "storagePrefix": "siteseal:"
+  },
+  "ui": {
+    "tablePageSize": 10,
+    "movementsPageSize": 15,
+    "toastDurationMs": 3500,
+    "queryStaleTimeMs": 30000
+  }
+}
