@@ -873,10 +873,21 @@
   "pwa": {
     "install": "Install app",
     "installHint": "Add SiteSeal to your home screen for quick, offline-ready access.",
+    "installBannerTitle": "Add to home screen",
+    "installBannerDesc": "Install SiteSeal for fast, offline access — works like a native app.",
+    "installBannerDismiss": "Not now",
     "updateAvailable": "A new version of the app is available.",
     "reload": "Update now",
     "offlineReady": "App is ready to work offline",
-    "offline": "You are offline — the demo keeps working with saved data."
+    "offline": "You are offline — the demo keeps working with saved data.",
+    "iosGuideTitle": "Add to Home Screen",
+    "iosGuideDesc": "Safari doesn't show an install button — follow these steps:",
+    "iosStep1": "Tap the Share icon at the bottom of Safari",
+    "iosStep2": "Scroll down and tap \"Add to Home Screen\"",
+    "iosStep3": "Tap \"Add\" to confirm",
+    "iosGuideNote": "Only works in Safari — not Chrome or Firefox on iPhone.",
+    "desktopGuideTitle": "Install from browser",
+    "desktopGuideDesc": "Look for the install icon (⊕) in your browser's address bar, or use the browser menu → \"Install SiteSeal\"."
   },
   "home": {
     "eyebrow": "Waterproofing inventory, simplified",

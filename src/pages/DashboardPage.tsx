@@ -10,6 +10,7 @@ import { ErrorState, KpiCard, KpiGrid, KpiSkeleton, PageHeader, SectionCard, Sit
 import { CategoryDonut, ConsumptionChart, StockBySiteChart } from '@/features/dashboard/charts'
 import { ActivityTimeline, ExpiryTimeline, QuickActions, TopMaterials } from '@/features/dashboard/widgets'
 import type { DashboardKpis } from '@/types'
+import { InstallBanner } from '@/components/layout/header/InstallAppButton'
 import { formatINRCompact, formatNumber, unitLabel } from '@/utils/format'
 
 type Translate = ReturnType<typeof useTranslation>['t']
@@ -51,6 +52,8 @@ export default function DashboardPage() {
         subtitle={seesAll ? t('dashboard.subtitleAll') : t('dashboard.subtitleAssigned')}
         actions={(sites?.length ?? 0) > 1 && <SiteSelect className="w-full sm:w-60" value={siteId} onChange={setSiteId} />}
       />
+
+      <InstallBanner />
 
       {isError ? (
         <Card>
