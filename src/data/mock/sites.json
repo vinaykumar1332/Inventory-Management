@@ -13,6 +13,7 @@
     "endDate": "2027-03-17",
     "storeName": "Block A Basement Store",
     "status": "active",
+    "phase": "waterproofing",
     "progress": 62
   },
   {
@@ -29,6 +30,7 @@
     "endDate": "2027-07-15",
     "storeName": "Tower 1 Ground Floor Store",
     "status": "active",
+    "phase": "mobilization",
     "progress": 38
   },
   {
@@ -45,6 +47,7 @@
     "endDate": "2026-12-17",
     "storeName": "Podium Level Site Store",
     "status": "active",
+    "phase": "inspection",
     "progress": 81
   }
 ]

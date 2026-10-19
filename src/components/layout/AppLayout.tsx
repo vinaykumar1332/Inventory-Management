@@ -8,7 +8,8 @@ import { useMediaQuery, usePersistentState } from '@/hooks/useMediaQuery'
 import { useOnlineStatus } from '@/pwa/pwa'
 import { DemoBadge, Logo } from '@/components/common'
 import { StockActionsProvider } from '@/features/stock/StockActions'
-import { AlertsBell, LanguageSelect, ThemeToggle } from './header/HeaderControls'
+import { LanguageSelect, ThemeToggle } from './header/HeaderControls'
+import { NotificationDropdown } from '@/features/notifications'
 import { InstallAppButton } from './header/InstallAppButton'
 import { UserMenu } from './header/UserMenu'
 import { BottomNav, MoreSheet } from './MobileNav'
@@ -33,7 +34,7 @@ function TopBar() {
           <span className="hidden sm:inline-flex">
             <ThemeToggle />
           </span>
-          <AlertsBell />
+          <NotificationDropdown />
           <UserMenu />
         </div>
       </div>

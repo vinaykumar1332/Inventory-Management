@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { updateAppBadge } from '@/pwa/badge'
 import * as notificationService from '../services/notificationService'
 import type { AppNotification } from '../types'
 
@@ -35,8 +36,10 @@ export function useMarkAsRead() {
           n.id === notificationId && !n.readAt ? { ...n, readAt: new Date().toISOString() } : n,
         ),
       )
-      // Invalidate unread count
-      void queryClient.invalidateQueries({ queryKey: queryKeys.unreadCount })
+      void queryClient.invalidateQueries({ queryKey: queryKeys.unreadCount }).then(async () => {
+        const count = await notificationService.getUnreadCount()
+        void updateAppBadge(count)
+      })
     },
   })
 }
@@ -47,9 +50,9 @@ export function useMarkAllAsRead() {
   return useMutation({
     mutationFn: notificationService.markAllAsRead,
     onSuccess: () => {
-      // Invalidate both notifications and unread count
       void queryClient.invalidateQueries({ queryKey: queryKeys.notifications })
       void queryClient.invalidateQueries({ queryKey: queryKeys.unreadCount })
+      void updateAppBadge(0)
     },
   })
 }
@@ -60,13 +63,14 @@ export function useAddMockNotification() {
   return useMutation({
     mutationFn: notificationService.addMockNotification,
     onSuccess: (newNotification) => {
-      // Add to notifications list
       queryClient.setQueryData(queryKeys.notifications, (old: AppNotification[] | undefined) => [
         newNotification,
         ...(old || []),
       ])
-      // Invalidate unread count
-      void queryClient.invalidateQueries({ queryKey: queryKeys.unreadCount })
+      void queryClient.invalidateQueries({ queryKey: queryKeys.unreadCount }).then(async () => {
+        const count = await notificationService.getUnreadCount()
+        void updateAppBadge(count)
+      })
     },
   })
 }
