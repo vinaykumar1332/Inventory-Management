@@ -10,7 +10,7 @@ import { useAuth } from '@/features/auth/AuthProvider'
 import { DemoRoleList, useSignIn } from '@/features/auth/DemoRoles'
 import { Button, Field, Input } from '@/components/ui'
 import { DemoBadge, Logo } from '@/components/common'
-import { LanguageSelect, ThemeToggle } from '@/components/layout/header/HeaderControls'
+import { LanguageSelect, ThemeToggle } from '@/components/layout/HeaderControls'
 
 const schema = z.object({
   email: z.string().trim().min(1, 'validation.required').pipe(z.email('validation.email')),

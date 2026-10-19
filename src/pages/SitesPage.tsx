@@ -6,27 +6,10 @@ import { useSites } from '@/hooks/queries'
 import { storageKeys } from '@/lib/storage'
 import { usePersistentState } from '@/hooks/useMediaQuery'
 import { Badge, Button, Card, Progress, Skeleton, Table, TableWrap, TBody, TD, TH, THead, TR } from '@/components/ui'
-import { EmptyState, ErrorState, PageHeader, Segmented, SiteStatusBadge } from '@/components/common'
+import { EmptyState, ErrorState, PageHeader, Segmented, SitePhaseBadge, SiteStatusBadge } from '@/components/common'
 import { CreateSiteSheet } from '@/features/sites/CreateSiteSheet'
-import type { SitePhase, SiteSummary } from '@/types'
+import type { SiteSummary } from '@/types'
 import { formatDate, formatINR, formatINRCompact } from '@/utils/format'
-
-const PHASE_COLORS: Record<SitePhase, string> = {
-  mobilization: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
-  waterproofing: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/40 dark:text-cyan-300',
-  curing: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300',
-  inspection: 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300',
-  completed: 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300',
-}
-
-function PhaseBadge({ phase }: { phase: SitePhase }) {
-  const { t } = useTranslation()
-  return (
-    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold ${PHASE_COLORS[phase]}`}>
-      {t(`sites.phases.${phase}`)}
-    </span>
-  )
-}
 
 function SiteCard({ site }: { site: SiteSummary }) {
   const { t } = useTranslation()
@@ -49,7 +32,7 @@ function SiteCard({ site }: { site: SiteSummary }) {
         </div>
         <div className="flex shrink-0 flex-col items-end gap-1">
           <SiteStatusBadge status={site.status} />
-          {site.phase && <PhaseBadge phase={site.phase} />}
+          {site.phase && <SitePhaseBadge phase={site.phase} />}
         </div>
       </div>
       <dl className="mt-4 grid grid-cols-3 gap-2 rounded-lg bg-muted/70 p-3 text-center">
@@ -193,7 +176,7 @@ export default function SitesPage() {
                     <TD>
                       <div className="flex flex-col gap-1">
                         <SiteStatusBadge status={s.status} />
-                        {s.phase && <PhaseBadge phase={s.phase} />}
+                        {s.phase && <SitePhaseBadge phase={s.phase} />}
                       </div>
                     </TD>
                   </TR>

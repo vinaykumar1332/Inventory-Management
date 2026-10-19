@@ -13,7 +13,7 @@ export function useMediaQuery(query: string) {
   return React.useSyncExternalStore(subscribe, () => window.matchMedia(query).matches, () => false)
 }
 
-/** useState persisted to localStorage (demo preferences only). */
+/** useState persisted to a cookie (demo preferences only). */
 export function usePersistentState<T>(key: string, initial: T) {
   const [value, setValue] = React.useState<T>(() => readStorage(key, initial))
   React.useEffect(() => writeStorage(key, value), [key, value])

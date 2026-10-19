@@ -2,7 +2,7 @@ import * as React from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { resetDemoData } from '@/services/mockApi'
+import { resetDemoData } from '@/api/mockApi'
 import { ConfirmDialog } from '@/components/ui'
 
 /** Shared confirm-and-reset flow (user menu, Users & Settings page). */

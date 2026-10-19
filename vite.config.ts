@@ -48,17 +48,11 @@ export default defineConfig({
           { name: 'Alerts', url: '/alerts', icons: [{ src: 'pwa-192x192.png', sizes: '192x192' }] },
         ],
       },
-      workbox: {
-        // Precache the whole app shell (incl. lazy routes) so the demo works offline
-        globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2}'],
-        cleanupOutdatedCaches: true,
-        runtimeCaching: [
-          {
-            urlPattern: ({ url }) => url.origin === 'https://fonts.googleapis.com' || url.origin === 'https://fonts.gstatic.com',
-            handler: 'StaleWhileRevalidate',
-            options: { cacheName: 'google-fonts', expiration: { maxEntries: 30, maxAgeSeconds: 60 * 60 * 24 * 365 } },
-          },
-        ],
+      injectManifest: {
+        // App shell incl. lazy routes; Latin font files only (other scripts load on demand)
+        globPatterns: ['**/*.{js,css,html,svg,png,ico}', '**/*-latin*.woff2'],
+        // Excel export is used on demand; keep its ~480 kB out of the first-install download
+        globIgnores: ['**/xlsx-*.js'],
       },
       devOptions: { enabled: false },
     }),
@@ -72,7 +66,6 @@ export default defineConfig({
       output: {
         manualChunks(id: string) {
           if (!id.includes('node_modules')) return undefined
-          if (id.includes('recharts') || id.includes('d3-')) return 'charts'
           if (id.includes('xlsx')) return 'xlsx'
           if (id.includes('@radix-ui')) return 'radix'
           if (id.includes('i18next')) return 'i18n'

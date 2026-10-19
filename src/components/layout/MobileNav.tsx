@@ -5,8 +5,8 @@ import { cn } from '@/lib/utils'
 import { Sheet } from '@/components/ui'
 import { DemoBadge } from '@/components/common'
 import { MOBILE_HIGHLIGHT, useMobileNav, useNavBadge, useVisibleNav, type NavItem } from './navigation'
-import { InstallAppButton } from './header/InstallAppButton'
-import { ThemeToggle } from './header/HeaderControls'
+import { InstallAppButton } from '@/features/pwa/components/InstallAppButton'
+import { ThemeToggle } from '@/components/layout/HeaderControls'
 
 function BottomNavLink({ item }: { item: NavItem }) {
   const { t } = useTranslation()

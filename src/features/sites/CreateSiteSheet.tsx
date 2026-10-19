@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { useApiMutation, useCompany, useUsers } from '@/hooks/queries'
-import { createSite } from '@/services/mockApi'
+import { createSite } from '@/api/mockApi'
 import { Button, Field, Input, Select, Sheet, Textarea } from '@/components/ui'
 import { isoDaysFromNow } from '@/utils/date'
 

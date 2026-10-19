@@ -5,7 +5,7 @@ import { ROUTES } from '@/app/routes'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { Button } from '@/components/ui'
 import { Logo } from '@/components/common'
-import { LanguageSelect, ThemeToggle } from './header/HeaderControls'
+import { LanguageSelect, ThemeToggle } from '@/components/layout/HeaderControls'
 
 /** Top bar for public pages (home, 404): brand, language, theme and the sign-in / dashboard action. */
 export function PublicHeader() {

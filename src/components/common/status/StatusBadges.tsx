@@ -5,7 +5,7 @@ import { getIcon } from '@/config/icons'
 import { TINT_CLASSES } from '@/config/tones'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui'
-import type { ExpiryBucket, InvoiceStatus, MovementType, SiteStatus, StockStatus, ToolCondition, ToolStatus, UploadType } from '@/types'
+import type { ExpiryBucket, InvoiceStatus, MovementType, SitePhase, SiteStatus, StockStatus, ToolCondition, ToolStatus, UploadType } from '@/types'
 import { expiryBucket } from '@/utils/calc'
 import { daysUntil } from '@/utils/date'
 import { formatDate } from '@/utils/format'
@@ -96,5 +96,11 @@ export function MovementBadge({ type }: { type: MovementType }) {
 export function SiteStatusBadge({ status }: { status: SiteStatus }) {
   const { t } = useTranslation()
   const meta = catalog.siteStatus[status]
+  return <Badge tone={meta.tone}>{t(meta.labelKey)}</Badge>
+}
+
+export function SitePhaseBadge({ phase }: { phase: SitePhase }) {
+  const { t } = useTranslation()
+  const meta = catalog.sitePhases[phase]
   return <Badge tone={meta.tone}>{t(meta.labelKey)}</Badge>
 }

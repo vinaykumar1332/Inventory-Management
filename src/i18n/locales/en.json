@@ -891,79 +891,6 @@
     "desktopGuideTitle": "Install from browser",
     "desktopGuideDesc": "If the install icon (⊕) shows in the address bar, click it or use the browser menu → \"Install SiteSeal\". If it doesn't, this page can't be installed yet: open the deployed HTTPS site (not the dev server) and reload once."
   },
-  "home": {
-    "eyebrow": "Waterproofing inventory, simplified",
-    "title": "Every bucket, batch and tool — accounted for, at every site.",
-    "subtitle": "Upload vendor bills, receive stock by batch, issue material expiry-first and see cost, coverage and alerts across all your construction sites.",
-    "ctaSignIn": "Sign in",
-    "ctaDashboard": "Go to dashboard",
-    "ctaTryDemo": "Try the demo",
-    "signedInAs": "Signed in as {{name}} · {{role}}",
-    "featuresTitle": "Built for site stores and project teams",
-    "features": {
-      "bills": {
-        "title": "Bill to stock in minutes",
-        "body": "Upload Excel, PDF or a phone photo. Review the extracted lines and approve straight into inventory."
-      },
-      "fefo": {
-        "title": "Expiry-first issue",
-        "body": "The batch that expires soonest is always suggested, with 7 / 15 / 30-day alerts before material is wasted."
-      },
-      "coverage": {
-        "title": "Usage vs coverage",
-        "body": "Area × coverage × coats shows expected consumption, so over-issue stands out immediately."
-      },
-      "sites": {
-        "title": "Every site, one view",
-        "body": "Stock value, low stock, tools and reports per site — in English, हिन्दी and తెలుగు."
-      }
-    },
-    "rolesTitle": "Explore by role",
-    "rolesHint": "Each demo role sees different sites, pages and actions.",
-    "stats": {
-      "sites": "Sites",
-      "products": "Products",
-      "batches": "Batches tracked",
-      "languages": "Languages"
-    },
-    "footer": "Client demo with mock data. No real data is stored."
-  },
-  "notifications": {
-    "title": "Notifications",
-    "settingsTitle": "Notification Preferences",
-    "settings": "Notification Preferences",
-    "settingsHint": "Control how you receive alerts about stock, expiry and bills",
-    "empty": "No notifications yet",
-    "markAllRead": "Mark all as read",
-    "viewAll": "View all alerts",
-    "date": {
-      "today": "Today",
-      "yesterday": "Yesterday",
-      "earlier": "Earlier"
-    },
-    "category": {
-      "expiry": "Expiry Alert",
-      "low_stock": "Low Stock",
-      "bill": "Bill Approval",
-      "tool": "Tool Return",
-      "system": "System"
-    },
-    "permission": {
-      "default": "Permission not requested",
-      "granted": "Notifications enabled",
-      "denied": "Notifications disabled",
-      "unsupported": "Not supported on this browser"
-    },
-    "permissionStatus": "Current Permission",
-    "permissionDenied": "You have denied notification permissions. Update your browser settings to enable notifications.",
-    "enableNotifications": "Enable Notifications",
-    "sendTestNotification": "Send Test Notification",
-    "simulateCriticalAlert": "Simulate Critical Alert",
-    "unsupported": "Push notifications are not supported on this browser.",
-    "demoMode": "Push delivery is in demo mode. In-app alerts are active. When connected to a backend with VAPID keys, real notifications will be delivered.",
-    "iPhoneInstallation": "iPhone/iPad Installation",
-    "iPhoneInstructions": "To receive notifications on iPhone/iPad, open this site in Safari, tap Share, select ‘Add to Home Screen’, then open the installed app and enable notifications."
-  },
   "notFound": {
     "code": "404",
     "title": "We couldn’t find that page",
@@ -975,5 +902,13 @@
     "goDashboard": "Go to dashboard",
     "signIn": "Sign in",
     "popular": "Popular pages"
+  },
+  "network": {
+    "slowToast": "Your connection is slow — the app will use less data and motion.",
+    "offlineToast": "You are offline. Pages you opened before still work.",
+    "restoredToast": "Connection restored.",
+    "slowConfirmTitle": "Slow connection",
+    "slowConfirmBody": "Your connection is slow, so this upload may take a long time or fail. Upload anyway?",
+    "slowConfirmAction": "Upload anyway"
   }
 }

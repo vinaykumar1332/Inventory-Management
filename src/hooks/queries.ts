@@ -1,7 +1,8 @@
+import * as React from 'react'
 import { useMutation, useQuery, useQueryClient, type QueryKey } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import i18n from '@/i18n'
-import * as api from '@/services/mockApi'
+import * as api from '@/api/mockApi'
 import type { MovementType, ReportFilters, ReportId } from '@/types'
 
 export const queryKeys = {
@@ -71,6 +72,12 @@ export const useBill = (id: string | null) =>
 
 export const useAlerts = () => useQuery({ queryKey: queryKeys.alerts, queryFn: api.getAlerts })
 
+/** Open (unread and unresolved) alerts: drives the nav badge and the app icon badge. */
+export const useUnreadAlertCount = () => {
+  const { data } = useAlerts()
+  return data?.filter((a) => !a.read && !a.resolved).length ?? 0
+}
+
 export const useTools = () => useQuery({ queryKey: queryKeys.tools, queryFn: api.getTools })
 
 export const useUsers = () => useQuery({ queryKey: queryKeys.users, queryFn: api.getUsers, staleTime: 5 * 60_000 })
@@ -92,7 +99,7 @@ export function useApiMutation<TVars, TResult>(
   options: { successKey?: string; invalidate?: QueryKey[] } = {},
 ) {
   const qc = useQueryClient()
-  return useMutation({
+  const mutation = useMutation({
     mutationFn: fn,
     onSuccess: async () => {
       if (options.successKey) toast.success(i18n.t(options.successKey))
@@ -104,6 +111,37 @@ export function useApiMutation<TVars, TResult>(
     },
     onError: (error) => toast.error(errorMessage(error)),
   })
+
+  // Identical requests that are still in flight (double clicks) share one call.
+  const inFlight = React.useRef(new Map<string, Promise<TResult>>())
+  const keyOf = (vars: TVars) => JSON.stringify(vars) ?? ''
+
+  const mutateAsync = React.useCallback(
+    (vars: TVars) => {
+      const key = keyOf(vars)
+      const existing = inFlight.current.get(key)
+      if (existing) return existing
+      const request = mutation.mutateAsync(vars).finally(() => inFlight.current.delete(key))
+      inFlight.current.set(key, request)
+      return request
+    },
+    [mutation.mutateAsync],
+  )
+
+  const mutate = React.useCallback(
+    (
+      vars: TVars,
+      callbacks?: { onSuccess?: (result: TResult) => void; onError?: (error: unknown) => void; onSettled?: () => void },
+    ) => {
+      if (inFlight.current.has(keyOf(vars))) return
+      void mutateAsync(vars)
+        .then(callbacks?.onSuccess, (error: unknown) => callbacks?.onError?.(error))
+        .finally(() => callbacks?.onSettled?.())
+    },
+    [mutateAsync],
+  )
+
+  return { ...mutation, mutate, mutateAsync }
 }
 
 export const useDemoAccounts = () => useQuery({ queryKey: ['demoAccounts'], queryFn: api.getDemoAccounts, staleTime: Infinity })
