@@ -873,10 +873,21 @@
   "pwa": {
     "install": "ऐप इंस्टॉल करें",
     "installHint": "तेज़ और ऑफ़लाइन उपयोग के लिए SiteSeal को होम स्क्रीन पर जोड़ें।",
+    "installBannerTitle": "होम स्क्रीन पर जोड़ें",
+    "installBannerDesc": "SiteSeal को इंस्टॉल करें — नेटिव ऐप जैसा अनुभव, ऑफ़लाइन भी काम करता है।",
+    "installBannerDismiss": "अभी नहीं",
     "updateAvailable": "ऐप का नया संस्करण उपलब्ध है।",
     "reload": "अभी अपडेट करें",
     "offlineReady": "ऐप ऑफ़लाइन काम करने के लिए तैयार है",
-    "offline": "आप ऑफ़लाइन हैं — डेमो सेव किए गए डेटा के साथ चलता रहेगा।"
+    "offline": "आप ऑफ़लाइन हैं — डेमो सेव किए गए डेटा के साथ चलता रहेगा।",
+    "iosGuideTitle": "होम स्क्रीन पर जोड़ें",
+    "iosGuideDesc": "Safari में इंस्टॉल बटन नहीं दिखता — ये steps करें:",
+    "iosStep1": "Safari में नीचे Share आइकन दबाएं",
+    "iosStep2": "\"Add to Home Screen\" पर टैप करें",
+    "iosStep3": "\"Add\" दबाकर कन्फर्म करें",
+    "iosGuideNote": "केवल Safari में काम करता है — iPhone पर Chrome या Firefox में नहीं।",
+    "desktopGuideTitle": "ब्राउज़र से इंस्टॉल करें",
+    "desktopGuideDesc": "एड्रेस बार में इंस्टॉल आइकन (⊕) खोजें, या ब्राउज़र मेनू → \"Install SiteSeal\" चुनें।"
   },
   "home": {
     "eyebrow": "वॉटरप्रूफिंग इन्वेंटरी, आसान तरीके से",
