@@ -264,7 +264,15 @@
     "team": "साइट टीम",
     "store": "स्टोर",
     "usageHint": "इस साइट के कार्य क्षेत्रों को जारी की गई सामग्री",
-    "reportsHint": "साइट-स्तर की रिपोर्ट Excel में डाउनलोड करें"
+    "reportsHint": "साइट-स्तर की रिपोर्ट Excel में डाउनलोड करें",
+    "phase": "चरण",
+    "phases": {
+      "mobilization": "संचलन",
+      "waterproofing": "वाटरप्रूफिंग",
+      "curing": "क्यूरिंग",
+      "inspection": "निरीक्षण",
+      "completed": "पूर्ण"
+    }
   },
   "inventory": {
     "title": "इन्वेंटरी",
@@ -633,6 +641,9 @@
       "tool_overdue": "{{tool}} की वापसी में {{days}} दिन की देरी",
       "pending_approval": "बिल {{invoiceNo}} समीक्षा और स्वीकृति की प्रतीक्षा में है"
     },
+    "expiryCostRisk": "{{count}} समाप्त होने वाले बैच में जोखिम — बर्बाद होने से पहले कार्रवाई करें",
+    "suggestedOrder": "सुझाई गई ऑर्डर",
+    "toReachReorder": "रीऑर्डर स्तर तक पहुँचने के लिए",
     "empty": "सब ठीक है!",
     "emptyHint": "इस फ़िल्टर से कोई अलर्ट नहीं मिला।",
     "unread": "अपठित",

@@ -7,6 +7,8 @@ import {
   CheckCheck,
   CircleCheckBig,
   ExternalLink,
+  IndianRupee,
+  PackagePlus,
   Send,
   ShieldCheck,
 } from 'lucide-react'
@@ -20,10 +22,47 @@ import { cn } from '@/lib/utils'
 import { Badge, Button, Card, Checkbox, ConfirmDialog, Skeleton, Tooltip } from '@/components/ui'
 import { EmptyState, ErrorState, PageHeader, Segmented } from '@/components/common'
 import type { Alert, AlertType } from '@/types'
-import { formatQty } from '@/utils/format'
+import { formatINR, formatQty } from '@/utils/format'
 
 // Filters, icons, tints, severity tones and remindable types: catalog.json → alerts
 const FILTERS = catalog.alerts.filters
+
+const EXPIRY_TYPES: AlertType[] = ['expired', 'expiring_7', 'expiring_15', 'expiring_30']
+
+function ExpiryCostBanner({ alerts }: { alerts: Alert[] }) {
+  const { t } = useTranslation()
+  const expiryAlerts = alerts.filter((a) => EXPIRY_TYPES.includes(a.type) && !a.resolved && a.qty && a.unitCost)
+  if (expiryAlerts.length === 0) return null
+  const totalValue = expiryAlerts.reduce((sum, a) => sum + (a.qty ?? 0) * (a.unitCost ?? 0), 0)
+  return (
+    <div className="flex items-center gap-2 rounded-lg border border-warning/30 bg-warning-soft/40 px-4 py-2.5 text-sm">
+      <IndianRupee className="size-4 shrink-0 text-warning" aria-hidden />
+      <span>
+        <span className="font-semibold text-warning">{formatINR(totalValue)}</span>
+        <span className="ml-1.5 text-muted-foreground">{t('alerts.expiryCostRisk', { count: expiryAlerts.length })}</span>
+      </span>
+    </div>
+  )
+}
+
+function ReorderSuggestion({ alert }: { alert: Alert }) {
+  const { t } = useTranslation()
+  if (alert.type !== 'low_stock' || !alert.reorderLevel || alert.resolved) return null
+  const shortfall = Math.max(0, alert.reorderLevel - (alert.qty ?? 0))
+  if (shortfall === 0) return null
+  return (
+    <div className="mt-2 flex items-center gap-1.5 rounded-md border border-dashed border-primary/30 bg-primary-soft/10 px-3 py-2 text-xs">
+      <PackagePlus className="size-3.5 shrink-0 text-primary" aria-hidden />
+      <span className="text-muted-foreground">
+        {t('alerts.suggestedOrder')}:{' '}
+        <span className="font-semibold text-foreground">
+          {formatQty(shortfall, alert.unit ?? 'kg')}
+        </span>
+        <span className="ml-1">({t('alerts.toReachReorder')} {formatQty(alert.reorderLevel, alert.unit ?? 'kg')})</span>
+      </span>
+    </div>
+  )
+}
 
 function useAlertMessage() {
   const { t } = useTranslation()
@@ -89,6 +128,7 @@ function AlertItem({ alert, onException }: { alert: Alert; onException: (a: Aler
         </div>
         <p className={cn('mt-1.5 text-sm', !alert.read && 'font-medium')}>{message(alert)}</p>
         <p className="mt-0.5 text-xs text-muted-foreground">{alert.siteName}</p>
+        <ReorderSuggestion alert={alert} />
         <div className="mt-3 flex flex-wrap gap-1.5">
           <Button size="sm" variant="secondary" onClick={open}>
             <ExternalLink />
@@ -163,6 +203,11 @@ export default function AlertsPage() {
         }
       />
       <Card>
+        {data && data.some((a) => EXPIRY_TYPES.includes(a.type) && !a.resolved) && (
+          <div className="px-3 pt-3 md:px-4 md:pt-4">
+            <ExpiryCostBanner alerts={data} />
+          </div>
+        )}
         <div className="space-y-3 border-b p-3 md:p-4">
           <Segmented
             label={t('alerts.title')}

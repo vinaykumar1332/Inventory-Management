@@ -5,8 +5,8 @@ import { ArrowRightLeft, Download, FileText, PackageMinus, Undo2 } from 'lucide-
 import { useAuth } from '@/features/auth/AuthProvider'
 import { useStockActions } from '@/features/stock/StockActions'
 import { useProduct } from '@/hooks/queries'
-import { Badge, Button, Sheet, Skeleton, Table, TableWrap, Tabs, TabsContent, TabsList, TabsTrigger, TBody, TD, TH, THead, TR } from '@/components/ui'
-import { EmptyState, ErrorState, ExpiryCell, MovementBadge, ProductIcon } from '@/components/common'
+import { Badge, Button, Sheet, Skeleton, Table, TableWrap, TBody, TD, TH, THead, TR } from '@/components/ui'
+import { EmptyState, ErrorState, ExpiryCell, MovementBadge, PageTabs, ProductIcon, TabsContent } from '@/components/common'
 import { TINT_CLASSES } from '@/config/tones'
 import { cn } from '@/lib/utils'
 import type { ProductDetail } from '@/types'
@@ -90,6 +90,7 @@ export function ProductDrawer({
 
 function ProductDetailBody({ data }: { data: ProductDetail }) {
   const { t } = useTranslation()
+  const [productTab, setProductTab] = React.useState('overview')
   const { product: p, batches, movements } = data
   const fefo = fefoSort(batches)[0]
   const issues = movements.filter((m) => m.type === 'issue')
@@ -126,16 +127,18 @@ function ProductDetailBody({ data }: { data: ProductDetail }) {
         </div>
       </div>
 
-      <Tabs defaultValue="overview">
-        <TabsList>
-          <TabsTrigger value="overview">{t('product.tabs.overview')}</TabsTrigger>
-          <TabsTrigger value="batches">
-            {t('product.tabs.batches')} <span className="tabular text-xs text-muted-foreground">{batches.length}</span>
-          </TabsTrigger>
-          <TabsTrigger value="movements">{t('product.tabs.movements')}</TabsTrigger>
-          <TabsTrigger value="usage">{t('product.tabs.usage')}</TabsTrigger>
-          <TabsTrigger value="documents">{t('product.tabs.documents')}</TabsTrigger>
-        </TabsList>
+      <PageTabs
+        value={productTab}
+        onChange={setProductTab}
+        tabs={[
+          { value: 'overview', label: t('product.tabs.overview') },
+          { value: 'batches', label: t('product.tabs.batches'), count: batches.length },
+          { value: 'movements', label: t('product.tabs.movements') },
+          { value: 'usage', label: t('product.tabs.usage') },
+          { value: 'documents', label: t('product.tabs.documents') },
+        ]}
+        listClassName="mb-0"
+      >
 
         <TabsContent value="overview" className="pt-4">
           <div className="grid gap-x-8 md:grid-cols-2">
@@ -325,7 +328,7 @@ function ProductDetailBody({ data }: { data: ProductDetail }) {
             </ul>
           )}
         </TabsContent>
-      </Tabs>
+      </PageTabs>
     </div>
   )
 }

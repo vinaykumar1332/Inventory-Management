@@ -208,6 +208,7 @@ export function buildAlerts(db: DemoDb, siteIds: string[]): Alert[] {
     if (e.days > 30) continue
     const batch = db.batches.find((b) => b.id === e.batchId)
     if (batch?.expiryOverride) continue
+    const product = db.products.find((p) => p.id === e.productId)
     const type: Alert['type'] =
       e.days < 0 ? 'expired' : e.days <= 7 ? 'expiring_7' : e.days <= 15 ? 'expiring_15' : 'expiring_30'
     alerts.push({
@@ -226,6 +227,7 @@ export function buildAlerts(db: DemoDb, siteIds: string[]): Alert[] {
       qty: e.qty,
       unit: e.unit,
       days: e.days,
+      unitCost: product?.costPerBaseUnit,
     })
   }
 
@@ -244,6 +246,8 @@ export function buildAlerts(db: DemoDb, siteIds: string[]): Alert[] {
       productName: r.productName,
       qty: r.availableQty,
       unit: r.unit,
+      reorderLevel: r.reorderLevel,
+      unitCost: db.products.find((p) => p.id === r.productId)?.costPerBaseUnit,
     })
   }
 

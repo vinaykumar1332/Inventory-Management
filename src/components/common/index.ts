@@ -1,5 +1,6 @@
 // Shared app-level components. Import from '@/components/common'.
 export * from './brand/Brand'
+export * from './navigation/Navigation'
 export * from './data-display/DataDisplay'
 export * from './feedback/Feedback'
 export * from './inputs/Inputs'

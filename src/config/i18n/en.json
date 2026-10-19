@@ -264,7 +264,15 @@
     "team": "Site team",
     "store": "Store",
     "usageHint": "Material issued to work areas at this site",
-    "reportsHint": "Download site-level reports as Excel"
+    "reportsHint": "Download site-level reports as Excel",
+    "phase": "Phase",
+    "phases": {
+      "mobilization": "Mobilization",
+      "waterproofing": "Waterproofing",
+      "curing": "Curing",
+      "inspection": "Inspection",
+      "completed": "Completed"
+    }
   },
   "inventory": {
     "title": "Inventory",
@@ -633,6 +641,9 @@
       "tool_overdue": "{{tool}} is overdue by {{days}} days",
       "pending_approval": "Bill {{invoiceNo}} is waiting for review and approval"
     },
+    "expiryCostRisk": "at risk from {{count}} expiring batch(es) — act before it's wasted",
+    "suggestedOrder": "Suggested order",
+    "toReachReorder": "to reach reorder level of",
     "empty": "All clear!",
     "emptyHint": "No alerts match this filter.",
     "unread": "Unread",

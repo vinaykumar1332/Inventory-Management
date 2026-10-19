@@ -39,6 +39,7 @@ export interface User {
 }
 
 export type SiteStatus = 'active' | 'on_hold' | 'completed'
+export type SitePhase = 'mobilization' | 'waterproofing' | 'curing' | 'inspection' | 'completed'
 
 export interface Site {
   id: ID
@@ -54,6 +55,7 @@ export interface Site {
   endDate: ISODate
   storeName: string
   status: SiteStatus
+  phase?: SitePhase
   /** Waterproofing progress 0-100 */
   progress: number
 }
@@ -264,6 +266,8 @@ export interface Alert {
   toolName?: string
   invoiceId?: ID
   invoiceNo?: string
+  unitCost?: number
+  reorderLevel?: number
 }
 
 export interface AuditLog {
