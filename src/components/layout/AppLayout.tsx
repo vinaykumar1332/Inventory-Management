@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { WifiOff } from 'lucide-react'
+import { SignalLow, WifiOff } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { storageKeys } from '@/lib/storage'
 import { useMediaQuery, usePersistentState } from '@/hooks/useMediaQuery'
-import { useOnlineStatus } from '@/pwa/pwa'
+import { useNetworkState } from '@/pwa/pwa'
 import { DemoBadge, Logo } from '@/components/common'
 import { StockActionsProvider } from '@/features/stock/StockActions'
 import { LanguageSelect, ThemeToggle } from './header/HeaderControls'
@@ -17,7 +17,7 @@ import { Sidebar } from './Sidebar'
 
 function TopBar() {
   const { t } = useTranslation()
-  const online = useOnlineStatus()
+  const network = useNetworkState()
   return (
     <header className="sticky top-0 z-20 border-b bg-surface/95 backdrop-blur">
       <div className="flex h-14 items-center gap-2 px-3 md:h-16 md:px-6">
@@ -38,9 +38,10 @@ function TopBar() {
           <UserMenu />
         </div>
       </div>
-      {!online && (
+      {network !== 'online' && (
         <p role="status" className="flex items-center justify-center gap-2 bg-warning-soft px-3 py-1.5 text-xs font-medium text-warning">
-          <WifiOff className="size-3.5" aria-hidden /> {t('pwa.offline')}
+          {network === 'offline' ? <WifiOff className="size-3.5" aria-hidden /> : <SignalLow className="size-3.5" aria-hidden />}
+          {network === 'offline' ? t('pwa.offline') : t('pwa.slowNetwork')}
         </p>
       )}
     </header>

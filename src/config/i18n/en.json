@@ -138,6 +138,9 @@
     "resetDemoTitle": "Reset all demo data?",
     "resetDemoBody": "Bills, stock movements and other changes you made will be cleared and the original mock data restored.",
     "resetDone": "Demo data restored",
+    "clearData": "Clear cache & app data",
+    "clearDataTitle": "Clear all cache and app data?",
+    "clearDataBody": "Offline files, saved settings, your sign-in and any changes made in this browser will be removed, then the app reloads.",
     "assignedSites": "Assigned sites"
   },
   "dashboard": {
@@ -873,13 +876,12 @@
   "pwa": {
     "install": "Install app",
     "installHint": "Add SiteSeal to your home screen for quick, offline-ready access.",
-    "installBannerTitle": "Add to home screen",
-    "installBannerDesc": "Install SiteSeal for fast, offline access — works like a native app.",
-    "installBannerDismiss": "Not now",
     "updateAvailable": "A new version of the app is available.",
     "reload": "Update now",
     "offlineReady": "App is ready to work offline",
     "offline": "You are offline — the demo keeps working with saved data.",
+    "slowNetwork": "Slow or weak connection — pages and actions may take longer.",
+    "installNeedsNetwork": "Install needs an internet connection",
     "iosGuideTitle": "Add to Home Screen",
     "iosGuideDesc": "Safari doesn't show an install button — follow these steps:",
     "iosStep1": "Tap the Share icon at the bottom of Safari",
@@ -887,7 +889,7 @@
     "iosStep3": "Tap \"Add\" to confirm",
     "iosGuideNote": "Only works in Safari — not Chrome or Firefox on iPhone.",
     "desktopGuideTitle": "Install from browser",
-    "desktopGuideDesc": "Look for the install icon (⊕) in your browser's address bar, or use the browser menu → \"Install SiteSeal\"."
+    "desktopGuideDesc": "If the install icon (⊕) shows in the address bar, click it or use the browser menu → \"Install SiteSeal\". If it doesn't, this page can't be installed yet: open the deployed HTTPS site (not the dev server) and reload once."
   },
   "home": {
     "eyebrow": "Waterproofing inventory, simplified",
