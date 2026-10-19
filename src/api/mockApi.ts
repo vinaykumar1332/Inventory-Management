@@ -45,9 +45,9 @@ import { uid } from '@/lib/utils'
 import { expiryBucket, fefoSort, isExpired, round2 } from '@/utils/calc'
 import { addMonthsIso, daysUntil, isoDaysFromNow, nowIso, todayIso } from '@/utils/date'
 import { coverageLabel } from '@/utils/format'
-import { commit, getDb, resetDb } from './db'
-import { clearSession, getSession, setSession } from './session'
-import { releaseAllFiles } from './fileCache'
+import { getDb, resetDb } from '@/api/db'
+import { clearSession, getSession, setSession } from '@/api/session'
+import { releaseAllFiles } from '@/features/bills/fileCache'
 import {
   accessibleSiteIds,
   buildAlerts,
@@ -55,7 +55,7 @@ import {
   buildSiteSummaries,
   buildStockRows,
   buildToolRows,
-} from './selectors'
+} from '@/api/selectors'
 
 /** Error whose message is an i18n key, so the UI can translate it. */
 export class ApiError extends Error {
@@ -125,7 +125,6 @@ export async function login(email: string): Promise<User> {
   if (!user) throw new ApiError('auth.unknownUser')
   setSession(user.id)
   audit(db, user.id, 'login', 'session', user.id, i18n.t('system.signedIn'))
-  commit()
   return clone(user)
 }
 
@@ -225,7 +224,6 @@ export async function createSite(input: CreateSiteInput): Promise<Site> {
     if ((u.id === input.managerId || u.id === input.storekeeperId) && u.siteIds.length > 0) u.siteIds.push(site.id)
   }
   audit(db, user.id, 'site_created', 'site', site.id, site.name)
-  commit()
   return clone(site)
 }
 
@@ -368,7 +366,6 @@ export async function issueMaterial(input: IssueMaterialInput): Promise<StockMov
     batch,
   )
   audit(db, user.id, 'material_issued', 'batch', batch.id, `${input.qty} → ${input.workArea}`)
-  commit()
   return clone(mv)
 }
 
@@ -399,7 +396,6 @@ export async function returnMaterial(input: ReturnMaterialInput): Promise<StockM
     batch,
   )
   audit(db, user.id, 'material_returned', 'batch', batch.id, `${input.qty}`)
-  commit()
   return clone(mv)
 }
 
@@ -444,7 +440,6 @@ export async function transferStock(input: TransferStockInput): Promise<StockMov
   to.qtyReceived = round2(to.qtyReceived + input.qty)
   to.qtyAvailable = round2(to.qtyAvailable + input.qty)
   audit(db, user.id, 'stock_transferred', 'batch', from.id, `${input.qty} → ${toSite.name}`)
-  commit()
   return clone(mv)
 }
 
@@ -475,7 +470,6 @@ export async function reportDamage(input: DamageInput): Promise<StockMovement> {
     batch,
   )
   audit(db, user.id, 'damage_reported', 'batch', batch.id, input.reason)
-  commit()
   return clone(mv)
 }
 
@@ -506,7 +500,6 @@ export async function adjustStock(input: AdjustmentInput): Promise<StockMovement
     batch,
   )
   audit(db, user.id, 'stock_adjusted', 'batch', batch.id, input.reason)
-  commit()
   return clone(mv)
 }
 
@@ -573,7 +566,6 @@ export async function uploadBill(input: UploadBillInput): Promise<Invoice> {
   }
   db.invoices.unshift(invoice)
   audit(db, user.id, 'bill_uploaded', 'invoice', invoice.id, input.fileName)
-  commit()
   return clone(invoice)
 }
 
@@ -720,7 +712,6 @@ export async function extractBill(invoiceId: string, file?: File): Promise<Invoi
     status: 'needs_review',
   } satisfies Partial<Invoice>)
   audit(db, user.id, 'bill_extracted', 'invoice', inv.id, `${lineItems.length} lines`)
-  commit()
   return clone(inv)
 }
 
@@ -733,7 +724,6 @@ export async function saveBillDraft(invoiceId: string, draft: BillDraftInput): P
   assertSite(siteIds, draft.header.siteId)
   Object.assign(inv, draft.header, { lineItems: draft.lineItems, status: 'needs_review' satisfies Invoice['status'] })
   audit(db, user.id, 'bill_draft_saved', 'invoice', inv.id, inv.invoiceNo)
-  commit()
   return clone(inv)
 }
 
@@ -803,7 +793,6 @@ export async function approveBill(invoiceId: string, draft: BillDraftInput): Pro
     stockValueAdded += line.totalQty * line.unitCost
   }
   audit(db, user.id, 'bill_approved', 'invoice', inv.id, `${inv.invoiceNo} · ${matched.length} batches`)
-  commit()
   return clone({
     invoice: inv,
     batchesCreated: matched.length,
@@ -821,7 +810,6 @@ export async function rejectBill(invoiceId: string, reason: string): Promise<voi
   if (!inv) throw new ApiError('errors.notFound')
   inv.status = 'rejected'
   audit(db, user.id, 'bill_rejected', 'invoice', inv.id, reason)
-  commit()
 }
 
 export async function archiveBill(invoiceId: string): Promise<void> {
@@ -832,7 +820,6 @@ export async function archiveBill(invoiceId: string): Promise<void> {
   if (!inv) throw new ApiError('errors.notFound')
   inv.archived = true
   audit(db, user.id, 'bill_archived', 'invoice', inv.id, inv.invoiceNo)
-  commit()
 }
 
 export async function createProductRequest(name: string, brand: string, invoiceId: string | null): Promise<void> {
@@ -841,7 +828,6 @@ export async function createProductRequest(name: string, brand: string, invoiceI
   const { user } = authorize(db)
   db.productRequests.push({ id: uid('pr'), name, brand, requestedBy: user.id, at: nowIso(), invoiceId })
   audit(db, user.id, 'product_requested', 'product_request', invoiceId ?? '', `${brand} ${name}`)
-  commit()
 }
 
 /* ------------------------------------------------------------------ */
@@ -860,7 +846,6 @@ export async function updateAlerts(ids: string[], patch: { read?: boolean; resol
   const db = getDb()
   authorize(db)
   for (const id of ids) db.alertState[id] = { ...db.alertState[id], ...patch }
-  commit()
 }
 
 export async function sendReminder(alertId: string): Promise<void> {
@@ -869,7 +854,6 @@ export async function sendReminder(alertId: string): Promise<void> {
   const { user } = authorize(db)
   audit(db, user.id, 'reminder_sent', 'alert', alertId, i18n.t('system.reminderSent'))
   db.alertState[alertId] = { ...db.alertState[alertId], read: true }
-  commit()
 }
 
 /** Super Admin only: allow an expired batch to be issued (e.g. lab-tested OK). */
@@ -881,7 +865,6 @@ export async function approveExpiryException(batchId: string): Promise<void> {
   if (!batch) throw new ApiError('errors.notFound')
   batch.expiryOverride = true
   audit(db, user.id, 'expiry_override', 'batch', batch.id, batch.batchNo)
-  commit()
 }
 
 /* ------------------------------------------------------------------ */
@@ -917,7 +900,6 @@ export async function issueTool(toolId: string, input: { issuedTo: string; expec
     notes: input.notes,
   })
   audit(db, user.id, 'tool_issued', 'tool', tool.id, `${tool.code} → ${input.issuedTo}`)
-  commit()
 }
 
 export async function returnTool(toolId: string, input: { condition: ToolCondition; notes: string }) {
@@ -938,7 +920,6 @@ export async function returnTool(toolId: string, input: { condition: ToolConditi
     expectedReturnDate: null,
   })
   audit(db, user.id, 'tool_returned', 'tool', tool.id, `${tool.code} · ${input.condition}`)
-  commit()
 }
 
 export async function reportToolDamage(toolId: string, input: { notes: string }) {
@@ -952,7 +933,6 @@ export async function reportToolDamage(toolId: string, input: { notes: string })
   if (tool.status !== 'issued') tool.status = 'maintenance'
   tool.maintenanceHistory.unshift({ id: uid('mh'), date: todayIso(), note: i18n.t('system.damageReported', { notes: input.notes }), cost: 0 })
   audit(db, user.id, 'tool_damage', 'tool', tool.id, input.notes)
-  commit()
 }
 
 export async function completeMaintenance(toolId: string, input: { note: string; cost: number }) {
@@ -964,7 +944,6 @@ export async function completeMaintenance(toolId: string, input: { note: string;
   tool.maintenanceHistory.unshift({ id: uid('mh'), date: todayIso(), note: input.note, cost: input.cost })
   Object.assign(tool, { status: 'available', condition: 'good', maintenanceDue: isoDaysFromNow(businessConfig.tools.serviceIntervalDays) })
   audit(db, user.id, 'tool_serviced', 'tool', tool.id, input.note)
-  commit()
 }
 
 /* ------------------------------------------------------------------ */

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
-import { clearAppData } from '@/pwa/clearAppData'
+import { clearAppData } from '@/features/admin/appReset'
 import { ConfirmDialog } from '@/components/ui'
 
 /** Confirm-and-clear flow for offline cache and all locally stored app data. */

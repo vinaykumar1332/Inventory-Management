@@ -3,7 +3,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import i18n from '@/i18n'
 import { can, type Permission } from '@/lib/permissions'
-import { getCurrentUserSync, login as apiLogin, logout as apiLogout } from '@/services/mockApi'
+import { getCurrentUserSync, login as apiLogin, logout as apiLogout } from '@/api/mockApi'
 import type { User } from '@/types'
 
 /** Fired when an API call reports the session is gone (see app/App.tsx). */
@@ -23,9 +23,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = React.useState<User | null>(() => getCurrentUserSync())
 
   React.useEffect(() => {
-    // Signing in/out in another tab updates this tab too
-    const onStorage = () => setUser(getCurrentUserSync())
-    // Session vanished (cleared storage, reset) → protected routes send the user to /login
+    // Session vanished (cookie cleared, reset) → protected routes send the user to /login
     const onExpired = () => {
       if (!getCurrentUserSync()) {
         qc.clear()
@@ -33,12 +31,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         toast.error(i18n.t('auth.sessionEnded'))
       }
     }
-    window.addEventListener('storage', onStorage)
     window.addEventListener(SESSION_EXPIRED_EVENT, onExpired)
-    return () => {
-      window.removeEventListener('storage', onStorage)
-      window.removeEventListener(SESSION_EXPIRED_EVENT, onExpired)
-    }
+    return () => window.removeEventListener(SESSION_EXPIRED_EVENT, onExpired)
   }, [qc])
 
   const value = React.useMemo<AuthContextValue>(

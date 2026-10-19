@@ -34,7 +34,7 @@ export function TruncatedList({
   return (
     <div className={className}>
       <ul className={cn('space-y-1.5', itemClassName)}>
-        <AnimatePresence mode="popLayout">
+        <AnimatePresence>
           {visibleItems.map((item, idx) => (
             <m.li
               key={idx}

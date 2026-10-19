@@ -14,7 +14,7 @@ import {
 } from 'lucide-react'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { useAlerts, useApiMutation } from '@/hooks/queries'
-import * as api from '@/services/mockApi'
+import * as api from '@/api/mockApi'
 import { catalog } from '@/config'
 import { getIcon } from '@/config/icons'
 import { TINT_CLASSES } from '@/config/tones'
@@ -104,10 +104,9 @@ function AlertItem({ alert, onException }: { alert: Alert; onException: (a: Aler
 
   return (
     <m.li
-      layout
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, height: 0 }}
+      exit={{ opacity: 0 }}
       transition={{ duration: 0.18 }}
       className={cn('flex gap-3 px-4 py-4 md:px-5', !alert.read && !alert.resolved && 'bg-primary-soft/25', alert.resolved && 'opacity-60')}
     >

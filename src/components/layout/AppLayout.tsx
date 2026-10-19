@@ -1,17 +1,17 @@
 import * as React from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { m } from 'motion/react'
 import { SignalLow, WifiOff } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { storageKeys } from '@/lib/storage'
 import { useMediaQuery, usePersistentState } from '@/hooks/useMediaQuery'
-import { useNetworkState } from '@/pwa/pwa'
+import { useAppBadge, useNetworkState } from '@/features/pwa'
+import { useUnreadAlertCount } from '@/hooks/queries'
 import { DemoBadge, Logo } from '@/components/common'
 import { StockActionsProvider } from '@/features/stock/StockActions'
-import { LanguageSelect, ThemeToggle } from './header/HeaderControls'
-import { NotificationDropdown } from '@/features/notifications'
-import { InstallAppButton } from './header/InstallAppButton'
-import { UserMenu } from './header/UserMenu'
+import { LanguageSelect, ThemeToggle } from '@/components/layout/HeaderControls'
+import { UserMenu } from '@/components/layout/UserMenu'
 import { BottomNav, MoreSheet } from './MobileNav'
 import { Sidebar } from './Sidebar'
 
@@ -29,12 +29,10 @@ function TopBar() {
           <DemoBadge compact className="xl:hidden" />
         </div>
         <div className="ml-auto flex shrink-0 items-center gap-0.5 md:gap-1">
-          <InstallAppButton compact />
           <LanguageSelect />
           <span className="hidden sm:inline-flex">
             <ThemeToggle />
           </span>
-          <NotificationDropdown />
           <UserMenu />
         </div>
       </div>
@@ -58,6 +56,7 @@ export function AppLayout() {
   const compact = isLg ? collapsed : !tabletOpen
   const contentCompact = isLg ? collapsed : true
   const location = useLocation()
+  useAppBadge(useUnreadAlertCount())
 
   React.useEffect(() => {
     window.scrollTo({ top: 0 })
@@ -90,7 +89,9 @@ export function AppLayout() {
         <TopBar />
         <main id="main" tabIndex={-1} className="min-w-0 flex-1 px-4 pb-28 pt-5 outline-none md:px-6 md:pb-10 md:pt-6 xl:px-8">
           <div className="mx-auto w-full min-w-0 max-w-[1440px]">
-            <Outlet />
+            <m.div key={location.pathname} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, ease: "easeOut" }}>
+              <Outlet />
+            </m.div>
           </div>
         </main>
       </div>

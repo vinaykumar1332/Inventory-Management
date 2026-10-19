@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { FileSpreadsheet } from 'lucide-react'
 import { useMovements, useSites } from '@/hooks/queries'
-import { getCachedFile } from '@/services/fileCache'
+import { getCachedFile } from '@/features/bills/fileCache'
 import { Badge, Dialog, DialogContent, Skeleton, Table, TableWrap, TBody, TD, TH, THead, TR } from '@/components/ui'
 import { BillStatusBadge, EmptyState, MovementBadge } from '@/components/common'
 import { TINT_CLASSES } from '@/config/tones'

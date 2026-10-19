@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Check, Eraser, LogOut, MapPin, RotateCcw } from 'lucide-react'
+import { Check, Download, Eraser, LogOut, MapPin, RotateCcw } from 'lucide-react'
 import { appConfig } from '@/config'
 import { ROUTES } from '@/app/routes'
 import { useUser } from '@/features/auth/AuthProvider'
@@ -9,6 +9,8 @@ import { ResetDemoDialog } from '@/features/admin/ResetDemo'
 import { ClearAppDataDialog } from '@/features/admin/ClearAppData'
 import { useSites } from '@/hooks/queries'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui'
+import { InstallGuideDialog } from '@/features/pwa/components/InstallGuide'
+import { useInstallAction } from '@/features/pwa/components/InstallAppButton'
 
 export function initials(name: string) {
   return name
@@ -26,6 +28,7 @@ export function UserMenu() {
   const { data: sites } = useSites()
   const [confirmReset, setConfirmReset] = React.useState(false)
   const [confirmClear, setConfirmClear] = React.useState(false)
+  const install = useInstallAction()
 
   const assigned = user.siteIds.length ? sites?.filter((s) => user.siteIds.includes(s.id)).map((s) => s.name) : [t('common.allSites')]
 
@@ -61,6 +64,12 @@ export function UserMenu() {
             </div>
           ))}
           <DropdownMenuSeparator />
+          {install.visible && (
+            <DropdownMenuItem disabled={install.offline} onSelect={install.run}>
+              <Download />
+              {t('pwa.install')}
+            </DropdownMenuItem>
+          )}
           {appConfig.features.resetDemoData && (
             <DropdownMenuItem onSelect={() => setConfirmReset(true)}>
               <RotateCcw />
@@ -82,6 +91,7 @@ export function UserMenu() {
       </DropdownMenu>
       <ResetDemoDialog open={confirmReset} onOpenChange={setConfirmReset} />
       <ClearAppDataDialog open={confirmClear} onOpenChange={setConfirmClear} />
+      <InstallGuideDialog open={install.guideOpen} onClose={install.closeGuide} />
     </>
   )
 }

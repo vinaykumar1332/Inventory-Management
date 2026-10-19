@@ -2,7 +2,7 @@
 
 **Multi-site inventory for waterproofing and construction companies** — materials, product batches, expiry, vendor bills, stock usage, tools and reports in one mobile-friendly dashboard.
 
-> ⚠️ **Client demo — mock data only.** This is a clickable prototype for collecting client feedback before backend/API integration. There is no server, no real authentication, no OCR and no cloud storage. Everything runs in the browser, and demo edits are kept in `localStorage`. **No real data is stored.**
+> ⚠️ **Client demo — mock data only.** This is a clickable prototype for collecting client feedback before backend/API integration. There is no server, no real authentication, no OCR and no cloud storage. Everything runs in the browser, and demo edits live in memory (a reload restores the mock data). **No real data is stored.**
 
 ![Login](docs/screenshots/login.png)
 
@@ -173,25 +173,34 @@ npm run preview    # serve the production build
 
 ```text
 src/
-  config/               Everything configurable (see "Configuration")
-    i18n/               en.json · hi.json · te.json — every UI label
-    app.json · business.json · catalog.json · dashboard.json · navigation.json · roles.json · theme.json
-    index.ts            Typed access to the JSON · icons.ts (icon names → components) · tones.ts (colour classes)
-  data/
-    mock/*.json         Mock backend data (reference contract for the real API)
-    index.ts            Loads the JSON and shifts dates so demo cases stay current
-  services/             mockApi.ts (the only data entry point), db (localStorage), selectors, session
+  app/                  App root, router, route table, providers
+  pages/                Route-level pages (lazy-loaded), one per screen
+  features/             One folder per domain; each owns its components/, hooks/, services/
+                        auth · dashboard · sites · inventory · bills (+ upload/) · stock · tools
+                        reports · alerts · admin · pwa (install, network, updates, badge)
   components/
-    ui/                 Primitives, by kind: button/ · display/ · form/ · overlay/   → import from '@/components/ui'
-    common/             Shared app components: brand/ · data-display/ · feedback/ · inputs/ · layout/ · status/ · table/
-                        → import from '@/components/common'
-    layout/             AppLayout, Sidebar, MobileNav (bottom bar + More sheet), header/ controls, navigation.ts
-  features/             auth · admin · dashboard · sites · inventory · bills (+ upload/) · stock · tools · reports
-  pages/                Route-level pages (lazy-loaded)
-  theme/                ThemeProvider (light/dark/system) and CSS-variable injection from theme.json
-  pwa/                  Install prompt, service-worker update prompt, online status
-  hooks/ · lib/ · utils/ · types/ · i18n/
+    ui/                 Primitives (button, display, form, overlay)  → import from '@/components/ui'
+    common/             Shared domain components (status badges, PageHeader, DataTable…) → '@/components/common'
+    layout/             AppLayout, Sidebar, MobileNav, header controls, UserMenu
+  api/                  Mock API (the only data entry point), in-memory DB, session, selectors
+  data/                 Mock JSON and date shifting
+  config/               Typed JSON config (app, catalog, roles, theme…), icons.ts, tones.ts
+  i18n/                 i18n setup and locales/en.json · hi.json · te.json
+  hooks/ · lib/ · theme/ · types/ · utils/
 ```
+
+### Where does new code go?
+
+| I want to add… | Put it in |
+|---|---|
+| A new screen | `src/pages/` and a route in `src/app/router.tsx` |
+| A reusable button, input or dialog | `src/components/ui/` |
+| UI that only one feature uses | `src/features/<name>/components/` |
+| A data call | `src/api/mockApi.ts`, wrapped in a hook in `src/hooks/queries.ts` |
+| An action that sends data (upload, submit) | Wrap it with `useGuardedAction` (blocks double clicks, warns on slow networks) |
+| Any visible text | `src/i18n/locales/*.json` (all three languages) |
+| A number, colour, label or limit | `src/config/*.json` |
+
 
 Reusable building blocks used across pages include `SectionCard`, `KpiCard` / `KpiGrid`, `QueryState` (loading → error → empty → content), `FilterBar`, `SiteSelect`, `CategorySelect`, `SearchInput`, `Segmented`, the `DataTable` sort/pagination helpers and the config-driven status badges.
 
@@ -224,7 +233,7 @@ All demo data lives in `src/data/mock/*.json` — `company`, `users`, `sites`, `
 
 - No backend, no real authentication, no OCR. PDF/photo extraction returns a realistic canned result; **Excel bills are genuinely parsed** in the browser.
 - Uploaded files live only in memory for the current tab (object URLs are revoked on reset); they are not persisted.
-- Data, preferences (language, theme, sidebar) and demo edits are stored in this browser's `localStorage` only.
+- Preferences (language, theme, sidebar) and the login session are stored in cookies on this browser only. Demo edits live in memory and reset on reload.
 - Offline support covers the app itself and the demo data in this browser; nothing syncs between devices.
 - Role checks happen in the browser — see the security section below.
 
@@ -232,7 +241,7 @@ All demo data lives in `src/data/mock/*.json` — `company`, `users`, `sites`, `
 
 ## Future API integration plan
 
-All data access goes through `src/services/mockApi.ts`; components use React Query hooks from `src/hooks/queries.ts` and typed view models from `src/types`. Integrating a real backend means re-implementing those service functions with `fetch` — **no component redesign required**.
+All data access goes through `src/api/mockApi.ts`; components use React Query hooks from `src/hooks/queries.ts` and typed view models from `src/types`. Integrating a real backend means re-implementing those service functions with `fetch` — **no component redesign required**.
 
 | Mock function | Suggested endpoint |
 |---|---|
@@ -279,56 +288,7 @@ _SiteSeal Inventory — client demo build. Mock data only; no real data is store
 
 ## PWA Notification Foundation
 
-The app includes a production-ready PWA notification system with these features:
-
-### For Users
-
-**Notification Bell**
-- Shows unread notification count (9+ when exceeding 9)
-- Click to open a professional notification panel
-- Notifications grouped by date (Today, Yesterday, Earlier)
-- Mark individual notifications or all as read
-- Click notification to navigate to related alert
-- Direct access to full alerts page
-
-**Notification Preferences**
-- Enable/disable notifications via browser permission
-- Send test notification
-- Simulate demo alerts
-- iPhone/iPad installation guidance
-
-**App Icon Badge** (where supported)
-- System app badge shows unread count
-- Automatically updates on read/unread changes
-- Falls back to in-app bell when not supported
-
-### For Developers
-
-**Architecture**
-```
-src/
-  features/notifications/
-    components/           # React UI components
-      NotificationBell.tsx
-      NotificationPanel.tsx
-      NotificationSettings.tsx
-    hooks/               # React Query hooks
-      useNotifications.ts
-    services/            # Business logic
-      notificationService.ts
-    types.ts             # TypeScript types
-    mockNotifications.ts # Demo data
-  pwa/
-    badge.ts             # App badge helper
-src/sw.ts                # Custom service worker (push events, offline)
-```
-
-**Mock Notifications** (current demo state)
-- Expiry alerts (7, 15, 30 days)
-- Low stock alerts
-- Bill approval alerts
-- Tool return reminders
-- All persisted in localStorage
+The header bell was removed. **Alerts** (`/alerts`) is the single in-app notification center, and the installed app icon badge shows the number of unread alerts. Push support (service worker, VAPID keys below) is kept for a future backend.
 
 **Real Push Notifications** (future backend integration)
 1. Client registers service worker
@@ -347,14 +307,14 @@ VITE_VAPID_PUBLIC_KEY=   # Optional: web-push VAPID public key
 VITE_PUSH_API_BASE_URL=  # Optional: backend push subscription endpoint
 ```
 
-The feature works in **demo mode** without these keys (in-app notifications only).
+The feature works in **demo mode** without these keys (in-app alerts only).
 
 ### Testing
 
 1. **Enable notifications**: Click Settings → Notification Preferences → Enable Notifications
 2. **Send test**: Settings → Send Test Notification
 3. **Simulate demo**: Settings → Simulate Critical Alert
-4. **View notifications**: Click bell icon in header
+4. **View notifications**: Open Alerts from the sidebar
 5. **Native push** (when backend connected): Enable notifications + VAPID keys
 
 ### Service Worker
@@ -401,7 +361,7 @@ Before deploying with real push:
 
 - Payloads validated before rendering (no HTML injection)
 - Notification URLs restricted to same-origin paths
-- No sensitive data in localStorage (read/unread state only)
+- No sensitive data in cookies (read/unread state only)
 - Service worker never caches authenticated responses
 - Push validation happens on backend (private VAPID key)
 

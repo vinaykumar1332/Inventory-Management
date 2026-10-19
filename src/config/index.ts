@@ -19,6 +19,7 @@ import type {
   ProductIconKey,
   ReportId,
   Role,
+  SitePhase,
   SiteStatus,
   StockStatus,
   ToolCategory,
@@ -156,6 +157,7 @@ export interface CatalogConfig {
     statusTones: Record<ToolStatus, Tone>
   }
   siteStatus: Record<SiteStatus, { labelKey: string; tone: Tone }>
+  sitePhases: Record<SitePhase, { labelKey: string; tone: Tone }>
   alerts: {
     filters: (AlertType | 'all')[]
     types: Record<AlertType, { icon: IconName; tint: Tint }>

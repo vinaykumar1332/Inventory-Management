@@ -12,7 +12,6 @@ import LoginPage from '@/pages/LoginPage'
 import { ROUTES, locationToString } from './routes'
 
 // Route-level code splitting: chart-heavy pages and the Excel feature load on demand.
-const HomePage = React.lazy(() => import('@/pages/HomePage'))
 const NotFoundPage = React.lazy(() => import('@/pages/NotFoundPage'))
 const DashboardPage = React.lazy(() => import('@/pages/DashboardPage'))
 const SitesPage = React.lazy(() => import('@/pages/SitesPage'))
@@ -43,6 +42,12 @@ function PageFallback() {
 
 const Lazy = ({ children }: { children: React.ReactNode }) => <React.Suspense fallback={<PageFallback />}>{children}</React.Suspense>
 
+/** The login page is the entry point: signed-in users go straight to the dashboard. */
+function RootRedirect() {
+  const { user } = useAuth()
+  return <Navigate to={user ? ROUTES.afterLogin : ROUTES.login} replace />
+}
+
 /** Protected area: unauthenticated visitors go to /login and come back to the exact link afterwards. */
 function RequireAuth() {
   const { user } = useAuth()
@@ -60,7 +65,7 @@ function Guard({ permission, children }: { permission?: Permission; children: Re
       <EmptyState
         icon={ShieldAlert}
         title={t('auth.accessDenied')}
-        description={t('auth.accessDeniedBody', { role: t(`roles.${user?.role ?? 'storekeeper'}`) })}
+        description={t('auth.accessDeniedBody', { role: user ? t(`roles.${user.role}`) : '' })}
         action={
           <Button asChild>
             <Link to={ROUTES.afterLogin}>{t('auth.goToDashboard')}</Link>
@@ -100,7 +105,7 @@ const page = (path: string, element: React.ReactNode, permission?: Permission): 
 
 export const router = createBrowserRouter([
   /* Public */
-  { path: ROUTES.home, element: <Lazy><HomePage /></Lazy> },
+  { path: ROUTES.home, element: <RootRedirect /> },
   { path: ROUTES.login, element: <LoginPage /> },
   { path: ROUTES.logout, element: <LogoutRoute /> },
   ...Object.entries(ROUTES.aliases).map(([from, to]) => ({ path: from, element: <AliasRedirect to={to} /> })),

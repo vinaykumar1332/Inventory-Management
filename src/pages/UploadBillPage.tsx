@@ -7,13 +7,14 @@ import { toast } from 'sonner'
 import { ArrowLeft, ArrowRight, Ban, Loader2, Save } from 'lucide-react'
 import { useAuth, useUser } from '@/features/auth/AuthProvider'
 import { errorMessage, useApiMutation, useBill, useSites } from '@/hooks/queries'
-import * as api from '@/services/mockApi'
-import { cacheFile } from '@/services/fileCache'
+import * as api from '@/api/mockApi'
+import { cacheFile } from '@/features/bills/fileCache'
 import { Button, Card, CardContent, ConfirmDialog, Field, Input, Skeleton } from '@/components/ui'
 import { PageHeader } from '@/components/common'
 import { FileStep, ProcessingStep, SiteStep, Stepper, uploadTypeOf } from '@/features/bills/upload/Steps'
 import { InvoiceFields, LineItemsCard } from '@/features/bills/upload/ReviewStep'
 import { ConfirmStep, SuccessState } from '@/features/bills/upload/ConfirmStep'
+import { useGuardedAction } from '@/hooks/useGuardedAction'
 import { invoiceToValues, reviewSchema, valuesToDraft, type ReviewValues } from '@/features/bills/upload/reviewForm'
 import { businessConfig } from '@/config'
 import type { ApproveBillResult, BillDraftInput, Invoice } from '@/types'
@@ -118,6 +119,7 @@ export default function UploadBillPage() {
     }
   }
 
+  const upload = useGuardedAction(startUpload)
   const saveDraft = useApiMutation((v: BillDraftInput) => api.saveBillDraft(invoice?.id ?? '', v), { successKey: 'upload.draftSaved' })
   const approve = useApiMutation((v: BillDraftInput) => api.approveBill(invoice?.id ?? '', v))
   const reject = useApiMutation((reason: string) => api.rejectBill(invoice?.id ?? '', reason), { successKey: 'upload.rejected' })
@@ -210,6 +212,8 @@ export default function UploadBillPage() {
 
       {step === 5 && draft && <ConfirmStep draft={draft} siteName={siteName} />}
 
+      {upload.dialog}
+
       {/* Sticky action bar (thumb-reachable on phones) */}
       {step !== 3 && (
         <div className="pb-safe sticky bottom-16 z-20 -mx-4 mt-5 flex items-center gap-2 border-t bg-surface/95 px-4 py-3 backdrop-blur md:bottom-0 md:mx-0 md:rounded-lg md:border md:shadow-card">
@@ -230,7 +234,7 @@ export default function UploadBillPage() {
               </Button>
             )}
             {step === 2 && (
-              <Button className="flex-1 sm:flex-none" disabled={!file || progress !== null} onClick={() => void startUpload()}>
+              <Button className="flex-1 sm:flex-none" disabled={!file || progress !== null || upload.pending} onClick={() => upload.run()}>
                 {progress !== null && <Loader2 className="animate-spin" />}
                 {t('upload.uploadAndExtract')} <ArrowRight />
               </Button>

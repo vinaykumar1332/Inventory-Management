@@ -1,4 +1,6 @@
-/** Removes service workers, caches and all locally stored app data on this device, then reloads. */
+import { clearAppCookies } from '@/lib/storage'
+
+/** Removes service workers, caches and this app's cookies on this device, then reloads. */
 export async function clearAppData(): Promise<void> {
   try {
     const registrations = await navigator.serviceWorker?.getRegistrations()
@@ -12,11 +14,6 @@ export async function clearAppData(): Promise<void> {
   } catch {
     /* Cache API unavailable */
   }
-  try {
-    localStorage.clear()
-    sessionStorage.clear()
-  } catch {
-    /* storage blocked */
-  }
+  clearAppCookies()
   window.location.reload()
 }

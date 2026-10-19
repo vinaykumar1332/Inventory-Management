@@ -1,7 +1,7 @@
 import { navigationConfig, type NavItemConfig } from '@/config'
 import { getIcon } from '@/config/icons'
 import { useAuth } from '@/features/auth/AuthProvider'
-import { useAlerts } from '@/hooks/queries'
+import { useUnreadAlertCount } from '@/hooks/queries'
 
 export type NavItem = NavItemConfig & { Icon: ReturnType<typeof getIcon> }
 
@@ -23,10 +23,9 @@ export function useMobileNav(): NavItem[] {
 }
 
 export function useNavBadge(item: NavItemConfig): number | null {
-  const { data } = useAlerts()
+  const unread = useUnreadAlertCount()
   if (item.badge !== 'unreadAlerts') return null
-  const n = data?.filter((a) => !a.read && !a.resolved).length ?? 0
-  return n > 0 ? n : null
+  return unread > 0 ? unread : null
 }
 
 export const NAV_SECTIONS = navigationConfig.sections

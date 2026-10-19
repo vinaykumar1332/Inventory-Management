@@ -6,7 +6,7 @@ import { useAuth } from '@/features/auth/AuthProvider'
 import { useStockActions } from '@/features/stock/StockActions'
 import { useBatches, useBills, useDashboard, useMovements, useSite, useStock, useTools } from '@/hooks/queries'
 import { Button, Card, CardContent, CardHeader, CardTitle, Progress, Skeleton, Table, TableWrap, TBody, TD, TH, THead, TR } from '@/components/ui'
-import { EmptyState, ErrorState, ExpiryCell, KpiCard, KpiGrid, PageTabs, SiteStatusBadge, TableSkeleton, TabsContent } from '@/components/common'
+import { EmptyState, ErrorState, ExpiryCell, KpiCard, KpiGrid, PageTabs, SitePhaseBadge, SiteStatusBadge, TableSkeleton, TabsContent } from '@/components/common'
 import { StockTable } from '@/features/inventory/StockTable'
 import { ProductDrawer } from '@/features/inventory/ProductDrawer'
 import { BillsTable } from '@/features/bills/BillsTable'
@@ -16,24 +16,8 @@ import { ReportCard } from '@/features/reports/ReportCard'
 import { ConsumptionChart } from '@/features/dashboard/charts'
 import { ExpiryTimeline } from '@/features/dashboard/widgets'
 import { businessConfig, catalog } from '@/config'
-import type { ReportFilters, SitePhase } from '@/types'
+import type { ReportFilters } from '@/types'
 
-const PHASE_COLORS: Record<SitePhase, string> = {
-  mobilization: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
-  waterproofing: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/40 dark:text-cyan-300',
-  curing: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300',
-  inspection: 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300',
-  completed: 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300',
-}
-
-function PhaseBadge({ phase }: { phase: SitePhase }) {
-  const { t } = useTranslation()
-  return (
-    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold ${PHASE_COLORS[phase]}`}>
-      {t(`sites.phases.${phase}`)}
-    </span>
-  )
-}
 import { isoDaysFromNow } from '@/utils/date'
 import { formatDate, formatINR, formatINRCompact, formatQty } from '@/utils/format'
 
@@ -245,7 +229,7 @@ export default function SiteDetailPage() {
               <div className="flex flex-wrap items-center gap-2">
                 <h1 className="text-xl font-semibold tracking-tight md:text-2xl">{site.name}</h1>
                 <SiteStatusBadge status={site.status} />
-                {site.phase && <PhaseBadge phase={site.phase} />}
+                {site.phase && <SitePhaseBadge phase={site.phase} />}
               </div>
               <p className="text-sm text-muted-foreground">
                 {site.city} · <span className="font-mono">{site.code}</span> · {site.storeName}
