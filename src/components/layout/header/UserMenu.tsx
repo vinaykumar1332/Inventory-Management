@@ -1,20 +1,14 @@
 import * as React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Check, Download, LogOut, MapPin, RotateCcw } from 'lucide-react'
+import { Check, Eraser, LogOut, MapPin, RotateCcw } from 'lucide-react'
 import { appConfig } from '@/config'
 import { ROUTES } from '@/app/routes'
 import { useUser } from '@/features/auth/AuthProvider'
 import { ResetDemoDialog } from '@/features/admin/ResetDemo'
-import { useInstallPrompt } from '@/pwa/pwa'
+import { ClearAppDataDialog } from '@/features/admin/ClearAppData'
 import { useSites } from '@/hooks/queries'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui'
-import { InstallGuideDialog } from './InstallGuide'
-
-function isStandalone() {
-  try { return window.matchMedia('(display-mode: standalone)').matches || (navigator as any).standalone === true }
-  catch { return false }
-}
 
 export function initials(name: string) {
   return name
@@ -31,9 +25,7 @@ export function UserMenu() {
   const navigate = useNavigate()
   const { data: sites } = useSites()
   const [confirmReset, setConfirmReset] = React.useState(false)
-  const [guideOpen, setGuideOpen] = React.useState(false)
-  const { canInstall, install } = useInstallPrompt()
-  const showInstall = appConfig.features.pwaInstallPrompt && !isStandalone()
+  const [confirmClear, setConfirmClear] = React.useState(false)
 
   const assigned = user.siteIds.length ? sites?.filter((s) => user.siteIds.includes(s.id)).map((s) => s.name) : [t('common.allSites')]
 
@@ -69,18 +61,16 @@ export function UserMenu() {
             </div>
           ))}
           <DropdownMenuSeparator />
-          {showInstall && (
-            <DropdownMenuItem onSelect={() => canInstall ? void install() : setGuideOpen(true)}>
-              <Download />
-              {t('pwa.install')}
-            </DropdownMenuItem>
-          )}
           {appConfig.features.resetDemoData && (
             <DropdownMenuItem onSelect={() => setConfirmReset(true)}>
               <RotateCcw />
               {t('header.resetDemo')}
             </DropdownMenuItem>
           )}
+          <DropdownMenuItem onSelect={() => setConfirmClear(true)}>
+            <Eraser />
+            {t('header.clearData')}
+          </DropdownMenuItem>
           <DropdownMenuItem
             danger
             onSelect={() => navigate(ROUTES.logout)}
@@ -91,7 +81,7 @@ export function UserMenu() {
         </DropdownMenuContent>
       </DropdownMenu>
       <ResetDemoDialog open={confirmReset} onOpenChange={setConfirmReset} />
-      <InstallGuideDialog open={guideOpen} onClose={() => setGuideOpen(false)} />
+      <ClearAppDataDialog open={confirmClear} onOpenChange={setConfirmClear} />
     </>
   )
 }

@@ -2,7 +2,7 @@
 
 import { precacheAndRoute } from 'workbox-precaching'
 import { registerRoute } from 'workbox-routing'
-import { NetworkFirst, StaleWhileRevalidate } from 'workbox-strategies'
+import { NetworkFirst } from 'workbox-strategies'
 
 declare const self: ServiceWorkerGlobalScope
 
@@ -12,10 +12,10 @@ precacheAndRoute(self.__WB_MANIFEST || [])
 // Network-first for API calls
 registerRoute(/^https:\/\/api\//, new NetworkFirst({ cacheName: 'api-cache' }))
 
-// Stale-while-revalidate for document content
+// Network-first for documents so new deploys load fresh HTML; cache is the offline fallback
 registerRoute(
   ({ request }) => request.destination === 'document',
-  new StaleWhileRevalidate({ cacheName: 'pages-cache' }),
+  new NetworkFirst({ cacheName: 'pages-cache' }),
 )
 
 // Handle push events
@@ -89,6 +89,10 @@ self.addEventListener('notificationclick', (event) => {
 
 // Message event for updating app badge from React
 self.addEventListener('message', (event) => {
+  if (event.data?.type === 'SKIP_WAITING') {
+    void self.skipWaiting()
+    return
+  }
   if (event.data?.type === 'UPDATE_BADGE' && 'setAppBadge' in self.navigator) {
     const count = event.data.count as number
     if (count > 0) {
