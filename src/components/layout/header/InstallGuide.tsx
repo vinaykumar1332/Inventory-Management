@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Download, Share, Smartphone } from 'lucide-react'
-import { Button, Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui'
+import { Dialog, DialogContent } from '@/components/ui'
 
 function isIOS() {
   return (
@@ -16,10 +16,7 @@ export function InstallGuideDialog({ open, onClose }: { open: boolean; onClose: 
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{ios ? t('pwa.iosGuideTitle') : t('pwa.desktopGuideTitle')}</DialogTitle>
-        </DialogHeader>
+      <DialogContent title={ios ? t('pwa.iosGuideTitle') : t('pwa.desktopGuideTitle')}>
         {ios ? (
           <div className="space-y-4 text-sm">
             <p className="text-muted-foreground">{t('pwa.iosGuideDesc')}</p>
@@ -45,7 +42,6 @@ export function InstallGuideDialog({ open, onClose }: { open: boolean; onClose: 
         ) : (
           <p className="text-sm text-muted-foreground">{t('pwa.desktopGuideDesc')}</p>
         )}
-        <Button className="mt-2" onClick={onClose}>{t('common.close')}</Button>
       </DialogContent>
     </Dialog>
   )
