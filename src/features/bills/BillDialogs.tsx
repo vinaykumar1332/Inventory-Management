@@ -2,8 +2,8 @@ import { useTranslation } from 'react-i18next'
 import { FileSpreadsheet } from 'lucide-react'
 import { useMovements, useSites } from '@/hooks/queries'
 import { getCachedFile } from '@/features/bills/fileCache'
-import { Badge, Dialog, DialogContent, Skeleton, Table, TableWrap, TBody, TD, TH, THead, TR } from '@/components/ui'
-import { BillStatusBadge, EmptyState, MovementBadge } from '@/components/common'
+import { Badge, Dialog, DialogContent, Table, TableWrap, TBody, TD, TH, THead, TR } from '@/components/ui'
+import { BillStatusBadge, EmptyState, MovementBadge, Loader } from '@/components/common'
 import { TINT_CLASSES } from '@/config/tones'
 import { cn } from '@/lib/utils'
 import type { Invoice } from '@/types'
@@ -119,7 +119,7 @@ export function StockEntriesDialog({ invoice, onClose }: { invoice: Invoice | nu
       {invoice && (
         <DialogContent className="max-w-2xl" title={t('bills.stockEntries', { invoiceNo: invoice.invoiceNo })}>
           {isLoading ? (
-            <Skeleton className="h-40" />
+            <Loader compact />
           ) : !data?.length ? (
             <EmptyState title={t('bills.noStockEntries')} />
           ) : (

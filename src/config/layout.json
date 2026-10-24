@@ -1,0 +1,13 @@
+{
+  "contentMaxWidth": "1440px",
+  "sidebar": { "defaultCollapsed": false },
+  "aside": { "width": "md", "defaultOpen": true },
+  "dashboard": {
+    "rows": [
+      ["expiryTimeline"],
+      ["consumptionTrend", "categoryMix"],
+      ["stockBySite", "topMaterials", "recentActivity"]
+    ],
+    "spans": { "consumptionTrend": 2 }
+  }
+}

@@ -241,6 +241,10 @@
     "completed": {
       "labelKey": "sites.statusCompleted",
       "tone": "neutral"
+    },
+    "setup": {
+      "labelKey": "sites.statusSetup",
+      "tone": "warning"
     }
   },
   "alerts": {
@@ -252,6 +256,7 @@
       "expiring_30",
       "low_stock",
       "tool_overdue",
+      "no_manager",
       "pending_approval"
     ],
     "types": {
@@ -282,6 +287,10 @@
       "pending_approval": {
         "icon": "FileClock",
         "tint": "teal"
+      },
+      "no_manager": {
+        "icon": "UserX",
+        "tint": "amber"
       }
     },
     "severityTones": {

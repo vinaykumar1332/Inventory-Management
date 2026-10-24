@@ -4,7 +4,7 @@ import { catalog, type Tone } from '@/config'
 import { getIcon } from '@/config/icons'
 import { TINT_CLASSES, TONE_CHIP_CLASSES } from '@/config/tones'
 import { cn } from '@/lib/utils'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, Skeleton } from '@/components/ui'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui'
 import type { ProductIconKey } from '@/types'
 
 /* ---------------- Product icon (icon + tint from catalog.json) ---------------- */
@@ -60,18 +60,6 @@ export function KpiCard({
   )
 }
 
-export function KpiSkeleton() {
-  return (
-    <div className="rounded-lg border bg-surface p-3 shadow-card sm:p-4">
-      <div className="flex justify-between">
-        <Skeleton className="h-4 w-28" />
-        <Skeleton className="size-9" />
-      </div>
-      <Skeleton className="mt-3 h-7 w-24" />
-      <Skeleton className="mt-2 h-3 w-32" />
-    </div>
-  )
-}
 
 /** Responsive KPI grid shared by dashboard, tools and site pages */
 export function KpiGrid({ children, className }: { children: React.ReactNode; className?: string }) {

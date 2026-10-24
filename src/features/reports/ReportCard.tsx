@@ -3,8 +3,8 @@ import { toast } from 'sonner'
 import { FileSpreadsheet } from 'lucide-react'
 import { catalog, type ReportConfig } from '@/config'
 import { useReport } from '@/hooks/queries'
-import { Button, Skeleton } from '@/components/ui'
-import { SectionCard } from '@/components/common'
+import { Button } from '@/components/ui'
+import { SectionCard, Loader } from '@/components/common'
 import { GroupedBarChart } from '@/features/dashboard/charts'
 import type { ReportFilters, ReportId, ReportResult } from '@/types'
 import { formatDate, formatINRCompact } from '@/utils/format'
@@ -60,7 +60,7 @@ export function ReportCard({ id, filters }: { id: ReportId; filters: ReportFilte
     >
       <div className="flex-1">
         {isLoading || !data ? (
-          <Skeleton className="h-52" />
+          <Loader compact />
         ) : chart.length === 0 ? (
           <p className="flex h-52 items-center justify-center rounded-lg bg-muted/50 text-sm text-muted-foreground">{t('reports.noData')}</p>
         ) : (

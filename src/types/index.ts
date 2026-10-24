@@ -5,7 +5,7 @@ export type ID = string
 /** ISO 8601 date (yyyy-MM-dd) or datetime string */
 export type ISODate = string
 
-export type Role = 'super_admin' | 'admin' | 'storekeeper' | 'site_manager'
+export type Role = 'super_admin' | 'admin' | 'site_manager'
 
 export type Unit = 'kg' | 'litre' | 'bag' | 'bucket' | 'roll' | 'piece' | 'm2'
 
@@ -36,9 +36,13 @@ export interface User {
   phone: string
   /** Sites the user is assigned to. Empty means all sites. */
   siteIds: ID[]
+  employeeId: string
+  designation: string
+  status: 'active' | 'disabled'
+  firstLoginCompleted: boolean
 }
 
-export type SiteStatus = 'active' | 'on_hold' | 'completed'
+export type SiteStatus = 'setup' | 'active' | 'on_hold' | 'completed'
 export type SitePhase = 'mobilization' | 'waterproofing' | 'curing' | 'inspection' | 'completed'
 
 export interface Site {
@@ -49,8 +53,11 @@ export interface Site {
   code: string
   city: string
   address: string
-  managerId: ID
-  storekeeperId: ID
+  /** Primary Site Manager. Null until one is assigned; the site stays in setup until then. */
+  managerId: ID | null
+  backupManagerIds: ID[]
+  /** Admin assigned to oversee the site (informational; Admins already see every site). */
+  assignedAdminId: ID | null
   startDate: ISODate
   endDate: ISODate
   storeName: string
@@ -163,6 +170,7 @@ export interface Invoice extends InvoiceHeader {
   archived: boolean
   approvedAt?: ISODate
   approvedBy?: ID
+  pendingApprovalId?: ID | null
 }
 
 export type MovementType = 'receipt' | 'issue' | 'return' | 'transfer' | 'damage' | 'adjustment'
@@ -242,6 +250,7 @@ export type AlertType =
   | 'expiring_30'
   | 'low_stock'
   | 'tool_overdue'
+  | 'no_manager'
   | 'pending_approval'
 
 export type AlertSeverity = 'critical' | 'warning' | 'info'
@@ -278,6 +287,7 @@ export interface AuditLog {
   entity: string
   entityId: ID
   details: string
+  approvalId?: ID | null
 }
 
 export interface ProductRequest {
@@ -358,7 +368,10 @@ export interface DashboardData {
 
 export interface SiteSummary extends Site {
   managerName: string
-  storekeeperName: string
+  backupManagerNames: string[]
+  assignedAdminName: string
+  /** People who checked in today, or null if nobody has been recorded yet. */
+  labourCount: number | null
   stockValue: number
   activeMaterials: number
   expiryAlerts: number
@@ -425,8 +438,8 @@ export interface CreateSiteInput {
   address: string
   city: string
   code: string
-  managerId: ID
-  storekeeperId: ID
+  managerId: ID | null
+  backupManagerId: ID | null
   startDate: ISODate
   endDate: ISODate
   storeName: string
@@ -495,4 +508,66 @@ export interface ApproveBillResult {
   itemsHeld: number
   totalQtyByUnit: Partial<Record<Unit, number>>
   stockValueAdded: number
+}
+
+
+export interface CreateUserInput {
+  name: string
+  email: string
+  phone: string
+  employeeId: string
+  designation: string
+  role: Role
+  siteIds: ID[]
+}
+
+export interface UpdateUserInput {
+  name?: string
+  email?: string
+  phone?: string
+  employeeId?: string
+  designation?: string
+  role?: Role
+  siteIds?: ID[]
+  status?: 'active' | 'disabled'
+}
+
+export interface UpdateSiteInput {
+  name?: string
+  code?: string
+  city?: string
+  address?: string
+  storeName?: string
+  startDate?: ISODate
+  endDate?: ISODate
+  status?: SiteStatus
+  progress?: number
+  assignedAdminId?: ID | null
+}
+
+/* ---------- Labour ---------- */
+
+export type StaffRole = 'foreman' | 'worker' | 'supervisor' | 'quality_checker'
+
+export interface StaffMember {
+  id: ID
+  name: string
+  phone: string
+  role: StaffRole
+  /** Sites this person works on. A person can work on more than one site. */
+  siteIds: ID[]
+  startDate: ISODate
+  status: 'active' | 'inactive'
+}
+
+/** One person on one day at a site. Times are HH:mm. Edits are written to the audit log. */
+export interface LabourAttendance {
+  id: ID
+  siteId: ID
+  staffId: ID
+  date: ISODate
+  inAt: string | null
+  outAt: string | null
+  updatedBy: ID
+  updatedAt: ISODate
 }

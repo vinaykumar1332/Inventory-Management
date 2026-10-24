@@ -1,0 +1,7 @@
+{
+  "breakpoints": { "mobile": 640, "tablet": 768, "desktop": 1024, "wide": 1280 },
+  "sidePanel": { "defaultWidth": "md" },
+  "table": { "mobileCards": true, "skeletonRows": 6 },
+  "skeleton": { "rows": 6 },
+  "toast": { "durationMs": 4000 }
+}

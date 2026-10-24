@@ -1,0 +1,103 @@
+/* ResponsiveTable: table from md up, stacked cards below md. Colours and sizes come from tokens. */
+
+/* Base rules first. The breakpoint rules at the end of the file must win over these. */
+.desktop {
+  display: none;
+}
+
+.sortButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  margin: 0 calc(var(--space-1) * -1);
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  background: none;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+}
+
+.sortButton:hover {
+  color: var(--foreground);
+}
+
+.sortButton:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.sortButton svg {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.cards {
+  display: grid;
+  gap: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--border);
+}
+
+.card {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--border);
+}
+
+.cardTitle {
+  font-weight: var(--font-weight-semibold);
+  color: var(--foreground);
+}
+
+.cardFields {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.cardField {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  font-size: var(--font-size-sm);
+}
+
+.cardLabel {
+  color: var(--muted-foreground);
+}
+
+.cardValue {
+  margin: 0;
+  text-align: right;
+  color: var(--foreground);
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  background: color-mix(in srgb, var(--muted) 40%, transparent);
+}
+
+.cardActions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+/* Table from md up, cards below. Kept last so it overrides the base display rules above. */
+@media (min-width: 768px) {
+  .desktop {
+    display: block;
+  }
+  .cards {
+    display: none;
+  }
+}

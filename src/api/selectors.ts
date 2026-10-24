@@ -17,7 +17,7 @@ import type {
   User,
 } from '@/types'
 import { expiryBucket, round2, stockStatus } from '@/utils/calc'
-import { daysUntil, todayIso } from '@/utils/date'
+import { daysUntil, isoDaysFromNow, todayIso } from '@/utils/date'
 
 export function accessibleSiteIds(db: DemoDb, user: User): string[] {
   if (user.role === 'super_admin' || user.role === 'admin' || user.siteIds.length === 0) {
@@ -178,8 +178,10 @@ export function buildSiteSummaries(db: DemoDb, siteIds: string[]): SiteSummary[]
       const siteRows = rows.filter((r) => r.siteId === s.id)
       return {
         ...s,
-        managerName: name(s.managerId),
-        storekeeperName: name(s.storekeeperId),
+        managerName: s.managerId ? name(s.managerId) : '—',
+        backupManagerNames: s.backupManagerIds.map(name),
+        assignedAdminName: s.assignedAdminId ? name(s.assignedAdminId) : '',
+        labourCount: labourAttendedToday(db, s.id),
         stockValue: round2(siteRows.reduce((sum, r) => sum + r.stockValue, 0)),
         activeMaterials: siteRows.filter((r) => r.availableQty > 0).length,
         expiryAlerts: entries.filter((e) => e.siteName === s.name && e.days <= 30).length,
@@ -251,6 +253,20 @@ export function buildAlerts(db: DemoDb, siteIds: string[]): Alert[] {
     })
   }
 
+  for (const s of db.sites) {
+    if (!siteIds.includes(s.id) || s.managerId) continue
+    alerts.push({
+      id: `no-manager-${s.id}`,
+      type: 'no_manager',
+      severity: 'warning',
+      siteId: s.id,
+      siteName: s.name,
+      createdAt: now,
+      read: false,
+      resolved: false,
+    })
+  }
+
   for (const t of buildToolRows(db, siteIds)) {
     if (!t.overdue || !t.expectedReturnDate) continue
     alerts.push({
@@ -285,4 +301,49 @@ export function buildAlerts(db: DemoDb, siteIds: string[]): Alert[] {
   }
 
   return alerts.map((a) => ({ ...a, ...db.alertState[a.id] }))
+}
+
+/** Minutes since midnight for an HH:mm time. */
+function minutesOf(hhmm: string) {
+  const [h, m] = hhmm.split(':').map(Number)
+  return h * 60 + m
+}
+
+/** People who checked in today at a site, or null when nothing is recorded for today. */
+export function labourAttendedToday(db: DemoDb, siteId: string): number | null {
+  const today = db.labourAttendance.filter((r) => r.siteId === siteId && r.date === todayIso())
+  if (today.length === 0) return null
+  return today.filter((r) => r.inAt).length
+}
+
+/** Labour on one site: today's attendance per person, the last seven days, and the roster by role. */
+export function buildSiteLabour(db: DemoDb, siteId: string) {
+  const today = todayIso()
+  const records = db.labourAttendance.filter((r) => r.siteId === siteId)
+  const roster = db.staff
+    .filter((m) => m.siteIds.includes(siteId))
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map((m) => ({ ...m, working: m.status === 'active', today: records.find((r) => r.staffId === m.id && r.date === today) ?? null }))
+  const byRole: Record<string, number> = {}
+  for (const m of roster) if (m.today?.inAt) byRole[m.role] = (byRole[m.role] ?? 0) + 1
+  const history = Array.from({ length: 7 }, (_, i) => {
+    const date = isoDaysFromNow(-i)
+    const present = records.filter((r) => r.date === date && r.inAt)
+    const hours = present.filter((r) => r.outAt).map((r) => (minutesOf(r.outAt as string) - minutesOf(r.inAt as string)) / 60)
+    return {
+      date,
+      attended: present.length,
+      avgHours: hours.length ? Math.round((hours.reduce((x, y) => x + y, 0) / hours.length) * 10) / 10 : null,
+      recorded: records.some((r) => r.date === date),
+    }
+  })
+  const todayPresent = roster.filter((m) => m.today?.inAt)
+  return {
+    roster,
+    records: records.filter((r) => r.date >= isoDaysFromNow(-6)),
+    byRole,
+    attendedToday: todayPresent.length,
+    onSiteNow: todayPresent.filter((m) => !m.today?.outAt).length,
+    history,
+  }
 }

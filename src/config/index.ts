@@ -8,6 +8,8 @@ import catalogJson from './catalog.json'
 import dashboard from './dashboard.json'
 import navigation from './navigation.json'
 import roles from './roles.json'
+import ui from './ui.json'
+import layout from './layout.json'
 import theme from './theme.json'
 import type {
   AlertSeverity,
@@ -28,7 +30,8 @@ import type {
   Unit,
   UploadType,
 } from '@/types'
-import type { Permission } from '@/lib/permissions'
+import type { Permission } from '@/features/access/permissions'
+import type { GovernedAction, SubmissionMode } from '@/features/approvals/types'
 import type { IconName } from './icons'
 
 export type Tone = 'neutral' | 'primary' | 'success' | 'warning' | 'danger' | 'info' | 'navy'
@@ -86,7 +89,7 @@ export interface NavItemConfig {
   icon: IconName
   permission?: Permission
   section: 'main' | 'operations' | 'insights'
-  badge?: 'unreadAlerts'
+  badge?: 'unreadAlerts' | 'pendingApprovals'
 }
 
 export interface NavigationConfig {
@@ -126,8 +129,10 @@ export interface DashboardConfig {
 
 export interface RolesConfig {
   roles: Role[]
-  permissions: Record<Role, Permission[]>
-  permissionMatrixRows: Permission[]
+  actions: Record<GovernedAction, Record<Role, SubmissionMode>>
+  permissionAliases: Record<string, GovernedAction>
+  staticPermissions: Record<string, Partial<Record<Role, boolean>>>
+  permissionMatrixRows: string[]
 }
 
 export interface ReportConfig {
@@ -189,3 +194,22 @@ export const dashboardConfig = dashboard as DashboardConfig
 export const navigationConfig = navigation as NavigationConfig
 export const rolesConfig = roles as RolesConfig
 export const themeConfig = theme as ThemeConfig
+
+export interface UiConfig {
+  breakpoints: { mobile: number; tablet: number; desktop: number; wide: number }
+  sidePanel: { defaultWidth: 'sm' | 'md' | 'lg' }
+  table: { mobileCards: boolean; skeletonRows: number }
+  skeleton: { rows: number }
+  toast: { durationMs: number }
+}
+
+export interface LayoutConfig {
+  contentMaxWidth: string
+  sidebar: { defaultCollapsed: boolean }
+  aside: { width: 'sm' | 'md' | 'lg'; defaultOpen: boolean }
+  /** Columns each widget takes in its row (default 1). The row's column count is the sum of its spans. */
+  dashboard: { rows: string[][]; spans?: Record<string, number> }
+}
+
+export const uiConfig = ui as UiConfig
+export const layoutConfig = layout as LayoutConfig

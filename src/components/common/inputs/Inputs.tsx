@@ -4,7 +4,7 @@ import { Search, X } from 'lucide-react'
 import { catalog } from '@/config'
 import { useSites } from '@/hooks/queries'
 import { cn } from '@/lib/utils'
-import { inputClass, Select } from '@/components/ui'
+import { IconButton, Input, Select } from '@/components/ui'
 import type { MaterialCategory } from '@/types'
 
 /* ---------------- Search ---------------- */
@@ -26,23 +26,23 @@ export function SearchInput({
   return (
     <div className={cn('relative', className)}>
       <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
-      <input
+      <Input
         type="search"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         aria-label={label ?? placeholder}
-        className={cn(inputClass, 'pl-9 pr-9 [&::-webkit-search-cancel-button]:hidden')}
+        className="pl-9 pr-9 [&::-webkit-search-cancel-button]:hidden"
       />
       {value && (
-        <button
-          type="button"
+        <IconButton
+          variant="ghost"
           onClick={() => onChange('')}
           aria-label={t('common.clearFilters')}
-          className="absolute right-1 top-1/2 flex size-9 -translate-y-1/2 items-center justify-center rounded-md text-muted-foreground hover:bg-muted"
+          className="absolute right-1 top-1/2 -translate-y-1/2"
         >
-          <X className="size-4" />
-        </button>
+          <X />
+        </IconButton>
       )}
     </div>
   )

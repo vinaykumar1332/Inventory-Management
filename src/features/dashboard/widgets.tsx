@@ -4,6 +4,7 @@ import { CalendarClock } from 'lucide-react'
 import { catalog, dashboardConfig } from '@/config'
 import { getIcon } from '@/config/icons'
 import { DOT_CLASSES, TINT_PANEL_CLASSES, TONE_CHIP_CLASSES } from '@/config/tones'
+import { paths } from '@/app/routes'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { useStockActions } from '@/features/stock/StockActions'
@@ -15,7 +16,7 @@ import { formatINR, formatINRCompact, formatQty, formatRelative } from '@/utils/
 const LANE_TEXT = {
   danger: 'text-danger',
   warning: 'text-warning',
-  amber: 'text-amber-800 dark:text-amber-300',
+  amber: 'text-warning',
 } as const
 
 /** Expired / 7 / 15 / 30-day lanes (lanes and colours from catalog.json) */
@@ -45,7 +46,7 @@ export function ExpiryTimeline({ groups }: { groups: DashboardData['expiryGroups
             <ul className="space-y-1.5">
               {groups[lane.key].slice(0, perLane).map((e) => (
                 <li key={e.batchId}>
-                  <Link to={`/inventory?product=${e.productId}`} className="block rounded-md bg-surface px-2.5 py-2 text-xs shadow-xs hover:ring-1 hover:ring-primary/40">
+                  <Link to={paths.inventory({ productId: e.productId })} className="block rounded-md bg-surface px-2.5 py-2 text-xs shadow-xs hover:ring-1 hover:ring-primary/40">
                     <span className="block truncate font-medium text-foreground">{e.productName}</span>
                     <span className="mt-0.5 flex justify-between gap-2 text-muted-foreground">
                       <span className="truncate font-mono">{e.batchNo}</span>
@@ -59,7 +60,7 @@ export function ExpiryTimeline({ groups }: { groups: DashboardData['expiryGroups
               ))}
               {groups[lane.key].length > perLane && (
                 <li>
-                  <Link to="/alerts" className="block px-1 text-xs font-medium text-primary hover:underline">
+                  <Link to={paths.alerts} className="block px-1 text-xs font-medium text-primary hover:underline">
                     +{groups[lane.key].length - perLane} · {t('common.viewAll')}
                   </Link>
                 </li>
@@ -78,7 +79,7 @@ export function TopMaterials({ items }: { items: DashboardData['topMaterials'] }
     <ol className="space-y-3">
       {items.map((m, i) => (
         <li key={m.productId}>
-          <Link to={`/inventory?product=${m.productId}`} className="group block">
+          <Link to={paths.inventory({ productId: m.productId })} className="group block">
             <div className="flex items-baseline justify-between gap-3 text-sm">
               <span className="min-w-0 truncate">
                 <span className="tabular mr-2 text-muted-foreground">{i + 1}.</span>

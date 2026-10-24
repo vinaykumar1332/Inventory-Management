@@ -11,8 +11,8 @@ import { useAuth } from '@/features/auth/AuthProvider'
 import { useApiMutation } from '@/hooks/queries'
 import * as api from '@/api/mockApi'
 import { cn } from '@/lib/utils'
-import { Button, Dialog, DialogContent, Field, Input, Select, Sheet, Table, TableWrap, TBody, TD, Textarea, TH, THead, TR } from '@/components/ui'
-import { ConditionBadge, Pagination, SortHeader, ToolStatusBadge, useTableState } from '@/components/common'
+import { Button, Dialog, DialogContent, Field, Input, Select, Textarea } from '@/components/ui'
+import { ConditionBadge, ResponsiveTable, SidePanel, ToolStatusBadge, type Column } from '@/components/common'
 import type { ToolCategory, ToolRow } from '@/types'
 import { isoDaysFromNow } from '@/utils/date'
 import { formatDate, formatINR } from '@/utils/format'
@@ -28,100 +28,100 @@ export function ToolIcon({ category, className }: { category: ToolCategory; clas
   )
 }
 
-type SortKey = 'code' | 'name' | 'site' | 'status' | 'maintenance' | 'return'
-
 export function ToolsTable({ rows, onOpen, hideSite }: { rows: ToolRow[]; onOpen: (t: ToolRow) => void; hideSite?: boolean }) {
   const { t } = useTranslation()
-  const table = useTableState<ToolRow, SortKey>(
-    rows,
-    {
-      code: (r) => r.code,
-      name: (r) => r.name,
-      site: (r) => r.siteName,
-      status: (r) => (r.overdue ? 'a' : r.status),
-      maintenance: (r) => r.maintenanceDue,
-      return: (r) => r.expectedReturnDate,
-    },
-    { key: 'code', dir: 'asc' },
-    12,
-  )
-  const sh = { sort: table.sort, onSort: table.toggleSort }
   const c = (k: string) => t(`tools.cols.${k}`)
+
+  const siteColumn: Column<ToolRow> = {
+    key: 'site',
+    header: c('site'),
+    sortValue: (r) => r.siteName,
+    cell: (r) => r.siteName,
+    className: 'whitespace-nowrap',
+  }
+
+  const columns: Column<ToolRow>[] = [
+    {
+      key: 'code',
+      header: c('toolId'),
+      sortValue: (r) => r.code,
+      cell: (r) => (
+        <button
+          type="button"
+          className="font-mono text-xs font-semibold hover:text-primary hover:underline"
+          onClick={(e) => {
+            e.stopPropagation()
+            onOpen(r)
+          }}
+        >
+          {r.code}
+        </button>
+      ),
+    },
+    {
+      key: 'name',
+      header: c('name'),
+      sortValue: (r) => r.name,
+      cell: (r) => (
+        <div className="flex items-center gap-2.5">
+          <ToolIcon category={r.category} />
+          <div className="min-w-0">
+            <p className="max-w-56 truncate font-medium">{r.name}</p>
+            <p className="text-xs text-muted-foreground">{r.brand}</p>
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: 'category',
+      header: c('category'),
+      cell: (r) => t(`tools.categories.${r.category}`),
+      className: 'hidden whitespace-nowrap text-muted-foreground 2xl:table-cell',
+      hideOnMobile: true,
+    },
+    { key: 'condition', header: c('condition'), cell: (r) => <ConditionBadge condition={r.condition} /> },
+    ...(hideSite ? [] : [siteColumn]),
+    { key: 'assignedTo', header: c('assignedTo'), cell: (r) => <span className="max-w-44 truncate">{r.assignedTo ?? '—'}</span> },
+    {
+      key: 'issuedDate',
+      header: c('issuedDate'),
+      cell: (r) => formatDate(r.issuedDate),
+      className: 'tabular hidden whitespace-nowrap 2xl:table-cell',
+      hideOnMobile: true,
+    },
+    {
+      key: 'returnDate',
+      header: c('returnDate'),
+      sortValue: (r) => r.expectedReturnDate,
+      cell: (r) => <span className={r.overdue ? 'font-semibold text-danger' : undefined}>{formatDate(r.expectedReturnDate)}</span>,
+      className: 'tabular whitespace-nowrap',
+    },
+    {
+      key: 'maintenance',
+      header: c('maintenanceDue'),
+      sortValue: (r) => r.maintenanceDue,
+      cell: (r) => formatDate(r.maintenanceDue),
+      className: 'tabular hidden whitespace-nowrap lg:table-cell',
+      hideOnMobile: true,
+    },
+    {
+      key: 'status',
+      header: c('status'),
+      sortValue: (r) => (r.overdue ? 'a' : r.status),
+      cell: (r) => <ToolStatusBadge status={r.status} overdue={r.overdue} />,
+    },
+  ]
+
   return (
-    <>
-      <TableWrap className="hidden md:block">
-        <Table>
-          <THead>
-            <tr>
-              <SortHeader label={c('toolId')} sortKey="code" {...sh} />
-              <SortHeader label={c('name')} sortKey="name" {...sh} />
-              <TH className="hidden 2xl:table-cell">{c('category')}</TH>
-              <TH>{c('condition')}</TH>
-              {!hideSite && <SortHeader label={c('site')} sortKey="site" {...sh} />}
-              <TH>{c('assignedTo')}</TH>
-              <TH className="hidden 2xl:table-cell">{c('issuedDate')}</TH>
-              <SortHeader label={c('returnDate')} sortKey="return" {...sh} />
-              <SortHeader label={c('maintenanceDue')} sortKey="maintenance" {...sh} className="hidden lg:table-cell" />
-              <SortHeader label={c('status')} sortKey="status" {...sh} />
-            </tr>
-          </THead>
-          <TBody>
-            {table.pageRows.map((r) => (
-              <TR key={r.id} className="cursor-pointer" onClick={() => onOpen(r)}>
-                <TD>
-                  <button type="button" className="font-mono text-xs font-semibold hover:text-primary hover:underline" onClick={() => onOpen(r)}>
-                    {r.code}
-                  </button>
-                </TD>
-                <TD>
-                  <div className="flex items-center gap-2.5">
-                    <ToolIcon category={r.category} />
-                    <div className="min-w-0">
-                      <p className="max-w-56 truncate font-medium">{r.name}</p>
-                      <p className="text-xs text-muted-foreground">{r.brand}</p>
-                    </div>
-                  </div>
-                </TD>
-                <TD className="hidden whitespace-nowrap text-muted-foreground 2xl:table-cell">{t(`tools.categories.${r.category}`)}</TD>
-                <TD>
-                  <ConditionBadge condition={r.condition} />
-                </TD>
-                {!hideSite && <TD className="whitespace-nowrap">{r.siteName}</TD>}
-                <TD className="max-w-44 truncate">{r.assignedTo ?? '—'}</TD>
-                <TD className="tabular hidden whitespace-nowrap 2xl:table-cell">{formatDate(r.issuedDate)}</TD>
-                <TD className={cn('tabular whitespace-nowrap', r.overdue && 'font-semibold text-danger')}>{formatDate(r.expectedReturnDate)}</TD>
-                <TD className="tabular hidden whitespace-nowrap lg:table-cell">{formatDate(r.maintenanceDue)}</TD>
-                <TD>
-                  <ToolStatusBadge status={r.status} overdue={r.overdue} />
-                </TD>
-              </TR>
-            ))}
-          </TBody>
-        </Table>
-      </TableWrap>
-      <ul className="divide-y md:hidden">
-        {table.pageRows.map((r) => (
-          <li key={r.id}>
-            <button type="button" onClick={() => onOpen(r)} className="flex w-full gap-3 px-4 py-3 text-left">
-              <ToolIcon category={r.category} />
-              <span className="min-w-0 flex-1">
-                <span className="block truncate font-medium">{r.name}</span>
-                <span className="block text-xs text-muted-foreground">
-                  <span className="font-mono">{r.code}</span>
-                  {!hideSite && ` · ${r.siteName}`}
-                </span>
-                {r.assignedTo && <span className="block truncate text-xs">{r.assignedTo}</span>}
-                <span className="mt-1.5 flex flex-wrap gap-1.5">
-                  <ToolStatusBadge status={r.status} overdue={r.overdue} />
-                  <ConditionBadge condition={r.condition} />
-                </span>
-              </span>
-            </button>
-          </li>
-        ))}
-      </ul>
-      <Pagination page={table.page} pages={table.pages} total={table.total} pageSize={table.pageSize} onPage={table.setPage} />
-    </>
+    <ResponsiveTable
+      columns={columns}
+      rows={rows}
+      rowKey={(r) => r.id}
+      initialSort={{ key: 'code', dir: 'asc' }}
+      pageSize={12}
+      caption={t('tools.title')}
+      onRowClick={onOpen}
+    />
   )
 }
 
@@ -233,10 +233,10 @@ export function ToolDrawer({ tool, onClose }: { tool: ToolRow | null; onClose: (
 
   return (
     <>
-      <Sheet
+      <SidePanel
         open={!!tool}
-        onOpenChange={(o) => !o && onClose()}
-        size="lg"
+        onClose={onClose}
+        width="md"
         title={tool ? tool.name : ''}
         description={tool ? `${tool.code} · ${tool.brand}` : undefined}
         footer={
@@ -315,7 +315,7 @@ export function ToolDrawer({ tool, onClose }: { tool: ToolRow | null; onClose: (
             </section>
           </div>
         )}
-      </Sheet>
+      </SidePanel>
       <Dialog open={!!action && !!tool} onOpenChange={(o) => !o && setAction(null)}>
         {action && tool && (
           <DialogContent

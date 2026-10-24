@@ -5,8 +5,8 @@ import { ArrowRightLeft, Download, FileText, PackageMinus, Undo2 } from 'lucide-
 import { useAuth } from '@/features/auth/AuthProvider'
 import { useStockActions } from '@/features/stock/StockActions'
 import { useProduct } from '@/hooks/queries'
-import { Badge, Button, Sheet, Skeleton, Table, TableWrap, TBody, TD, TH, THead, TR } from '@/components/ui'
-import { EmptyState, ErrorState, ExpiryCell, MovementBadge, PageTabs, ProductIcon, TabsContent } from '@/components/common'
+import { Badge, Button } from '@/components/ui'
+import { EmptyState, ErrorState, ExpiryCell, MovementBadge, PageTabs, ProductIcon, ResponsiveTable, SidePanel, TabsContent, Loader } from '@/components/common'
 import { TINT_CLASSES } from '@/config/tones'
 import { cn } from '@/lib/utils'
 import type { ProductDetail } from '@/types'
@@ -34,32 +34,37 @@ export function ProductDrawer({
   const { t } = useTranslation()
   const { can } = useAuth()
   const stock = useStockActions()
+  // Close this drawer before a stock sheet opens: only one overlay is ever open, so nothing reopens afterwards.
+  const openStock = (mode: Parameters<typeof stock.open>[0], defaults: Parameters<typeof stock.open>[1]) => {
+    onClose()
+    stock.open(mode, defaults)
+  }
   const { data, isLoading, isError, refetch } = useProduct(productId, siteId)
   const p = data?.product
   const singleSite = siteId !== 'all' ? siteId : data?.batches.find((b) => b.qtyAvailable > 0)?.siteId
 
   return (
-    <Sheet
+    <SidePanel
       open={!!productId}
-      onOpenChange={(o) => !o && onClose()}
-      size="xl"
+      onClose={onClose}
+      width="lg"
       title={p ? p.name : t('common.loading')}
       description={p ? `${p.brand} · ${t('product.sku')} ${p.sku}` : undefined}
       footer={
         p && (
           <>
             {can('return_material') && (
-              <Button variant="secondary" onClick={() => stock.open('return', { productId: p.id, siteId: singleSite })}>
+              <Button variant="secondary" onClick={() => openStock('return', { productId: p.id, siteId: singleSite })}>
                 <Undo2 /> {t('inventory.return')}
               </Button>
             )}
             {can('transfer_stock') && (
-              <Button variant="secondary" onClick={() => stock.open('transfer', { productId: p.id, siteId: singleSite })}>
+              <Button variant="secondary" onClick={() => openStock('transfer', { productId: p.id, siteId: singleSite })}>
                 <ArrowRightLeft /> {t('inventory.transfer')}
               </Button>
             )}
             {can('issue_material') && (
-              <Button onClick={() => stock.open('issue', { productId: p.id, siteId: singleSite })}>
+              <Button onClick={() => openStock('issue', { productId: p.id, siteId: singleSite })}>
                 <PackageMinus /> {t('inventory.issue')}
               </Button>
             )}
@@ -70,21 +75,11 @@ export function ProductDrawer({
       {isError ? (
         <ErrorState onRetry={() => void refetch()} />
       ) : isLoading || !data || !p ? (
-        <div className="space-y-4">
-          <div className="flex gap-4">
-            <Skeleton className="size-14" />
-            <div className="flex-1 space-y-2">
-              <Skeleton className="h-5 w-2/3" />
-              <Skeleton className="h-4 w-1/3" />
-            </div>
-          </div>
-          <Skeleton className="h-10" />
-          <Skeleton className="h-64" />
-        </div>
+        <Loader />
       ) : (
         <ProductDetailBody data={data} />
       )}
-    </Sheet>
+    </SidePanel>
   )
 }
 
@@ -190,23 +185,18 @@ function ProductDetailBody({ data }: { data: ProductDetail }) {
           {batches.length === 0 ? (
             <EmptyState title={t('product.noBatches')} />
           ) : (
-            <TableWrap className="rounded-lg border">
-              <Table>
-                <THead>
-                  <tr>
-                    <TH>{t('product.batchCols.batchNo')}</TH>
-                    <TH>{t('product.batchCols.site')}</TH>
-                    <TH>{t('product.batchCols.mfg')}</TH>
-                    <TH>{t('product.batchCols.expiry')}</TH>
-                    <TH className="text-right">{t('product.batchCols.received')}</TH>
-                    <TH className="text-right">{t('product.batchCols.available')}</TH>
-                    <TH className="text-right">{t('product.batchCols.unitCost')}</TH>
-                  </tr>
-                </THead>
-                <TBody>
-                  {batches.map((b) => (
-                    <TR key={b.id} className={b.qtyAvailable <= 0 ? 'opacity-55' : undefined}>
-                      <TD>
+            <div className="overflow-hidden rounded-lg border">
+              <ResponsiveTable
+                rows={batches}
+                rowKey={(b) => b.id}
+                caption={t('product.tabs.batches')}
+                initialSort={{ key: 'expiry', dir: 'asc' }}
+                columns={[
+                  {
+                    key: 'batchNo',
+                    header: t('product.batchCols.batchNo'),
+                    cell: (b) => (
+                      <>
                         <span className="font-mono text-xs">{b.batchNo}</span>
                         {fefo?.id === b.id && (
                           <Badge tone="primary" className="ml-1.5">
@@ -218,20 +208,25 @@ function ProductDetailBody({ data }: { data: ProductDetail }) {
                             {t('product.override')}
                           </Badge>
                         )}
-                      </TD>
-                      <TD className="whitespace-nowrap">{b.siteName}</TD>
-                      <TD className="tabular whitespace-nowrap">{formatDate(b.mfgDate)}</TD>
-                      <TD>
-                        <ExpiryCell date={b.expiryDate} />
-                      </TD>
-                      <TD className="tabular whitespace-nowrap text-right">{formatQty(b.qtyReceived, p.baseUnit)}</TD>
-                      <TD className="tabular whitespace-nowrap text-right font-semibold">{formatQty(b.qtyAvailable, p.baseUnit)}</TD>
-                      <TD className="tabular whitespace-nowrap text-right">{formatINR(b.unitCost, true)}</TD>
-                    </TR>
-                  ))}
-                </TBody>
-              </Table>
-            </TableWrap>
+                      </>
+                    ),
+                  },
+                  { key: 'site', header: t('product.batchCols.site'), cell: (b) => b.siteName, className: 'whitespace-nowrap' },
+                  { key: 'mfg', header: t('product.batchCols.mfg'), cell: (b) => formatDate(b.mfgDate), className: 'tabular whitespace-nowrap' },
+                  { key: 'expiry', header: t('product.batchCols.expiry'), sortValue: (b) => b.expiryDate, cell: (b) => <ExpiryCell date={b.expiryDate} /> },
+                  { key: 'received', header: t('product.batchCols.received'), align: 'right', cell: (b) => formatQty(b.qtyReceived, p.baseUnit), className: 'tabular whitespace-nowrap' },
+                  {
+                    key: 'available',
+                    header: t('product.batchCols.available'),
+                    align: 'right',
+                    sortValue: (b) => b.qtyAvailable,
+                    cell: (b) => formatQty(b.qtyAvailable, p.baseUnit),
+                    className: 'tabular whitespace-nowrap font-semibold',
+                  },
+                  { key: 'unitCost', header: t('product.batchCols.unitCost'), align: 'right', cell: (b) => formatINR(b.unitCost, true), className: 'tabular whitespace-nowrap' },
+                ]}
+              />
+            </div>
           )}
         </TabsContent>
 

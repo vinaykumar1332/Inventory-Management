@@ -5,6 +5,7 @@ import { CircleCheck, FileUp, PackageCheck, TriangleAlert } from 'lucide-react'
 import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui'
 import { ExpiryCell } from '@/components/common'
 import type { ApproveBillResult, BillDraftInput, Unit } from '@/types'
+import { paths } from '@/app/routes'
 import { round2 } from '@/utils/calc'
 import { formatDate, formatINR, formatQty } from '@/utils/format'
 
@@ -130,7 +131,7 @@ export function SuccessState({
             <FileUp /> {t('upload.uploadAnother')}
           </Button>
           <Button variant="ghost" asChild>
-            <Link to="/bills">{t('upload.viewBill')}</Link>
+            <Link to={paths.bills}>{t('upload.viewBill')}</Link>
           </Button>
         </div>
       </CardContent>

@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient, type QueryKey } from '@tanstack/
 import { toast } from 'sonner'
 import i18n from '@/i18n'
 import * as api from '@/api/mockApi'
-import type { MovementType, ReportFilters, ReportId } from '@/types'
+import type { MovementType, ReportFilters, ReportId, StaffRole } from '@/types'
 
 export const queryKeys = {
   dashboard: (siteId: string) => ['dashboard', siteId] as const,
@@ -26,6 +26,11 @@ export const queryKeys = {
 export function errorMessage(error: unknown) {
   if (error instanceof api.ApiError) return i18n.t(error.key, error.params)
   return i18n.t('errors.generic')
+}
+
+/** A governed write that is waiting for approval returns { approvalId } instead of a result. */
+function isPendingResult(value: unknown): boolean {
+  return typeof value === 'object' && value !== null && 'approvalId' in value
 }
 
 /* ---------- Queries ---------- */
@@ -82,6 +87,28 @@ export const useTools = () => useQuery({ queryKey: queryKeys.tools, queryFn: api
 
 export const useUsers = () => useQuery({ queryKey: queryKeys.users, queryFn: api.getUsers, staleTime: 5 * 60_000 })
 
+export const useSiteLabour = (siteId: string) =>
+  useQuery({ queryKey: ['labour', siteId], queryFn: () => api.getSiteLabour(siteId), enabled: !!siteId })
+
+export const useSetAttendance = () =>
+  useApiMutation(
+    (v: { siteId: string; staffId: string; date: string; inAt?: string | null; outAt?: string | null }) =>
+      api.setAttendance(v.siteId, v.staffId, v.date, { inAt: v.inAt, outAt: v.outAt }),
+    { successKey: 'labour.saved' },
+  )
+
+export const useMarkArrived = () =>
+  useApiMutation((v: { siteId: string; staffId: string }) => api.markArrivedNow(v.siteId, v.staffId), { successKey: 'labour.arrived' })
+
+export const useMarkLeft = () =>
+  useApiMutation((v: { siteId: string; staffId: string }) => api.markLeftNow(v.siteId, v.staffId), { successKey: 'labour.leftNow' })
+
+export const useAddLabourMember = () =>
+  useApiMutation((v: { siteId: string; name: string; phone: string; role: StaffRole }) => api.addLabourMember(v.siteId, v), { successKey: 'labour.memberAdded' })
+
+export const useLabourLog = (siteId: string) =>
+  useQuery({ queryKey: ['labourLog', siteId], queryFn: () => api.getLabourLog(siteId), enabled: !!siteId })
+
 export const useVendors = () => useQuery({ queryKey: queryKeys.vendors, queryFn: api.getVendors, staleTime: 5 * 60_000 })
 
 export const useReport = (id: ReportId, filters: ReportFilters, enabled = true) =>
@@ -93,6 +120,8 @@ export const useReport = (id: ReportId, filters: ReportFilters, enabled = true) 
  * Wraps a mock API mutation: shows a success toast, surfaces translated
  * errors, and refreshes every cached query so KPIs, alerts and tables
  * reflect the new stock movement immediately.
+ *
+ * Identical requests still in flight (double clicks) share one call.
  */
 export function useApiMutation<TVars, TResult>(
   fn: (vars: TVars) => Promise<TResult>,
@@ -101,8 +130,9 @@ export function useApiMutation<TVars, TResult>(
   const qc = useQueryClient()
   const mutation = useMutation({
     mutationFn: fn,
-    onSuccess: async () => {
-      if (options.successKey) toast.success(i18n.t(options.successKey))
+    onSuccess: async (result) => {
+      if (isPendingResult(result)) toast.info(i18n.t('approvals.submitted'))
+      else if (options.successKey) toast.success(i18n.t(options.successKey))
       if (options.invalidate) {
         await Promise.all(options.invalidate.map((queryKey) => qc.invalidateQueries({ queryKey })))
       } else {
@@ -112,7 +142,6 @@ export function useApiMutation<TVars, TResult>(
     onError: (error) => toast.error(errorMessage(error)),
   })
 
-  // Identical requests that are still in flight (double clicks) share one call.
   const inFlight = React.useRef(new Map<string, Promise<TResult>>())
   const keyOf = (vars: TVars) => JSON.stringify(vars) ?? ''
 
@@ -143,6 +172,8 @@ export function useApiMutation<TVars, TResult>(
 
   return { ...mutation, mutate, mutateAsync }
 }
+
+/* ---------- Reference data ---------- */
 
 export const useDemoAccounts = () => useQuery({ queryKey: ['demoAccounts'], queryFn: api.getDemoAccounts, staleTime: Infinity })
 

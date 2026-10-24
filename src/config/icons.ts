@@ -96,6 +96,9 @@ export const ICONS = {
 
 export type IconName = keyof typeof ICONS
 
-export function getIcon(name: IconName): LucideIcon {
-  return ICONS[name]
+/** Used when a config names an icon that isn't registered, so one typo never crashes a menu. */
+const FALLBACK_ICON: LucideIcon = ICONS.CircleCheck
+
+export function getIcon(name: IconName | undefined): LucideIcon {
+  return (name && ICONS[name]) || FALLBACK_ICON
 }

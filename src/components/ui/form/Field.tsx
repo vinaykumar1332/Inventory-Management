@@ -48,3 +48,6 @@ export function Field({ label, htmlFor, error, hint, required, className, childr
     </div>
   )
 }
+
+/** Name used by the design brief. Same component as Field. */
+export const FormField = Field

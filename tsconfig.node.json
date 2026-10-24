@@ -14,5 +14,5 @@
     "types": ["node"],
     "strict": true
   },
-  "include": ["vite.config.ts", "src/config/app.json"]
+  "include": ["vite.config.ts", "vitest.config.ts", "src/config/app.json"]
 }

@@ -1,63 +1,127 @@
 {
-  "roles": ["super_admin", "admin", "storekeeper", "site_manager"],
-  "permissions": {
-    "super_admin": [
-      "view_all_sites",
-      "manage_sites",
-      "manage_users",
-      "manage_settings",
-      "view_bills",
-      "upload_bills",
-      "approve_bills",
-      "receive_stock",
-      "issue_material",
-      "return_material",
-      "transfer_stock",
-      "report_damage",
-      "stock_adjustment",
-      "expiry_override",
-      "manage_tools",
-      "view_reports",
-      "manage_products"
-    ],
-    "admin": [
-      "view_all_sites",
-      "manage_sites",
-      "view_bills",
-      "upload_bills",
-      "approve_bills",
-      "receive_stock",
-      "issue_material",
-      "return_material",
-      "transfer_stock",
-      "report_damage",
-      "manage_tools",
-      "view_reports",
-      "manage_products"
-    ],
-    "storekeeper": [
-      "view_bills",
-      "upload_bills",
-      "approve_bills",
-      "receive_stock",
-      "issue_material",
-      "return_material",
-      "transfer_stock",
-      "report_damage",
-      "manage_tools"
-    ],
-    "site_manager": ["issue_material", "report_damage", "view_reports"]
+  "roles": [
+    "super_admin",
+    "admin",
+    "site_manager"
+  ],
+  "actions": {
+    "bill.upload": {
+      "super_admin": "direct",
+      "admin": "direct",
+      "site_manager": "needs_approval"
+    },
+    "bill.approve": {
+      "super_admin": "direct",
+      "admin": "direct",
+      "site_manager": "needs_approval"
+    },
+    "stock.issue": {
+      "super_admin": "direct",
+      "admin": "direct",
+      "site_manager": "needs_approval"
+    },
+    "stock.return": {
+      "super_admin": "direct",
+      "admin": "direct",
+      "site_manager": "needs_approval"
+    },
+    "stock.transfer": {
+      "super_admin": "direct",
+      "admin": "direct",
+      "site_manager": "needs_approval"
+    },
+    "damage.report": {
+      "super_admin": "direct",
+      "admin": "direct",
+      "site_manager": "needs_approval"
+    },
+    "stock.adjust": {
+      "super_admin": "direct",
+      "admin": "needs_approval",
+      "site_manager": "forbidden"
+    },
+    "expiry.override": {
+      "super_admin": "direct",
+      "admin": "needs_approval",
+      "site_manager": "forbidden"
+    },
+    "site.create": {
+      "super_admin": "direct",
+      "admin": "direct",
+      "site_manager": "forbidden"
+    },
+    "manager.assign": {
+      "super_admin": "direct",
+      "admin": "needs_approval",
+      "site_manager": "forbidden"
+    },
+    "user.create": {
+      "super_admin": "direct",
+      "admin": "direct",
+      "site_manager": "forbidden"
+    },
+    "user.update": {
+      "super_admin": "direct",
+      "admin": "direct",
+      "site_manager": "forbidden"
+    },
+    "site.update": {
+      "super_admin": "direct",
+      "admin": "forbidden",
+      "site_manager": "forbidden"
+    }
+  },
+  "permissionAliases": {
+    "upload_bills": "bill.upload",
+    "approve_bills": "bill.approve",
+    "issue_material": "stock.issue",
+    "return_material": "stock.return",
+    "transfer_stock": "stock.transfer",
+    "report_damage": "damage.report",
+    "stock_adjustment": "stock.adjust",
+    "expiry_override": "expiry.override",
+    "manage_sites": "site.create",
+    "assign_managers": "manager.assign",
+    "manage_users": "user.update",
+    "edit_sites": "site.update"
+  },
+  "staticPermissions": {
+    "view_bills": {
+      "super_admin": true,
+      "admin": true,
+      "site_manager": true
+    },
+    "view_reports": {
+      "super_admin": true,
+      "admin": true,
+      "site_manager": true
+    },
+    "manage_tools": {
+      "super_admin": true,
+      "admin": true
+    },
+    "view_audit_log": {
+      "super_admin": true,
+      "admin": true
+    },
+    "create_admin": {
+      "super_admin": true
+    }
   },
   "permissionMatrixRows": [
-    "view_all_sites",
     "manage_sites",
+    "edit_sites",
     "manage_users",
+    "assign_managers",
     "upload_bills",
     "approve_bills",
     "issue_material",
     "transfer_stock",
     "stock_adjustment",
     "expiry_override",
-    "view_reports"
+    "view_bills",
+    "view_reports",
+    "view_audit_log",
+    "create_admin"
   ]
 }

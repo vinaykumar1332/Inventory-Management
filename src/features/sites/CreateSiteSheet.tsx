@@ -7,7 +7,9 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { useApiMutation, useCompany, useUsers } from '@/hooks/queries'
 import { createSite } from '@/api/mockApi'
-import { Button, Field, Input, Select, Sheet, Textarea } from '@/components/ui'
+import { Button, Field, Input, Select, Textarea } from '@/components/ui'
+import { SidePanel } from '@/components/common'
+import { paths } from '@/app/routes'
 import { isoDaysFromNow } from '@/utils/date'
 
 const schema = z
@@ -17,13 +19,14 @@ const schema = z
     address: z.string().trim().min(1, 'validation.required'),
     city: z.string().trim().min(1, 'validation.required'),
     code: z.string().trim().regex(/^[A-Za-z0-9-]{3,15}$/, 'validation.siteCode'),
-    managerId: z.string().min(1, 'validation.required'),
-    storekeeperId: z.string().min(1, 'validation.required'),
+    managerId: z.string(),
+    backupManagerId: z.string(),
     startDate: z.string().min(1, 'validation.required'),
     endDate: z.string().min(1, 'validation.required'),
     storeName: z.string().trim().min(1, 'validation.required'),
   })
   .refine((v) => !v.startDate || !v.endDate || v.endDate > v.startDate, { path: ['endDate'], message: 'validation.endAfterStart' })
+  .refine((v) => !v.managerId || v.managerId !== v.backupManagerId, { path: ['backupManagerId'], message: 'errors.invalidManager' })
 
 type Values = z.infer<typeof schema>
 
@@ -41,7 +44,7 @@ export function CreateSiteSheet({ open, onOpenChange }: { open: boolean; onOpenC
       city: '',
       code: '',
       managerId: '',
-      storekeeperId: '',
+      backupManagerId: '',
       startDate: isoDaysFromNow(0),
       endDate: isoDaysFromNow(240),
       storeName: '',
@@ -56,25 +59,32 @@ export function CreateSiteSheet({ open, onOpenChange }: { open: boolean; onOpenC
 
   const onSubmit = handleSubmit(async (v) => {
     try {
-      const site = await mutation.mutateAsync(v)
-      toast.success(t('sites.created', { name: site.name }))
+      const result = await mutation.mutateAsync({
+        ...v,
+        managerId: v.managerId || null,
+        backupManagerId: v.backupManagerId || null,
+      })
       reset()
       onOpenChange(false)
-      navigate(`/sites/${site.id}`)
+      if ('id' in result) {
+        toast.success(t('sites.created', { name: result.name }))
+        navigate(paths.site(result.id))
+      }
     } catch {
       /* toast handled by mutation */
     }
   })
 
   const err = (k: keyof Values) => (formState.errors[k]?.message ? t(formState.errors[k]?.message ?? '') : undefined)
-  const userOptions = (role: 'site_manager' | 'storekeeper') =>
-    (users ?? []).filter((u) => u.role === role).map((u) => ({ value: u.id, label: u.name }))
+  const managerOptions = (users ?? [])
+    .filter((u) => u.role === 'site_manager' && u.status === 'active')
+    .map((u) => ({ value: u.id, label: u.name }))
 
   return (
-    <Sheet
+    <SidePanel
       open={open}
-      onOpenChange={onOpenChange}
-      size="lg"
+      onClose={() => onOpenChange(false)}
+      width="md"
       title={t('sites.createTitle')}
       description={t('sites.createHint')}
       footer={
@@ -104,11 +114,11 @@ export function CreateSiteSheet({ open, onOpenChange }: { open: boolean; onOpenC
         <Field label={t('sites.code')} htmlFor="cs-code" error={err('code')} required>
           <Input id="cs-code" placeholder={t('placeholders.siteCode')} className="uppercase" {...register('code')} />
         </Field>
-        <Field label={t('sites.manager')} htmlFor="cs-manager" error={err('managerId')} required>
-          <Select id="cs-manager" placeholder={t('common.selectPlaceholder')} options={userOptions('site_manager')} {...register('managerId')} />
+        <Field label={t('sites.manager')} htmlFor="cs-manager" error={err('managerId')} hint={t('sites.managerHint')}>
+          <Select id="cs-manager" placeholder={t('common.selectPlaceholder')} options={managerOptions} {...register('managerId')} />
         </Field>
-        <Field label={t('sites.storekeeper')} htmlFor="cs-store-user" error={err('storekeeperId')} required>
-          <Select id="cs-store-user" placeholder={t('common.selectPlaceholder')} options={userOptions('storekeeper')} {...register('storekeeperId')} />
+        <Field label={t('sites.backupManager')} htmlFor="cs-backup" error={err('backupManagerId')}>
+          <Select id="cs-backup" placeholder={t('common.selectPlaceholder')} options={managerOptions} {...register('backupManagerId')} />
         </Field>
         <Field label={t('sites.startDate')} htmlFor="cs-start" error={err('startDate')} required>
           <Input id="cs-start" type="date" {...register('startDate')} />
@@ -120,6 +130,6 @@ export function CreateSiteSheet({ open, onOpenChange }: { open: boolean; onOpenC
           <Input id="cs-storename" placeholder={t('placeholders.storeName')} {...register('storeName')} />
         </Field>
       </form>
-    </Sheet>
+    </SidePanel>
   )
 }
