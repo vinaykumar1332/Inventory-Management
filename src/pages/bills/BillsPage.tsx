@@ -6,7 +6,7 @@ import { useAuth } from '@/features/auth/AuthProvider'
 import { catalog } from '@/config'
 import { useBills } from '@/hooks/queries'
 import { Button, Card } from '@/components/ui'
-import { PageHeader, QueryState, SearchInput, Segmented, SiteSelect, TableSkeleton } from '@/components/common'
+import { PageHeader, QueryState, SearchInput, Segmented, SiteSelect } from '@/components/common'
 import { BillsTable } from '@/features/bills/BillsTable'
 import type { InvoiceStatus } from '@/types'
 
@@ -65,7 +65,7 @@ export default function BillsPage() {
         </div>
         <QueryState
           query={{ isLoading, isError, refetch }}
-          loading={<TableSkeleton rows={8} />}
+         
           isEmpty={filtered.length === 0}
           empty={{ icon: Receipt, title: t('bills.empty'), description: t('bills.emptyHint') }}
         >

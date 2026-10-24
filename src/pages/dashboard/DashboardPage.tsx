@@ -5,8 +5,8 @@ import { dashboardConfig, type KpiId } from '@/config'
 import { getIcon } from '@/config/icons'
 import { useUser } from '@/features/auth/AuthProvider'
 import { useDashboard, useSites } from '@/hooks/queries'
-import { Card, Skeleton } from '@/components/ui'
-import { ErrorState, KpiCard, KpiGrid, KpiSkeleton, PageHeader, SectionCard, SiteSelect } from '@/components/common'
+import { Card } from '@/components/ui'
+import { ErrorState, KpiCard, KpiGrid, Loader, PageHeader, SectionCard, SiteSelect } from '@/components/common'
 import { CategoryDonut, ConsumptionChart, StockBySiteChart } from '@/features/dashboard/charts'
 import { ActivityTimeline, ExpiryTimeline, QuickActions, TopMaterials } from '@/features/dashboard/widgets'
 import type { DashboardKpis } from '@/types'
@@ -59,12 +59,14 @@ export default function DashboardPage() {
       ) : (
         <div className="space-y-5">
           <KpiGrid className="xl:grid-cols-3 2xl:grid-cols-6">
-            {isLoading || !data
-              ? kpis.map((k) => <KpiSkeleton key={k.id} />)
-              : kpis.map((k) => {
+            {isLoading || !data ? (
+              <Loader className="col-span-full" />
+            ) : (
+              kpis.map((k) => {
                   const content = kpiContent(k.id, data.kpis, t)
                   return <KpiCard key={k.id} label={t(k.labelKey)} icon={getIcon(k.icon)} tone={k.tone} to={k.to} {...content} />
-                })}
+                })
+            )}
           </KpiGrid>
 
           <SectionCard title={t('dashboard.quickActions')}>
@@ -72,11 +74,7 @@ export default function DashboardPage() {
           </SectionCard>
 
           {isLoading || !data ? (
-            <div className="grid gap-5 lg:grid-cols-3">
-              <Skeleton className="h-80 lg:col-span-2" />
-              <Skeleton className="h-80" />
-              <Skeleton className="h-64 lg:col-span-3" />
-            </div>
+            <Loader />
           ) : (
             <m.div className="space-y-5" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: 'easeOut' }}>
               {widgets.expiryTimeline && (

@@ -1,8 +1,9 @@
 import * as React from 'react'
+import { Spinner } from '@/components/common'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { ArrowRight, ClipboardCheck, Loader2, ShieldCheck, Store, UserCog, type LucideIcon } from 'lucide-react'
+import { ArrowRight, ClipboardCheck, ShieldCheck, UserCog, type LucideIcon } from 'lucide-react'
 import { ROUTES, safeRedirect } from '@/app/routes'
 import { errorMessage, useDemoAccounts } from '@/hooks/queries'
 import { cn } from '@/lib/utils'
@@ -12,7 +13,6 @@ import { useAuth } from './AuthProvider'
 const ROLE_ICON: Record<Role, LucideIcon> = {
   super_admin: ShieldCheck,
   admin: UserCog,
-  storekeeper: Store,
   site_manager: ClipboardCheck,
 }
 
@@ -66,7 +66,7 @@ export function DemoRoleList({
               className="group flex h-full w-full items-start gap-3 rounded-lg border bg-surface p-3 text-left transition-colors hover:border-primary/50 hover:bg-primary-soft/40 disabled:opacity-60"
             >
               <span className="flex size-9 shrink-0 items-center justify-center rounded-md bg-primary-soft text-primary">
-                {loading ? <Loader2 className="size-4 animate-spin" aria-hidden /> : <Icon className="size-4" aria-hidden />}
+                {loading ? <Spinner /> : <Icon className="size-4" aria-hidden />}
               </span>
               <span className="min-w-0 flex-1">
                 <span className="flex items-center justify-between gap-1 text-sm font-semibold">

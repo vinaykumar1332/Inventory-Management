@@ -7,7 +7,7 @@ import { useAuth } from '@/features/auth/AuthProvider'
 import { useStockActions } from '@/features/stock/StockActions'
 import { useStock } from '@/hooks/queries'
 import { Button, Card, Select } from '@/components/ui'
-import { CategorySelect, FilterBar, PageHeader, QueryState, SearchInput, SiteSelect, TableSkeleton } from '@/components/common'
+import { CategorySelect, FilterBar, PageHeader, QueryState, SearchInput, SiteSelect } from '@/components/common'
 import { ProductDrawer } from '@/features/inventory/ProductDrawer'
 import { StockTable } from '@/features/inventory/StockTable'
 import type { MaterialCategory, StockRow } from '@/types'
@@ -86,7 +86,7 @@ export default function InventoryPage() {
         subtitle={t('inventory.subtitle')}
         actions={
           <>
-            {can('receive_stock') && (
+            {can('upload_bills') && (
               <Button variant="secondary" onClick={() => stock.open('receive')}>
                 <PackagePlus /> {t('inventory.receiveStock')}
               </Button>
@@ -143,7 +143,7 @@ export default function InventoryPage() {
 
         <QueryState
           query={{ isLoading, isError, refetch }}
-          loading={<TableSkeleton rows={8} cols={8} />}
+         
           isEmpty={filtered.length === 0}
           empty={{
             icon: PackageSearch,

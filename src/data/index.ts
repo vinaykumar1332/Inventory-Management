@@ -34,6 +34,11 @@ import toolIssues from './mock/toolIssues.json'
 import auditLogs from './mock/auditLogs.json'
 import extractionSample from './mock/extractionSample.json'
 import sampleBill from './mock/sampleBill.json'
+import approvals from './mock/approvals.json'
+import staff from './mock/staff.json'
+import labourAttendance from './mock/labourAttendance.json'
+import type { Approval } from '@/features/approvals/types'
+import type { LabourAttendance, StaffMember } from '@/types'
 
 export interface DemoDb {
   version: number
@@ -51,6 +56,9 @@ export interface DemoDb {
   alertState: Record<string, { read?: boolean; resolved?: boolean }>
   auditLogs: AuditLog[]
   productRequests: ProductRequest[]
+  approvals: Approval[]
+  staff: StaffMember[]
+  labourAttendance: LabourAttendance[]
 }
 
 export const DB_VERSION = meta.version
@@ -89,6 +97,9 @@ export function loadMockDb(): DemoDb {
       tools,
       toolIssues,
       auditLogs,
+      approvals,
+      staff,
+      labourAttendance,
     },
     dayShift(),
   )

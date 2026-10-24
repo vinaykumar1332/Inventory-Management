@@ -3,7 +3,7 @@ import { ArrowDown, ArrowUp, ArrowUpDown, ChevronLeft, ChevronRight } from 'luci
 import { useTranslation } from 'react-i18next'
 import { appConfig } from '@/config'
 import { cn } from '@/lib/utils'
-import { Button, Skeleton, TH } from '@/components/ui'
+import { Button, TH } from '@/components/ui'
 
 export type SortDir = 'asc' | 'desc'
 export interface SortState<K extends string> {
@@ -120,17 +120,3 @@ export function Pagination({
   )
 }
 
-export function TableSkeleton({ rows = 6, cols = 6 }: { rows?: number; cols?: number }) {
-  return (
-    <div className="divide-y" aria-busy="true">
-      {Array.from({ length: rows }, (_, r) => (
-        <div key={r} className="flex items-center gap-4 px-4 py-4">
-          <Skeleton className="size-9 shrink-0" />
-          {Array.from({ length: cols - 1 }, (_, c) => (
-            <Skeleton key={c} className={cn('h-4', c === 0 ? 'w-40' : 'hidden w-20 md:block')} />
-          ))}
-        </div>
-      ))}
-    </div>
-  )
-}

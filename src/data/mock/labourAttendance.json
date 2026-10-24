@@ -1,0 +1,722 @@
+[
+  {
+    "id": "lab1",
+    "siteId": "s1",
+    "staffId": "st1",
+    "date": "2026-10-12",
+    "inAt": "07:00",
+    "outAt": "16:00",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-12T18:00:00.000Z"
+  },
+  {
+    "id": "lab2",
+    "siteId": "s1",
+    "staffId": "st1",
+    "date": "2026-10-13",
+    "inAt": "08:05",
+    "outAt": "18:03",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-13T18:00:00.000Z"
+  },
+  {
+    "id": "lab3",
+    "siteId": "s1",
+    "staffId": "st1",
+    "date": "2026-10-14",
+    "inAt": "09:10",
+    "outAt": "17:06",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-14T18:00:00.000Z"
+  },
+  {
+    "id": "lab4",
+    "siteId": "s1",
+    "staffId": "st1",
+    "date": "2026-10-16",
+    "inAt": "08:20",
+    "outAt": "18:12",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-16T18:00:00.000Z"
+  },
+  {
+    "id": "lab5",
+    "siteId": "s1",
+    "staffId": "st1",
+    "date": "2026-10-17",
+    "inAt": "09:25",
+    "outAt": "17:15",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-17T18:00:00.000Z"
+  },
+  {
+    "id": "lab6",
+    "siteId": "s1",
+    "staffId": "st1",
+    "date": "2026-10-18",
+    "inAt": "07:30",
+    "outAt": null,
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-18T18:00:00.000Z"
+  },
+  {
+    "id": "lab7",
+    "siteId": "s1",
+    "staffId": "st2",
+    "date": "2026-10-12",
+    "inAt": "08:07",
+    "outAt": "17:11",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-12T18:00:00.000Z"
+  },
+  {
+    "id": "lab8",
+    "siteId": "s1",
+    "staffId": "st2",
+    "date": "2026-10-13",
+    "inAt": "09:12",
+    "outAt": "16:14",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-13T18:00:00.000Z"
+  },
+  {
+    "id": "lab9",
+    "siteId": "s1",
+    "staffId": "st2",
+    "date": "2026-10-15",
+    "inAt": "08:22",
+    "outAt": "17:20",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-15T18:00:00.000Z"
+  },
+  {
+    "id": "lab10",
+    "siteId": "s1",
+    "staffId": "st2",
+    "date": "2026-10-16",
+    "inAt": "09:27",
+    "outAt": "16:23",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-16T18:00:00.000Z"
+  },
+  {
+    "id": "lab11",
+    "siteId": "s1",
+    "staffId": "st2",
+    "date": "2026-10-17",
+    "inAt": "07:32",
+    "outAt": "18:26",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-17T18:00:00.000Z"
+  },
+  {
+    "id": "lab12",
+    "siteId": "s1",
+    "staffId": "st2",
+    "date": "2026-10-18",
+    "inAt": "08:37",
+    "outAt": "17:29",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-18T18:00:00.000Z"
+  },
+  {
+    "id": "lab13",
+    "siteId": "s1",
+    "staffId": "st3",
+    "date": "2026-10-12",
+    "inAt": "09:14",
+    "outAt": "18:22",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-12T18:00:00.000Z"
+  },
+  {
+    "id": "lab14",
+    "siteId": "s1",
+    "staffId": "st3",
+    "date": "2026-10-14",
+    "inAt": "08:24",
+    "outAt": "16:28",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-14T18:00:00.000Z"
+  },
+  {
+    "id": "lab15",
+    "siteId": "s1",
+    "staffId": "st3",
+    "date": "2026-10-15",
+    "inAt": "09:29",
+    "outAt": "18:31",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-15T18:00:00.000Z"
+  },
+  {
+    "id": "lab16",
+    "siteId": "s1",
+    "staffId": "st3",
+    "date": "2026-10-16",
+    "inAt": "07:34",
+    "outAt": "17:34",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-16T18:00:00.000Z"
+  },
+  {
+    "id": "lab17",
+    "siteId": "s1",
+    "staffId": "st3",
+    "date": "2026-10-17",
+    "inAt": "08:39",
+    "outAt": "16:37",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-17T18:00:00.000Z"
+  },
+  {
+    "id": "lab18",
+    "siteId": "s1",
+    "staffId": "st3",
+    "date": "2026-10-18",
+    "inAt": "09:44",
+    "outAt": "18:40",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-18T18:00:00.000Z"
+  },
+  {
+    "id": "lab19",
+    "siteId": "s1",
+    "staffId": "st4",
+    "date": "2026-10-13",
+    "inAt": "08:26",
+    "outAt": "18:36",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-13T18:00:00.000Z"
+  },
+  {
+    "id": "lab20",
+    "siteId": "s1",
+    "staffId": "st4",
+    "date": "2026-10-14",
+    "inAt": "09:31",
+    "outAt": "17:39",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-14T18:00:00.000Z"
+  },
+  {
+    "id": "lab21",
+    "siteId": "s1",
+    "staffId": "st4",
+    "date": "2026-10-15",
+    "inAt": "07:36",
+    "outAt": "16:42",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-15T18:00:00.000Z"
+  },
+  {
+    "id": "lab22",
+    "siteId": "s1",
+    "staffId": "st4",
+    "date": "2026-10-16",
+    "inAt": "08:41",
+    "outAt": "18:45",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-16T18:00:00.000Z"
+  },
+  {
+    "id": "lab23",
+    "siteId": "s1",
+    "staffId": "st4",
+    "date": "2026-10-17",
+    "inAt": "09:46",
+    "outAt": "17:48",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-17T18:00:00.000Z"
+  },
+  {
+    "id": "lab24",
+    "siteId": "s1",
+    "staffId": "st4",
+    "date": "2026-10-18",
+    "inAt": "07:01",
+    "outAt": null,
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-18T18:00:00.000Z"
+  },
+  {
+    "id": "lab25",
+    "siteId": "s1",
+    "staffId": "st5",
+    "date": "2026-10-12",
+    "inAt": "08:28",
+    "outAt": "17:44",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-12T18:00:00.000Z"
+  },
+  {
+    "id": "lab26",
+    "siteId": "s1",
+    "staffId": "st5",
+    "date": "2026-10-13",
+    "inAt": "09:33",
+    "outAt": "16:47",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-13T18:00:00.000Z"
+  },
+  {
+    "id": "lab27",
+    "siteId": "s1",
+    "staffId": "st5",
+    "date": "2026-10-14",
+    "inAt": "07:38",
+    "outAt": "18:00",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-14T18:00:00.000Z"
+  },
+  {
+    "id": "lab28",
+    "siteId": "s1",
+    "staffId": "st5",
+    "date": "2026-10-15",
+    "inAt": "08:43",
+    "outAt": "17:03",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-15T18:00:00.000Z"
+  },
+  {
+    "id": "lab29",
+    "siteId": "s1",
+    "staffId": "st5",
+    "date": "2026-10-16",
+    "inAt": "09:48",
+    "outAt": "16:06",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-16T18:00:00.000Z"
+  },
+  {
+    "id": "lab30",
+    "siteId": "s1",
+    "staffId": "st5",
+    "date": "2026-10-17",
+    "inAt": "07:03",
+    "outAt": "18:09",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-17T18:00:00.000Z"
+  },
+  {
+    "id": "lab31",
+    "siteId": "s2",
+    "staffId": "st6",
+    "date": "2026-10-12",
+    "inAt": "09:35",
+    "outAt": "18:05",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-12T18:00:00.000Z"
+  },
+  {
+    "id": "lab32",
+    "siteId": "s2",
+    "staffId": "st6",
+    "date": "2026-10-13",
+    "inAt": "07:40",
+    "outAt": "17:08",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-13T18:00:00.000Z"
+  },
+  {
+    "id": "lab33",
+    "siteId": "s2",
+    "staffId": "st6",
+    "date": "2026-10-14",
+    "inAt": "08:45",
+    "outAt": "16:11",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-14T18:00:00.000Z"
+  },
+  {
+    "id": "lab34",
+    "siteId": "s2",
+    "staffId": "st6",
+    "date": "2026-10-15",
+    "inAt": "09:00",
+    "outAt": "18:14",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-15T18:00:00.000Z"
+  },
+  {
+    "id": "lab35",
+    "siteId": "s2",
+    "staffId": "st6",
+    "date": "2026-10-16",
+    "inAt": "07:05",
+    "outAt": "17:17",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-16T18:00:00.000Z"
+  },
+  {
+    "id": "lab36",
+    "siteId": "s2",
+    "staffId": "st6",
+    "date": "2026-10-18",
+    "inAt": "09:15",
+    "outAt": "18:23",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-18T18:00:00.000Z"
+  },
+  {
+    "id": "lab37",
+    "siteId": "s2",
+    "staffId": "st7",
+    "date": "2026-10-12",
+    "inAt": "07:42",
+    "outAt": "16:16",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-12T18:00:00.000Z"
+  },
+  {
+    "id": "lab38",
+    "siteId": "s2",
+    "staffId": "st7",
+    "date": "2026-10-13",
+    "inAt": "08:47",
+    "outAt": "18:19",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-13T18:00:00.000Z"
+  },
+  {
+    "id": "lab39",
+    "siteId": "s2",
+    "staffId": "st7",
+    "date": "2026-10-14",
+    "inAt": "09:02",
+    "outAt": "17:22",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-14T18:00:00.000Z"
+  },
+  {
+    "id": "lab40",
+    "siteId": "s2",
+    "staffId": "st7",
+    "date": "2026-10-15",
+    "inAt": "07:07",
+    "outAt": "16:25",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-15T18:00:00.000Z"
+  },
+  {
+    "id": "lab41",
+    "siteId": "s2",
+    "staffId": "st7",
+    "date": "2026-10-17",
+    "inAt": "09:17",
+    "outAt": "17:31",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-17T18:00:00.000Z"
+  },
+  {
+    "id": "lab42",
+    "siteId": "s2",
+    "staffId": "st7",
+    "date": "2026-10-18",
+    "inAt": "07:22",
+    "outAt": null,
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-18T18:00:00.000Z"
+  },
+  {
+    "id": "lab43",
+    "siteId": "s2",
+    "staffId": "st8",
+    "date": "2026-10-12",
+    "inAt": "08:49",
+    "outAt": "17:27",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-12T18:00:00.000Z"
+  },
+  {
+    "id": "lab44",
+    "siteId": "s2",
+    "staffId": "st8",
+    "date": "2026-10-13",
+    "inAt": "09:04",
+    "outAt": "16:30",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-13T18:00:00.000Z"
+  },
+  {
+    "id": "lab45",
+    "siteId": "s2",
+    "staffId": "st8",
+    "date": "2026-10-14",
+    "inAt": "07:09",
+    "outAt": "18:33",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-14T18:00:00.000Z"
+  },
+  {
+    "id": "lab46",
+    "siteId": "s2",
+    "staffId": "st8",
+    "date": "2026-10-16",
+    "inAt": "09:19",
+    "outAt": "16:39",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-16T18:00:00.000Z"
+  },
+  {
+    "id": "lab47",
+    "siteId": "s2",
+    "staffId": "st8",
+    "date": "2026-10-17",
+    "inAt": "07:24",
+    "outAt": "18:42",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-17T18:00:00.000Z"
+  },
+  {
+    "id": "lab48",
+    "siteId": "s2",
+    "staffId": "st8",
+    "date": "2026-10-18",
+    "inAt": "08:29",
+    "outAt": "17:45",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-18T18:00:00.000Z"
+  },
+  {
+    "id": "lab49",
+    "siteId": "s2",
+    "staffId": "st9",
+    "date": "2026-10-12",
+    "inAt": "09:06",
+    "outAt": "18:38",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-12T18:00:00.000Z"
+  },
+  {
+    "id": "lab50",
+    "siteId": "s2",
+    "staffId": "st9",
+    "date": "2026-10-13",
+    "inAt": "07:11",
+    "outAt": "17:41",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-13T18:00:00.000Z"
+  },
+  {
+    "id": "lab51",
+    "siteId": "s2",
+    "staffId": "st9",
+    "date": "2026-10-15",
+    "inAt": "09:21",
+    "outAt": "18:47",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-15T18:00:00.000Z"
+  },
+  {
+    "id": "lab52",
+    "siteId": "s2",
+    "staffId": "st9",
+    "date": "2026-10-16",
+    "inAt": "07:26",
+    "outAt": "17:00",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-16T18:00:00.000Z"
+  },
+  {
+    "id": "lab53",
+    "siteId": "s2",
+    "staffId": "st9",
+    "date": "2026-10-17",
+    "inAt": "08:31",
+    "outAt": "16:03",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-17T18:00:00.000Z"
+  },
+  {
+    "id": "lab54",
+    "siteId": "s2",
+    "staffId": "st9",
+    "date": "2026-10-18",
+    "inAt": "09:36",
+    "outAt": "18:06",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-18T18:00:00.000Z"
+  },
+  {
+    "id": "lab55",
+    "siteId": "s3",
+    "staffId": "st10",
+    "date": "2026-10-12",
+    "inAt": "07:13",
+    "outAt": "16:49",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-12T18:00:00.000Z"
+  },
+  {
+    "id": "lab56",
+    "siteId": "s3",
+    "staffId": "st10",
+    "date": "2026-10-14",
+    "inAt": "09:23",
+    "outAt": "17:05",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-14T18:00:00.000Z"
+  },
+  {
+    "id": "lab57",
+    "siteId": "s3",
+    "staffId": "st10",
+    "date": "2026-10-15",
+    "inAt": "07:28",
+    "outAt": "16:08",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-15T18:00:00.000Z"
+  },
+  {
+    "id": "lab58",
+    "siteId": "s3",
+    "staffId": "st10",
+    "date": "2026-10-16",
+    "inAt": "08:33",
+    "outAt": "18:11",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-16T18:00:00.000Z"
+  },
+  {
+    "id": "lab59",
+    "siteId": "s3",
+    "staffId": "st10",
+    "date": "2026-10-17",
+    "inAt": "09:38",
+    "outAt": "17:14",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-17T18:00:00.000Z"
+  },
+  {
+    "id": "lab60",
+    "siteId": "s3",
+    "staffId": "st10",
+    "date": "2026-10-18",
+    "inAt": "07:43",
+    "outAt": null,
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-18T18:00:00.000Z"
+  },
+  {
+    "id": "lab61",
+    "siteId": "s3",
+    "staffId": "st11",
+    "date": "2026-10-13",
+    "inAt": "09:25",
+    "outAt": "16:13",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-13T18:00:00.000Z"
+  },
+  {
+    "id": "lab62",
+    "siteId": "s3",
+    "staffId": "st11",
+    "date": "2026-10-14",
+    "inAt": "07:30",
+    "outAt": "18:16",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-14T18:00:00.000Z"
+  },
+  {
+    "id": "lab63",
+    "siteId": "s3",
+    "staffId": "st11",
+    "date": "2026-10-15",
+    "inAt": "08:35",
+    "outAt": "17:19",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-15T18:00:00.000Z"
+  },
+  {
+    "id": "lab64",
+    "siteId": "s3",
+    "staffId": "st11",
+    "date": "2026-10-16",
+    "inAt": "09:40",
+    "outAt": "16:22",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-16T18:00:00.000Z"
+  },
+  {
+    "id": "lab65",
+    "siteId": "s3",
+    "staffId": "st11",
+    "date": "2026-10-17",
+    "inAt": "07:45",
+    "outAt": "18:25",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-17T18:00:00.000Z"
+  },
+  {
+    "id": "lab66",
+    "siteId": "s3",
+    "staffId": "st11",
+    "date": "2026-10-18",
+    "inAt": "08:00",
+    "outAt": "17:28",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-18T18:00:00.000Z"
+  },
+  {
+    "id": "lab67",
+    "siteId": "s3",
+    "staffId": "st12",
+    "date": "2026-10-12",
+    "inAt": "09:27",
+    "outAt": "18:21",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-12T18:00:00.000Z"
+  },
+  {
+    "id": "lab68",
+    "siteId": "s3",
+    "staffId": "st12",
+    "date": "2026-10-13",
+    "inAt": "07:32",
+    "outAt": "17:24",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-13T18:00:00.000Z"
+  },
+  {
+    "id": "lab69",
+    "siteId": "s3",
+    "staffId": "st12",
+    "date": "2026-10-14",
+    "inAt": "08:37",
+    "outAt": "16:27",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-14T18:00:00.000Z"
+  },
+  {
+    "id": "lab70",
+    "siteId": "s3",
+    "staffId": "st12",
+    "date": "2026-10-15",
+    "inAt": "09:42",
+    "outAt": "18:30",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-15T18:00:00.000Z"
+  },
+  {
+    "id": "lab71",
+    "siteId": "s3",
+    "staffId": "st12",
+    "date": "2026-10-16",
+    "inAt": "07:47",
+    "outAt": "17:33",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-16T18:00:00.000Z"
+  },
+  {
+    "id": "lab72",
+    "siteId": "s3",
+    "staffId": "st12",
+    "date": "2026-10-17",
+    "inAt": "08:02",
+    "outAt": "16:36",
+    "updatedBy": "u4",
+    "updatedAt": "2026-10-17T18:00:00.000Z"
+  }
+]

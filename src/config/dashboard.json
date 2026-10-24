@@ -10,7 +10,7 @@
   "quantityUnitsOrder": ["kg", "litre", "m2", "piece"],
   "quickActions": [
     { "id": "upload", "labelKey": "quick.uploadBill", "icon": "FileUp", "permission": "upload_bills", "action": "navigate", "to": "/upload", "primary": true },
-    { "id": "receive", "labelKey": "quick.receiveStock", "icon": "PackagePlus", "permission": "receive_stock", "action": "stock", "mode": "receive" },
+    { "id": "receive", "labelKey": "quick.receiveStock", "icon": "PackagePlus", "permission": "upload_bills", "action": "stock", "mode": "receive" },
     { "id": "issue", "labelKey": "quick.issueMaterial", "icon": "PackageMinus", "permission": "issue_material", "action": "stock", "mode": "issue" },
     { "id": "site", "labelKey": "quick.addSite", "icon": "Building2", "permission": "manage_sites", "action": "navigate", "to": "/sites?create=1" },
     { "id": "report", "labelKey": "quick.downloadReport", "icon": "Download", "permission": "view_reports", "action": "navigate", "to": "/reports" }

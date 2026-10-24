@@ -1,12 +1,12 @@
 import { Link, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Building2, ChevronRight, LayoutGrid, List, MapPin, Plus, TriangleAlert, User } from 'lucide-react'
+import { Building2, ChevronRight, HardHat, LayoutGrid, List, MapPin, Plus, TriangleAlert, User } from 'lucide-react'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { useSites } from '@/hooks/queries'
 import { storageKeys } from '@/lib/storage'
 import { usePersistentState } from '@/hooks/useMediaQuery'
-import { Badge, Button, Card, Progress, Skeleton, Table, TableWrap, TBody, TD, TH, THead, TR } from '@/components/ui'
-import { EmptyState, ErrorState, PageHeader, Segmented, SitePhaseBadge, SiteStatusBadge } from '@/components/common'
+import { Badge, Button, Card, Progress, Table, TableWrap, TBody, TD, TH, THead, TR } from '@/components/ui'
+import { EmptyState, ErrorState, PageHeader, Segmented, SitePhaseBadge, SiteStatusBadge, Loader } from '@/components/common'
 import { CreateSiteSheet } from '@/features/sites/CreateSiteSheet'
 import type { SiteSummary } from '@/types'
 import { formatDate, formatINR, formatINRCompact } from '@/utils/format'
@@ -61,6 +61,10 @@ function SiteCard({ site }: { site: SiteSummary }) {
           <User className="size-3.5" aria-hidden />
           {site.managerName}
         </span>
+        <span className="flex items-center gap-1.5 text-muted-foreground">
+          <HardHat className="size-3.5" aria-hidden />
+          {site.labourCount === null ? t('sites.labourNotEntered') : t('sites.labourWorking', { count: site.labourCount })}
+        </span>
         <span className="flex items-center gap-0.5 font-medium text-primary">
           {t('sites.openSite')} <ChevronRight className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden />
         </span>
@@ -108,11 +112,7 @@ export default function SitesPage() {
           <ErrorState onRetry={() => void refetch()} />
         </Card>
       ) : isLoading || !data ? (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {Array.from({ length: 3 }, (_, i) => (
-            <Skeleton key={i} className="h-72" />
-          ))}
-        </div>
+        <Loader />
       ) : data.length === 0 ? (
         <Card>
           <EmptyState icon={Building2} title={t('sites.empty')} description={t('sites.emptyHint')} />
@@ -132,11 +132,12 @@ export default function SitesPage() {
                   <TH>{t('common.site')}</TH>
                   <TH>{t('sites.city')}</TH>
                   <TH>{t('sites.manager')}</TH>
-                  <TH>{t('sites.storekeeper')}</TH>
+                  <TH>{t('sites.backupManager')}</TH>
                   <TH className="text-right">{t('sites.stockValue')}</TH>
                   <TH className="text-right">{t('sites.activeMaterials')}</TH>
                   <TH className="text-right">{t('sites.expiryAlerts')}</TH>
                   <TH>{t('sites.progress')}</TH>
+                  <TH className="text-right">{t('sites.labour')}</TH>
                   <TH>{t('common.status')}</TH>
                 </tr>
               </THead>
@@ -151,7 +152,7 @@ export default function SitesPage() {
                     </TD>
                     <TD>{s.city}</TD>
                     <TD className="whitespace-nowrap">{s.managerName}</TD>
-                    <TD className="whitespace-nowrap">{s.storekeeperName}</TD>
+                    <TD className="whitespace-nowrap">{s.backupManagerNames.join(', ') || '—'}</TD>
                     <TD className="tabular whitespace-nowrap text-right">{formatINR(s.stockValue)}</TD>
                     <TD className="tabular text-right">{s.activeMaterials}</TD>
                     <TD className="text-right">
@@ -173,6 +174,7 @@ export default function SitesPage() {
                         {t('sites.duration', { start: formatDate(s.startDate), end: formatDate(s.endDate) })}
                       </p>
                     </TD>
+                    <TD className="tabular text-right">{s.labourCount ?? '–'}</TD>
                     <TD>
                       <div className="flex flex-col gap-1">
                         <SiteStatusBadge status={s.status} />

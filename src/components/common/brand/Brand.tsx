@@ -2,11 +2,14 @@ import { useTranslation } from 'react-i18next'
 import { appConfig } from '@/config'
 import { cn } from '@/lib/utils'
 
+/** The SiteSeal mark. Used by the header logo, the loader and the launch screen. */
+export const BRAND_MARK_SRC = '/favicon.svg'
+
 export function Logo({ className, light }: { className?: string; light?: boolean }) {
   const { t } = useTranslation()
   return (
     <span className={cn('flex items-center gap-2.5', className)}>
-      <img src="/favicon.svg" alt="" width={32} height={32} className={cn('size-8 shrink-0 rounded-lg', light && 'ring-1 ring-white/15')} />
+      <img src={BRAND_MARK_SRC} alt="" width={32} height={32} className={cn('size-8 shrink-0 rounded-lg', light && 'ring-1 ring-white/15')} />
       <span className="logo-text truncate text-base font-semibold tracking-tight">{t('app.name')}</span>
     </span>
   )

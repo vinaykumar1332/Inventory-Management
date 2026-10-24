@@ -1,0 +1,71 @@
+[
+  {
+    "id": "ap-seed-1",
+    "action": "stock.issue",
+    "siteId": "s1",
+    "entityId": "b1",
+    "payload": {
+      "siteId": "s1",
+      "productId": "p1",
+      "batchId": "b1",
+      "qty": 4,
+      "workArea": "Block A · Terrace",
+      "areaM2": null,
+      "coats": null,
+      "expectedQty": null,
+      "notes": "Terrace waterproofing, level 2"
+    },
+    "summary": "4 → Block A · Terrace",
+    "submittedBy": "u3",
+    "submittedAt": "2026-10-23T09:12:00.000Z",
+    "requiredApproverRole": "admin",
+    "status": "pending",
+    "snapshot": null,
+    "reviewedBy": null,
+    "reviewedAt": null,
+    "reason": null
+  },
+  {
+    "id": "ap-seed-2",
+    "action": "stock.adjust",
+    "siteId": "s1",
+    "entityId": "b2",
+    "payload": {
+      "siteId": "s1",
+      "productId": "p1",
+      "batchId": "b2",
+      "qty": 2,
+      "direction": -1,
+      "reason": "Physical count shortfall"
+    },
+    "summary": "2 · Physical count shortfall",
+    "submittedBy": "u2",
+    "submittedAt": "2026-10-23T10:40:00.000Z",
+    "requiredApproverRole": "super_admin",
+    "status": "pending",
+    "snapshot": null,
+    "reviewedBy": null,
+    "reviewedAt": null,
+    "reason": null
+  },
+  {
+    "id": "ap-seed-3",
+    "action": "manager.assign",
+    "siteId": "s2",
+    "entityId": "s2",
+    "payload": {
+      "siteId": "s2",
+      "managerId": "u4",
+      "backupManagerId": null
+    },
+    "summary": "Remove backup manager",
+    "submittedBy": "u2",
+    "submittedAt": "2026-10-23T11:05:00.000Z",
+    "requiredApproverRole": "super_admin",
+    "status": "pending",
+    "snapshot": null,
+    "reviewedBy": null,
+    "reviewedAt": null,
+    "reason": null
+  }
+]

@@ -5,7 +5,7 @@ import { FileSpreadsheet, History } from 'lucide-react'
 import { catalog } from '@/config'
 import { useMovements } from '@/hooks/queries'
 import { Button, Card, Select } from '@/components/ui'
-import { FilterBar, PageHeader, QueryState, SearchInput, SiteSelect, TableSkeleton } from '@/components/common'
+import { FilterBar, PageHeader, QueryState, SearchInput, SiteSelect } from '@/components/common'
 import { MovementsTable } from '@/features/stock/MovementsTable'
 import type { MovementType } from '@/types'
 import { formatDateTime, unitLabel } from '@/utils/format'
@@ -63,7 +63,7 @@ export default function MovementsPage() {
             options={[{ value: 'all', label: `${t('movements.filterType')}: ${t('common.all')}` }, ...TYPES.map((x) => ({ value: x, label: t(`movements.types.${x}`) }))]}
           />
         </FilterBar>
-        <QueryState query={{ isLoading, isError, refetch }} loading={<TableSkeleton rows={10} />} isEmpty={rows.length === 0} empty={{ icon: History, title: t('movements.empty') }}>
+        <QueryState query={{ isLoading, isError, refetch }} isEmpty={rows.length === 0} empty={{ icon: History, title: t('movements.empty') }}>
           <MovementsTable rows={rows} />
         </QueryState>
       </Card>

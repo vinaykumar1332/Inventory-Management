@@ -4,12 +4,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useTranslation } from 'react-i18next'
 import { m } from 'motion/react'
-import { ArrowLeft, CalendarClock, FileUp, Info, Loader2, ShieldCheck } from 'lucide-react'
+import { ArrowLeft, CalendarClock, FileUp, Info, ShieldCheck } from 'lucide-react'
 import { ROUTES, safeRedirect } from '@/app/routes'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { DemoRoleList, useSignIn } from '@/features/auth/DemoRoles'
 import { Button, Field, Input } from '@/components/ui'
-import { DemoBadge, Logo } from '@/components/common'
+import { DemoBadge, Logo, Spinner } from '@/components/common'
 import { LanguageSelect, ThemeToggle } from '@/components/layout/HeaderControls'
 
 const schema = z.object({
@@ -108,9 +108,10 @@ export default function LoginPage() {
             </Field>
             <Field label={t('auth.password')} htmlFor="password" error={fieldError('password')} hint={t('auth.passwordHint')} required>
               <Input id="password" type="password" autoComplete="current-password" {...register('password')} />
+              <p className="mt-1 text-xs text-muted-foreground">{t('auth.demoPasswordNote')}</p>
             </Field>
             <Button type="submit" size="lg" className="w-full" disabled={!!pendingEmail}>
-              {pendingEmail ? <Loader2 className="animate-spin" aria-hidden /> : null}
+              {pendingEmail ? <Spinner /> : null}
               {pendingEmail ? t('auth.signingIn') : t('auth.signIn')}
             </Button>
           </form>

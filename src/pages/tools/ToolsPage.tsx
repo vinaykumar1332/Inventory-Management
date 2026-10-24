@@ -5,7 +5,7 @@ import { Clock, LogOut, PackageCheck, Wrench } from 'lucide-react'
 import { catalog } from '@/config'
 import { useTools } from '@/hooks/queries'
 import { Card, Select } from '@/components/ui'
-import { FilterBar, KpiCard, KpiGrid, KpiSkeleton, PageHeader, QueryState, SearchInput, SiteSelect, TableSkeleton } from '@/components/common'
+import { FilterBar, KpiCard, KpiGrid, Loader, PageHeader, QueryState, SearchInput, SiteSelect } from '@/components/common'
 import { ToolDrawer, ToolsTable } from '@/features/tools/ToolComponents'
 import type { ToolStatus } from '@/types'
 
@@ -36,7 +36,7 @@ export default function ToolsPage() {
       <PageHeader title={t('tools.title')} subtitle={t('tools.subtitle')} />
       <KpiGrid className="mb-5 grid-cols-2 lg:grid-cols-4">
         {isLoading ? (
-          Array.from({ length: 4 }, (_, i) => <KpiSkeleton key={i} />)
+          <Loader className="col-span-full" />
         ) : (
           <>
             <KpiCard label={t('tools.summaryIssued')} value={count((r) => r.status === 'issued')} icon={LogOut} tone="info" />
@@ -61,7 +61,7 @@ export default function ToolsPage() {
             ]}
           />
         </FilterBar>
-        <QueryState query={{ isLoading, isError, refetch }} loading={<TableSkeleton rows={8} />} isEmpty={rows.length === 0} empty={{ icon: Wrench, title: t('tools.empty') }}>
+        <QueryState query={{ isLoading, isError, refetch }} isEmpty={rows.length === 0} empty={{ icon: Wrench, title: t('tools.empty') }}>
           <ToolsTable rows={rows} hideSite={site !== 'all'} onOpen={(r) => setParams({ tool: r.id }, { replace: true })} />
         </QueryState>
       </Card>

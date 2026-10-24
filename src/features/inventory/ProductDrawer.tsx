@@ -5,8 +5,8 @@ import { ArrowRightLeft, Download, FileText, PackageMinus, Undo2 } from 'lucide-
 import { useAuth } from '@/features/auth/AuthProvider'
 import { useStockActions } from '@/features/stock/StockActions'
 import { useProduct } from '@/hooks/queries'
-import { Badge, Button, Sheet, Skeleton, Table, TableWrap, TBody, TD, TH, THead, TR } from '@/components/ui'
-import { EmptyState, ErrorState, ExpiryCell, MovementBadge, PageTabs, ProductIcon, TabsContent } from '@/components/common'
+import { Badge, Button, Sheet, Table, TableWrap, TBody, TD, TH, THead, TR } from '@/components/ui'
+import { EmptyState, ErrorState, ExpiryCell, MovementBadge, PageTabs, ProductIcon, TabsContent, Loader } from '@/components/common'
 import { TINT_CLASSES } from '@/config/tones'
 import { cn } from '@/lib/utils'
 import type { ProductDetail } from '@/types'
@@ -34,6 +34,11 @@ export function ProductDrawer({
   const { t } = useTranslation()
   const { can } = useAuth()
   const stock = useStockActions()
+  // Close this drawer before a stock sheet opens: only one overlay is ever open, so nothing reopens afterwards.
+  const openStock = (mode: Parameters<typeof stock.open>[0], defaults: Parameters<typeof stock.open>[1]) => {
+    onClose()
+    stock.open(mode, defaults)
+  }
   const { data, isLoading, isError, refetch } = useProduct(productId, siteId)
   const p = data?.product
   const singleSite = siteId !== 'all' ? siteId : data?.batches.find((b) => b.qtyAvailable > 0)?.siteId
@@ -49,17 +54,17 @@ export function ProductDrawer({
         p && (
           <>
             {can('return_material') && (
-              <Button variant="secondary" onClick={() => stock.open('return', { productId: p.id, siteId: singleSite })}>
+              <Button variant="secondary" onClick={() => openStock('return', { productId: p.id, siteId: singleSite })}>
                 <Undo2 /> {t('inventory.return')}
               </Button>
             )}
             {can('transfer_stock') && (
-              <Button variant="secondary" onClick={() => stock.open('transfer', { productId: p.id, siteId: singleSite })}>
+              <Button variant="secondary" onClick={() => openStock('transfer', { productId: p.id, siteId: singleSite })}>
                 <ArrowRightLeft /> {t('inventory.transfer')}
               </Button>
             )}
             {can('issue_material') && (
-              <Button onClick={() => stock.open('issue', { productId: p.id, siteId: singleSite })}>
+              <Button onClick={() => openStock('issue', { productId: p.id, siteId: singleSite })}>
                 <PackageMinus /> {t('inventory.issue')}
               </Button>
             )}
@@ -70,17 +75,7 @@ export function ProductDrawer({
       {isError ? (
         <ErrorState onRetry={() => void refetch()} />
       ) : isLoading || !data || !p ? (
-        <div className="space-y-4">
-          <div className="flex gap-4">
-            <Skeleton className="size-14" />
-            <div className="flex-1 space-y-2">
-              <Skeleton className="h-5 w-2/3" />
-              <Skeleton className="h-4 w-1/3" />
-            </div>
-          </div>
-          <Skeleton className="h-10" />
-          <Skeleton className="h-64" />
-        </div>
+        <Loader />
       ) : (
         <ProductDetailBody data={data} />
       )}

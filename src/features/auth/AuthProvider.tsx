@@ -2,7 +2,7 @@ import * as React from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import i18n from '@/i18n'
-import { can, type Permission } from '@/lib/permissions'
+import { can, type Permission } from '@/features/access/permissions'
 import { getCurrentUserSync, login as apiLogin, logout as apiLogout } from '@/api/mockApi'
 import type { User } from '@/types'
 
@@ -14,6 +14,7 @@ interface AuthContextValue {
   login: (email: string) => Promise<User>
   logout: () => void
   can: (permission: Permission) => boolean
+  refreshUser: () => void
 }
 
 const AuthContext = React.createContext<AuthContextValue | null>(null)
@@ -50,6 +51,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(null)
       },
       can: (permission) => can(user?.role, permission),
+      refreshUser: () => setUser(getCurrentUserSync()),
     }),
     [user, qc],
   )

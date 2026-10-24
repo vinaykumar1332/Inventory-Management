@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Loader } from '../loader/Loader'
 import { AlertCircle, Inbox, RotateCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
@@ -60,13 +61,13 @@ interface QueryLike {
 export function QueryState({
   query,
   isEmpty,
-  loading,
+  loading = <Loader />,
   empty,
   children,
 }: {
   query: QueryLike
   isEmpty?: boolean
-  loading: React.ReactNode
+  loading?: React.ReactNode
   empty?: React.ComponentProps<typeof EmptyState>
   children: React.ReactNode
 }) {

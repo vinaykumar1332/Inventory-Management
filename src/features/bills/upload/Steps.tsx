@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Spinner } from '@/components/common'
 import { useDropzone, type FileRejection } from 'react-dropzone'
 import { useTranslation } from 'react-i18next'
 import { AnimatePresence, m } from 'motion/react'
@@ -9,7 +10,6 @@ import {
   CircleCheck,
   CloudUpload,
   FileSpreadsheet,
-  Loader2,
   MapPin,
   RefreshCw,
   TriangleAlert,
@@ -314,7 +314,7 @@ export function ProcessingStep({ phase }: { phase: number }) {
       <div className="relative flex size-20 items-center justify-center">
         <span className="absolute inset-0 rounded-full bg-primary-soft" />
         {phase < 4 ? (
-          <Loader2 className="relative size-9 animate-spin text-primary motion-reduce:animate-none" aria-hidden />
+          <Spinner size="lg" className="text-primary" />
         ) : (
           <m.span initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="relative">
             <CircleCheck className="size-10 text-primary" aria-hidden />
@@ -354,7 +354,7 @@ export function ProcessingStep({ phase }: { phase: number }) {
                 {done ? (
                   <Check className="size-3.5" aria-hidden />
                 ) : current ? (
-                  <Loader2 className="size-3.5 animate-spin motion-reduce:animate-none" aria-hidden />
+                  <Spinner />
                 ) : (
                   <span className="size-1.5 rounded-full bg-current" />
                 )}

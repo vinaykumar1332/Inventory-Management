@@ -5,7 +5,13 @@
     "email": "superadmin@demo.com",
     "role": "super_admin",
     "phone": "+91 98480 11223",
-    "siteIds": []
+    "siteIds": [],
+    "employeeId": "EMP001",
+    "designation": "Managing Director",
+    "status": "active",
+    "firstLoginCompleted": true,
+    "createdBy": "u1",
+    "createdAt": "2026-01-10"
   },
   {
     "id": "u2",
@@ -13,57 +19,107 @@
     "email": "admin@demo.com",
     "role": "admin",
     "phone": "+91 99890 44556",
-    "siteIds": []
+    "siteIds": [],
+    "employeeId": "EMP002",
+    "designation": "Operations Admin",
+    "status": "active",
+    "firstLoginCompleted": true,
+    "createdBy": "u1",
+    "createdAt": "2026-01-10"
+  },
+  {
+    "id": "u8",
+    "name": "Meena Rao",
+    "email": "meena.r@demo.com",
+    "role": "admin",
+    "phone": "+91 98111 62340",
+    "siteIds": [],
+    "employeeId": "EMP003",
+    "designation": "Procurement Admin",
+    "status": "active",
+    "firstLoginCompleted": false,
+    "createdBy": "u1",
+    "createdAt": "2026-01-10"
   },
   {
     "id": "u3",
     "name": "Suresh Kumar",
-    "email": "storekeeper@demo.com",
-    "role": "storekeeper",
-    "phone": "+91 90000 77881",
+    "email": "suresh.k@demo.com",
+    "role": "site_manager",
+    "phone": "+91 98765 43210",
     "siteIds": [
       "s1"
-    ]
+    ],
+    "employeeId": "EMP010",
+    "designation": "Store Manager",
+    "status": "active",
+    "firstLoginCompleted": true,
+    "createdBy": "u1",
+    "createdAt": "2026-01-10"
   },
   {
     "id": "u4",
     "name": "Anil Varma",
     "email": "manager@demo.com",
     "role": "site_manager",
-    "phone": "+91 97010 33442",
+    "phone": "+91 98490 77012",
     "siteIds": [
       "s1",
       "s2"
-    ]
+    ],
+    "employeeId": "EMP011",
+    "designation": "Site Manager",
+    "status": "active",
+    "firstLoginCompleted": true,
+    "createdBy": "u1",
+    "createdAt": "2026-01-10"
   },
   {
     "id": "u5",
     "name": "Lakshmi Prasad",
     "email": "lakshmi.p@demo.com",
-    "role": "storekeeper",
-    "phone": "+91 94400 21877",
+    "role": "site_manager",
+    "phone": "+91 98480 55019",
     "siteIds": [
       "s2"
-    ]
+    ],
+    "employeeId": "EMP012",
+    "designation": "Store Manager",
+    "status": "active",
+    "firstLoginCompleted": true,
+    "createdBy": "u1",
+    "createdAt": "2026-01-10"
   },
   {
     "id": "u6",
     "name": "Kiran Rao",
     "email": "kiran.r@demo.com",
-    "role": "storekeeper",
-    "phone": "+91 96760 55129",
+    "role": "site_manager",
+    "phone": "+91 98660 20417",
     "siteIds": [
       "s3"
-    ]
+    ],
+    "employeeId": "EMP013",
+    "designation": "Store Manager",
+    "status": "active",
+    "firstLoginCompleted": true,
+    "createdBy": "u1",
+    "createdAt": "2026-01-10"
   },
   {
     "id": "u7",
     "name": "Venkat Naidu",
     "email": "venkat.n@demo.com",
     "role": "site_manager",
-    "phone": "+91 98660 90314",
+    "phone": "+91 99120 33874",
     "siteIds": [
       "s3"
-    ]
+    ],
+    "employeeId": "EMP014",
+    "designation": "Site Manager",
+    "status": "active",
+    "firstLoginCompleted": true,
+    "createdBy": "u1",
+    "createdAt": "2026-01-10"
   }
 ]

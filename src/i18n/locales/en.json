@@ -89,19 +89,18 @@
     "expandSidebar": "Expand sidebar",
     "sectionOperations": "Operations",
     "sectionInsights": "Insights",
-    "home": "Home"
+    "home": "Home",
+    "approvals": "Approvals"
   },
   "roles": {
     "super_admin": "Super Admin",
     "admin": "Admin",
-    "storekeeper": "Storekeeper",
     "site_manager": "Site Manager"
   },
   "roleDescriptions": {
-    "super_admin": "All sites, users, settings, adjustments and expiry overrides",
-    "admin": "All sites, products, bills, approvals and reports",
-    "storekeeper": "Assigned site stock, bill upload, receipts, issue and return",
-    "site_manager": "Assigned site dashboard, material usage and reports"
+    "super_admin": "All sites, users, approvals, stock adjustments and expiry exceptions",
+    "admin": "All sites, Site Managers, bills and approvals of Site Manager work",
+    "site_manager": "Assigned sites only. Uploads and stock use need admin approval"
   },
   "auth": {
     "welcome": "Welcome back",
@@ -127,7 +126,9 @@
     "signedOut": "You have been signed out",
     "sessionEnded": "Your session ended. Please sign in again.",
     "backHome": "Back to home",
-    "openDashboard": "Open dashboard"
+    "openDashboard": "Open dashboard",
+    "accountDisabled": "This account is disabled. Ask an admin to enable it.",
+    "demoPasswordNote": "Demo: the password is not checked."
   },
   "header": {
     "language": "Language",
@@ -237,7 +238,6 @@
     "city": "City",
     "code": "Site code",
     "manager": "Site manager",
-    "storekeeper": "Storekeeper",
     "startDate": "Start date",
     "endDate": "Expected end date",
     "storeName": "Warehouse / store name",
@@ -261,7 +261,8 @@
       "bills": "Bills",
       "usage": "Usage",
       "tools": "Tools",
-      "reports": "Reports"
+      "reports": "Reports",
+      "labour": "Workers"
     },
     "siteInfo": "Site information",
     "team": "Site team",
@@ -275,7 +276,18 @@
       "curing": "Curing",
       "inspection": "Inspection",
       "completed": "Completed"
-    }
+    },
+    "statusSetup": "Setup",
+    "backupManager": "Backup manager",
+    "managerHint": "Leave empty to save the site in Setup. Setup sites raise an alert until a manager is set.",
+    "edit": "Edit site",
+    "editHint": "Super Admin only. Changing status, managers and admin assignment is applied immediately and recorded in the audit log.",
+    "assignedAdmin": "Assigned admin",
+    "noAdmin": "No admin assigned",
+    "saved": "Site saved",
+    "labour": "Workers",
+    "labourWorking": "{{count}} working",
+    "labourNotEntered": "Not entered today"
   },
   "inventory": {
     "title": "Inventory",
@@ -619,7 +631,8 @@
       "expiring_30": "Expiring in 30 days",
       "low_stock": "Low stock",
       "tool_overdue": "Tools overdue",
-      "pending_approval": "Pending approval"
+      "pending_approval": "Pending approval",
+      "no_manager": "No site manager"
     },
     "showResolved": "Show resolved",
     "unreadOnly": "Unread only",
@@ -642,7 +655,8 @@
       "expiring": "{{product}} batch {{batchNo}} expires in {{days}} days — {{qty}} in store",
       "low_stock": "{{product}} is below reorder level — {{qty}} left",
       "tool_overdue": "{{tool}} is overdue by {{days}} days",
-      "pending_approval": "Bill {{invoiceNo}} is waiting for review and approval"
+      "pending_approval": "Bill {{invoiceNo}} is waiting for review and approval",
+      "no_manager": "{{name}} has no site manager assigned"
     },
     "expiryCostRisk": "at risk from {{count}} expiring batch(es) — act before it's wasted",
     "suggestedOrder": "Suggested order",
@@ -803,15 +817,20 @@
     "permissions": "Role permissions",
     "perm": {
       "view_all_sites": "View all sites",
-      "manage_sites": "Create and manage sites",
-      "manage_users": "Manage users and settings",
+      "manage_sites": "Create sites",
+      "manage_users": "Create and edit users",
       "upload_bills": "Upload bills",
-      "approve_bills": "Approve bills / receive stock",
+      "approve_bills": "Approve bills",
       "issue_material": "Issue material",
       "transfer_stock": "Transfer stock",
-      "stock_adjustment": "Stock adjustments",
-      "expiry_override": "Expiry override",
-      "view_reports": "View reports"
+      "stock_adjustment": "Adjust stock",
+      "expiry_override": "Expiry exceptions",
+      "view_reports": "View reports",
+      "assign_managers": "Assign site managers",
+      "view_bills": "View bills",
+      "view_audit_log": "View audit log",
+      "create_admin": "Create admins",
+      "edit_sites": "Edit sites and status"
     },
     "demoControls": "Demo controls",
     "demoControlsHint": "Restore the original mock data at any time. Language and role preferences are kept.",
@@ -828,7 +847,8 @@
     "expiryAfterMfg": "Expiry must be after MFG date",
     "gst": "GSTIN should be 15 characters",
     "siteCode": "Use 3–15 letters, numbers or dashes",
-    "differentSite": "Choose a different site"
+    "differentSite": "Choose a different site",
+    "range": "Enter a value from 0 to 100"
   },
   "errors": {
     "generic": "Something went wrong. Please try again.",
@@ -846,10 +866,21 @@
     "noMatchedLines": "Match at least one line item to a product before approving.",
     "toolUnavailable": "This tool is not available to issue.",
     "pageNotFound": "Page not found",
-    "pageNotFoundHint": "The page you are looking for does not exist."
+    "pageNotFoundHint": "The page you are looking for does not exist.",
+    "duplicateUser": "{{field}} is already used by {{name}}",
+    "siteRequired": "Choose at least one site for a Site Manager",
+    "adminOnly": "Only a Super Admin can create or change Admins",
+    "invalidManager": "Pick an active Site Manager, and use different people for primary and backup",
+    "siteNeedsManager": "Assign a site manager before making the site active",
+    "siteCodeTaken": "This site code is already used",
+    "invalidAdmin": "This assignment is not allowed",
+    "invalidTime": "Enter a valid time (HH:mm)",
+    "leaveBeforeArrival": "Leave time must be after check-in",
+    "noCheckIn": "Record check-in before leave time",
+    "dateOutOfRange": "Only the last 7 days can be changed"
   },
   "placeholders": {
-    "email": "storekeeper@demo.com",
+    "email": "name@company.com",
     "siteName": "Lakeview Residency",
     "city": "Guntur",
     "siteCode": "LVR-GNT-04",
@@ -910,5 +941,199 @@
     "slowConfirmTitle": "Slow connection",
     "slowConfirmBody": "Your connection is slow, so this upload may take a long time or fail. Upload anyway?",
     "slowConfirmAction": "Upload anyway"
+  },
+  "access": {
+    "direct": "Direct",
+    "approval": "Needs approval",
+    "none": "Not allowed"
+  },
+  "profile": {
+    "title": "Confirm your profile",
+    "body": "Check your details. Your phone number is used for approvals and reminders.",
+    "confirm": "Confirm and continue"
+  },
+  "approvals": {
+    "title": "Approvals",
+    "subtitle": "Changes that need a second person before they take effect",
+    "tabs": {
+      "waiting": "Waiting for me",
+      "mine": "My submissions",
+      "history": "History"
+    },
+    "status": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "cancelled": "Cancelled",
+      "conflict": "Conflict"
+    },
+    "buttons": {
+      "approve": "Approve",
+      "reject": "Reject",
+      "cancel": "Cancel request"
+    },
+    "actionKeys": {
+      "bill_upload": "Bill upload",
+      "bill_approve": "Bill approval",
+      "stock_issue": "Material issue",
+      "stock_return": "Material return",
+      "stock_transfer": "Stock transfer",
+      "damage_report": "Damage report",
+      "stock_adjust": "Stock adjustment",
+      "expiry_override": "Expiry exception",
+      "site_create": "New site",
+      "manager_assign": "Site manager change",
+      "user_create": "New user",
+      "user_update": "User change"
+    },
+    "submittedBy": "Submitted by",
+    "submittedAt": "Submitted",
+    "site": "Site",
+    "reviewedBy": "Reviewed by",
+    "reasonLabel": "Reason for rejection",
+    "reasonRequired": "Give a reason before rejecting.",
+    "rejectTitle": "Reject this change?",
+    "rejectBody": "The change will not be applied. The submitter sees your reason.",
+    "rejectConfirm": "Reject change",
+    "submitted": "Sent for approval",
+    "approved": "Change approved and applied",
+    "rejected": "Change rejected",
+    "cancelled": "Request cancelled",
+    "conflict": "This record changed after the request was made. Ask the submitter to resubmit.",
+    "alreadyReviewed": "This request has already been reviewed.",
+    "selfApproval": "You cannot approve your own change.",
+    "pendingChip": "Pending approval by {{name}}",
+    "empty": "Nothing here",
+    "emptyHint": "No requests match this tab.",
+    "incomingOne": "{{name}} sent an approval: {{summary}}",
+    "incomingMany": "{{count}} approvals are waiting for you",
+    "view": "View",
+    "details": "Details",
+    "requiredApprover": "Needs approval from",
+    "fields": {
+      "qty": "Quantity",
+      "reason": "Reason",
+      "notes": "Notes",
+      "workArea": "Work area",
+      "direction": "Direction",
+      "managerId": "Primary manager",
+      "backupManagerId": "Backup manager",
+      "batchId": "Batch",
+      "productId": "Product",
+      "siteId": "Site",
+      "invoiceId": "Bill",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "designation": "Designation",
+      "employeeId": "Employee ID",
+      "role": "Role",
+      "status": "Status",
+      "code": "Site code",
+      "city": "City",
+      "address": "Address",
+      "storeName": "Store name",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "progress": "Progress",
+      "assignedAdminId": "Assigned admin",
+      "areaM2": "Area (m²)",
+      "coats": "Coats",
+      "expectedQty": "Expected quantity",
+      "kind": "Damage type",
+      "invoiceNo": "Bill number"
+    }
+  },
+  "users": {
+    "title": "Users and access",
+    "subtitle": "Create, edit and disable users. Changes to Admins need Super Admin approval.",
+    "add": "Add user",
+    "edit": "Edit user",
+    "disable": "Disable",
+    "enable": "Enable",
+    "created": "User created",
+    "updated": "User saved",
+    "fields": {
+      "name": "Full name",
+      "email": "Email",
+      "phone": "Phone",
+      "employeeId": "Employee ID",
+      "designation": "Designation",
+      "role": "Role",
+      "sites": "Assigned sites"
+    },
+    "cols": {
+      "name": "Name",
+      "employeeId": "Employee ID",
+      "designation": "Designation",
+      "role": "Role",
+      "sites": "Sites",
+      "status": "Status"
+    },
+    "allSites": "All sites",
+    "siteRequired": "Choose at least one site for a Site Manager",
+    "statusActive": "Active",
+    "statusDisabled": "Disabled",
+    "sheetHint": "Duplicate email, phone or employee ID is rejected across all users, including disabled ones."
+  },
+  "labour": {
+    "title": "Workers",
+    "working": "working",
+    "empty": "No workers assigned yet",
+    "emptyHint": "Workers assigned to this site will appear here.",
+    "active": "Active",
+    "inactive": "Inactive",
+    "roles": {
+      "foreman": "Foreman",
+      "supervisor": "Supervisor",
+      "worker": "Worker",
+      "quality_checker": "Quality checker"
+    },
+    "cols": {
+      "name": "Name",
+      "role": "Role",
+      "phone": "Phone",
+      "since": "Since",
+      "status": "Status",
+      "checkIn": "Check-in",
+      "leftAt": "Left at"
+    },
+    "today": "Today",
+    "notEnteredToday": "Not entered yet today",
+    "decrease": "Decrease headcount",
+    "increase": "Increase headcount",
+    "countLabel": "Workers count for today",
+    "history": "Last 7 days",
+    "roster": "Team members",
+    "addMember": "Add member",
+    "addHint": "Add someone who works on this site. Only the name is required.",
+    "save": "Save",
+    "markLeft": "Mark as left",
+    "markWorking": "Mark as working",
+    "left": "Left",
+    "phoneOptional": "Optional",
+    "saved": "Workers count saved",
+    "memberAdded": "Member added",
+    "attendance": "Attendance",
+    "todayShort": "Today",
+    "status": {
+      "absent": "Not in",
+      "onSite": "On site",
+      "left": "Left"
+    },
+    "checkInNow": "Check in now",
+    "markLeftNow": "Mark left now",
+    "presentOn": "{{count}} present on {{date}}",
+    "analytics": "Last 7 days",
+    "analyticsHint": "People who checked in each day.",
+    "noData": "No attendance recorded yet",
+    "log": "Activity log",
+    "logEmpty": "No changes yet",
+    "attendedToday": "Checked in today",
+    "onSiteNow": "On site now",
+    "rosterCount": "On roster",
+    "avgHours": "Average hours (selected day)",
+    "arrived": "Check-in saved",
+    "leftNow": "Leave time saved"
   }
 }

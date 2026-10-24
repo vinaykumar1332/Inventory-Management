@@ -15,14 +15,33 @@
     "monthFormat": "MMM yy",
     "defaultLanguage": "en",
     "languages": [
-      { "code": "en", "label": "English", "short": "EN", "dateLocale": "enIN" },
-      { "code": "hi", "label": "हिन्दी", "short": "हि", "dateLocale": "hi" },
-      { "code": "te", "label": "తెలుగు", "short": "తె", "dateLocale": "te" }
+      {
+        "code": "en",
+        "label": "English",
+        "short": "EN",
+        "dateLocale": "enIN"
+      },
+      {
+        "code": "hi",
+        "label": "हिन्दी",
+        "short": "हि",
+        "dateLocale": "hi"
+      },
+      {
+        "code": "te",
+        "label": "తెలుగు",
+        "short": "తె",
+        "dateLocale": "te"
+      }
     ]
   },
   "theme": {
     "default": "system",
-    "modes": ["light", "dark", "system"]
+    "modes": [
+      "light",
+      "dark",
+      "system"
+    ]
   },
   "features": {
     "demoBadge": true,
@@ -34,8 +53,15 @@
     "resetDemoData": true
   },
   "demo": {
-    "quickLoginEmails": ["superadmin@demo.com", "admin@demo.com", "storekeeper@demo.com", "manager@demo.com"],
-    "apiDelayMs": { "min": 300, "max": 700 },
+    "quickLoginEmails": [
+      "superadmin@demo.com",
+      "admin@demo.com",
+      "manager@demo.com"
+    ],
+    "apiDelayMs": {
+      "min": 2500,
+      "max": 3500
+    },
     "storagePrefix": "siteseal:"
   },
   "ui": {

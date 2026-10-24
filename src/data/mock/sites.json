@@ -8,13 +8,16 @@
     "city": "Hyderabad",
     "address": "Survey No. 118, Gachibowli, Hyderabad 500032",
     "managerId": "u4",
-    "storekeeperId": "u3",
     "startDate": "2026-02-20",
     "endDate": "2027-03-17",
     "storeName": "Block A Basement Store",
     "status": "active",
     "phase": "waterproofing",
-    "progress": 62
+    "progress": 62,
+    "backupManagerIds": [
+      "u3"
+    ],
+    "assignedAdminId": "u2"
   },
   {
     "id": "s2",
@@ -25,13 +28,16 @@
     "city": "Vijayawada",
     "address": "MG Road, near Benz Circle, Vijayawada 520010",
     "managerId": "u4",
-    "storekeeperId": "u5",
     "startDate": "2026-05-21",
     "endDate": "2027-07-15",
     "storeName": "Tower 1 Ground Floor Store",
     "status": "active",
     "phase": "mobilization",
-    "progress": 38
+    "progress": 38,
+    "backupManagerIds": [
+      "u5"
+    ],
+    "assignedAdminId": "u2"
   },
   {
     "id": "s3",
@@ -42,12 +48,15 @@
     "city": "Visakhapatnam",
     "address": "Dwaraka Nagar Main Road, Visakhapatnam 530016",
     "managerId": "u7",
-    "storekeeperId": "u6",
     "startDate": "2025-12-02",
     "endDate": "2026-12-17",
     "storeName": "Podium Level Site Store",
     "status": "active",
     "phase": "inspection",
-    "progress": 81
+    "progress": 81,
+    "backupManagerIds": [
+      "u6"
+    ],
+    "assignedAdminId": "u2"
   }
 ]

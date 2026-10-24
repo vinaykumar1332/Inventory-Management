@@ -1,18 +1,20 @@
 import * as React from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { ArrowLeft, Building2, Calendar, MapPin, PackageMinus, Store, User, Warehouse } from 'lucide-react'
+import { ArrowLeft, Building2, Calendar, MapPin, PackageMinus, Pencil, Store, User, Warehouse } from 'lucide-react'
+import { EditSiteSheet } from '@/features/sites/EditSiteSheet'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { useStockActions } from '@/features/stock/StockActions'
 import { useBatches, useBills, useDashboard, useMovements, useSite, useStock, useTools } from '@/hooks/queries'
-import { Button, Card, CardContent, CardHeader, CardTitle, Progress, Skeleton, Table, TableWrap, TBody, TD, TH, THead, TR } from '@/components/ui'
-import { EmptyState, ErrorState, ExpiryCell, KpiCard, KpiGrid, PageTabs, SitePhaseBadge, SiteStatusBadge, TableSkeleton, TabsContent } from '@/components/common'
+import { Button, Card, CardContent, CardHeader, CardTitle, Progress, Table, TableWrap, TBody, TD, TH, THead, TR } from '@/components/ui'
+import { EmptyState, ErrorState, ExpiryCell, KpiCard, KpiGrid, PageTabs, SitePhaseBadge, SiteStatusBadge, Loader, TabsContent } from '@/components/common'
 import { StockTable } from '@/features/inventory/StockTable'
 import { ProductDrawer } from '@/features/inventory/ProductDrawer'
 import { BillsTable } from '@/features/bills/BillsTable'
 import { MovementsTable } from '@/features/stock/MovementsTable'
 import { ToolDrawer, ToolsTable } from '@/features/tools/ToolComponents'
 import { ReportCard } from '@/features/reports/ReportCard'
+import { LabourTab } from '@/features/sites/LabourTab'
 import { ConsumptionChart } from '@/features/dashboard/charts'
 import { ExpiryTimeline } from '@/features/dashboard/widgets'
 import { businessConfig, catalog } from '@/config'
@@ -21,19 +23,19 @@ import type { ReportFilters } from '@/types'
 import { isoDaysFromNow } from '@/utils/date'
 import { formatDate, formatINR, formatINRCompact, formatQty } from '@/utils/format'
 
-const TABS = ['overview', 'stock', 'batches', 'bills', 'usage', 'tools', 'reports'] as const
+const TABS = ['overview', 'stock', 'batches', 'bills', 'usage', 'tools', 'labour', 'reports'] as const
 type Tab = (typeof TABS)[number]
 const SITE_REPORTS = catalog.reports.siteReports
 
 function Loading() {
-  return <TableSkeleton rows={6} />
+  return <Loader />
 }
 
 function OverviewTab({ siteId }: { siteId: string }) {
   const { t } = useTranslation()
   const { data: site } = useSite(siteId)
   const { data: dash, isLoading } = useDashboard(siteId)
-  if (!site) return <Skeleton className="h-64" />
+  if (!site) return <Loader compact />
   const info: [typeof MapPin, string, string][] = [
     [MapPin, t('sites.address'), site.address],
     [Calendar, t('sites.durationLabel'), t('sites.duration', { start: formatDate(site.startDate), end: formatDate(site.endDate) })],
@@ -77,7 +79,11 @@ function OverviewTab({ siteId }: { siteId: string }) {
               </li>
               <li className="flex items-center gap-2">
                 <User className="size-4 text-muted-foreground" aria-hidden />
-                {site.storekeeperName} <span className="text-xs text-muted-foreground">· {t('sites.storekeeper')}</span>
+                {site.backupManagerNames.join(', ') || '—'} <span className="text-xs text-muted-foreground">· {t('sites.backupManager')}</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <User className="size-4 text-muted-foreground" aria-hidden />
+                {site.assignedAdminName || t('sites.noAdmin')} <span className="text-xs text-muted-foreground">· {t('sites.assignedAdmin')}</span>
               </li>
             </ul>
           </CardContent>
@@ -86,14 +92,14 @@ function OverviewTab({ siteId }: { siteId: string }) {
           <CardHeader>
             <CardTitle>{t('dashboard.consumption')}</CardTitle>
           </CardHeader>
-          <CardContent>{isLoading || !dash ? <Skeleton className="h-64" /> : <ConsumptionChart data={dash.consumptionTrend} />}</CardContent>
+          <CardContent>{isLoading || !dash ? <Loader compact /> : <ConsumptionChart data={dash.consumptionTrend} />}</CardContent>
         </Card>
       </div>
       <Card>
         <CardHeader>
           <CardTitle>{t('dashboard.expiryTimeline')}</CardTitle>
         </CardHeader>
-        <CardContent>{isLoading || !dash ? <Skeleton className="h-40" /> : <ExpiryTimeline groups={dash.expiryGroups} />}</CardContent>
+        <CardContent>{isLoading || !dash ? <Loader compact /> : <ExpiryTimeline groups={dash.expiryGroups} />}</CardContent>
       </Card>
     </div>
   )
@@ -202,6 +208,7 @@ function ReportsTab({ siteId }: { siteId: string }) {
 
 export default function SiteDetailPage() {
   const { t } = useTranslation()
+  const [editing, setEditing] = React.useState(false)
   const { siteId = '' } = useParams()
   const { can } = useAuth()
   const stock = useStockActions()
@@ -218,7 +225,7 @@ export default function SiteDetailPage() {
         <ArrowLeft className="size-4" aria-hidden /> {t('sites.title')}
       </Link>
       {isLoading || !site ? (
-        <Skeleton className="mb-6 h-16 w-full max-w-lg" />
+        <Loader compact />
       ) : (
         <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div className="flex items-start gap-3">
@@ -236,11 +243,18 @@ export default function SiteDetailPage() {
               </p>
             </div>
           </div>
-          {can('issue_material') && (
-            <Button onClick={() => stock.open('issue', { siteId })}>
-              <PackageMinus /> {t('quick.issueMaterial')}
-            </Button>
-          )}
+          <div className="flex shrink-0 flex-wrap gap-2">
+            {can('edit_sites') && site && (
+              <Button variant="secondary" onClick={() => setEditing(true)}>
+                <Pencil /> {t('sites.edit')}
+              </Button>
+            )}
+            {can('issue_material') && (
+              <Button onClick={() => stock.open('issue', { siteId })}>
+                <PackageMinus /> {t('quick.issueMaterial')}
+              </Button>
+            )}
+          </div>
         </div>
       )}
 
@@ -263,11 +277,17 @@ export default function SiteDetailPage() {
             </Card>
           </TabsContent>
         ))}
+        <TabsContent value="labour">
+          <Card className="overflow-hidden">
+            <LabourTab siteId={siteId} />
+          </Card>
+        </TabsContent>
         <TabsContent value="reports">
           <p className="mb-4 text-sm text-muted-foreground">{t('sites.reportsHint')}</p>
           <ReportsTab siteId={siteId} />
         </TabsContent>
       </PageTabs>
+      {site && <EditSiteSheet open={editing} onOpenChange={setEditing} site={site} />}
     </>
   )
 }

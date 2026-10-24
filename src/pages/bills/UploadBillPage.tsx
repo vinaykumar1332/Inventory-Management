@@ -4,13 +4,13 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { ArrowLeft, ArrowRight, Ban, Loader2, Save } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Ban, Save } from 'lucide-react'
 import { useAuth, useUser } from '@/features/auth/AuthProvider'
 import { errorMessage, useApiMutation, useBill, useSites } from '@/hooks/queries'
 import * as api from '@/api/mockApi'
 import { cacheFile } from '@/features/bills/fileCache'
-import { Button, Card, CardContent, ConfirmDialog, Field, Input, Skeleton } from '@/components/ui'
-import { PageHeader } from '@/components/common'
+import { Button, Card, CardContent, ConfirmDialog, Field, Input } from '@/components/ui'
+import { PageHeader, Loader, Spinner } from '@/components/common'
 import { FileStep, ProcessingStep, SiteStep, Stepper, uploadTypeOf } from '@/features/bills/upload/Steps'
 import { InvoiceFields, LineItemsCard } from '@/features/bills/upload/ReviewStep'
 import { ConfirmStep, SuccessState } from '@/features/bills/upload/ConfirmStep'
@@ -138,6 +138,7 @@ export default function UploadBillPage() {
     if (!draft) return
     try {
       const res = await approve.mutateAsync(draft)
+      if ('approvalId' in res) return
       setResult(res)
     } catch {
       /* toast shown by mutation */
@@ -174,11 +175,7 @@ export default function UploadBillPage() {
         <Card>
           <CardContent className="p-4 md:p-6">
             {sitesLoading || !sites ? (
-              <div className="grid gap-3 md:grid-cols-3">
-                {Array.from({ length: 3 }, (_, i) => (
-                  <Skeleton key={i} className="h-28" />
-                ))}
-              </div>
+              <Loader />
             ) : (
               <SiteStep sites={sites} value={siteId} onChange={setSiteId} />
             )}
@@ -235,7 +232,7 @@ export default function UploadBillPage() {
             )}
             {step === 2 && (
               <Button className="flex-1 sm:flex-none" disabled={!file || progress !== null || upload.pending} onClick={() => upload.run()}>
-                {progress !== null && <Loader2 className="animate-spin" />}
+                {progress !== null && <Spinner />}
                 {t('upload.uploadAndExtract')} <ArrowRight />
               </Button>
             )}
@@ -251,7 +248,7 @@ export default function UploadBillPage() {
             )}
             {step === 5 && (
               <Button className="flex-1 sm:flex-none" size="lg" onClick={() => void onApprove()} disabled={approve.isPending || !can('approve_bills')}>
-                {approve.isPending && <Loader2 className="animate-spin" />}
+                {approve.isPending && <Spinner />}
                 {approve.isPending ? t('upload.approving') : t('upload.approve')}
               </Button>
             )}

@@ -2,6 +2,7 @@ import { navigationConfig, type NavItemConfig } from '@/config'
 import { getIcon } from '@/config/icons'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { useUnreadAlertCount } from '@/hooks/queries'
+import { useWaitingApprovalCount } from '@/features/approvals'
 
 export type NavItem = NavItemConfig & { Icon: ReturnType<typeof getIcon> }
 
@@ -24,8 +25,9 @@ export function useMobileNav(): NavItem[] {
 
 export function useNavBadge(item: NavItemConfig): number | null {
   const unread = useUnreadAlertCount()
-  if (item.badge !== 'unreadAlerts') return null
-  return unread > 0 ? unread : null
+  const waiting = useWaitingApprovalCount()
+  const count = item.badge === 'pendingApprovals' ? waiting : item.badge === 'unreadAlerts' ? unread : 0
+  return count > 0 ? count : null
 }
 
 export const NAV_SECTIONS = navigationConfig.sections

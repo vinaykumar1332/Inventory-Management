@@ -19,8 +19,8 @@ import { catalog } from '@/config'
 import { getIcon } from '@/config/icons'
 import { TINT_CLASSES } from '@/config/tones'
 import { cn } from '@/lib/utils'
-import { Badge, Button, Card, Checkbox, ConfirmDialog, Skeleton, Tooltip } from '@/components/ui'
-import { EmptyState, ErrorState, PageHeader, Segmented } from '@/components/common'
+import { Badge, Button, Card, Checkbox, ConfirmDialog, Tooltip } from '@/components/ui'
+import { EmptyState, ErrorState, Loader, PageHeader, Segmented } from '@/components/common'
 import type { Alert, AlertType } from '@/types'
 import { formatINR, formatQty } from '@/utils/format'
 
@@ -79,6 +79,8 @@ function useAlertMessage() {
         return t('alerts.msg.low_stock', { product: a.productName, qty })
       case 'tool_overdue':
         return t('alerts.msg.tool_overdue', { tool: a.toolName, days: a.days })
+      case 'no_manager':
+        return t('alerts.msg.no_manager', { name: a.siteName })
       case 'pending_approval':
         return t('alerts.msg.pending_approval', { invoiceNo: a.invoiceNo })
     }
@@ -97,7 +99,8 @@ function AlertItem({ alert, onException }: { alert: Alert; onException: (a: Aler
 
   const open = () => {
     if (!alert.read) update.mutate({ ids: [alert.id], patch: { read: true } })
-    if (alert.invoiceId) navigate(`/upload?invoice=${alert.invoiceId}`)
+    if (alert.type === 'no_manager') navigate(`/sites/${alert.siteId}`)
+    else if (alert.invoiceId) navigate(`/upload?invoice=${alert.invoiceId}`)
     else if (alert.toolId) navigate(`/tools?tool=${alert.toolId}`)
     else if (alert.productId) navigate(`/inventory?product=${alert.productId}&productSite=${alert.siteId}`)
   }
@@ -131,7 +134,7 @@ function AlertItem({ alert, onException }: { alert: Alert; onException: (a: Aler
         <div className="mt-3 flex flex-wrap gap-1.5">
           <Button size="sm" variant="secondary" onClick={open}>
             <ExternalLink />
-            {alert.invoiceId ? t('alerts.openBill') : alert.toolId ? t('alerts.openTool') : t('alerts.openBatch')}
+            {alert.invoiceId ? t('alerts.openBill') : alert.toolId ? t('alerts.openTool') : alert.type === 'no_manager' ? t('sites.openSite') : t('alerts.openBatch')}
           </Button>
           {!alert.read && !alert.resolved && (
             <Button size="sm" variant="ghost" onClick={() => update.mutate({ ids: [alert.id], patch: { read: true } })}>
@@ -228,11 +231,7 @@ export default function AlertsPage() {
         {isError ? (
           <ErrorState onRetry={() => void refetch()} />
         ) : isLoading ? (
-          <div className="space-y-3 p-4">
-            {Array.from({ length: 5 }, (_, i) => (
-              <Skeleton key={i} className="h-24" />
-            ))}
-          </div>
+          <Loader />
         ) : visible.length === 0 ? (
           <EmptyState icon={CircleCheckBig} title={t('alerts.empty')} description={t('alerts.emptyHint')} />
         ) : (

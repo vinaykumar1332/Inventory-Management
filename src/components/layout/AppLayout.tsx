@@ -9,7 +9,9 @@ import { useMediaQuery, usePersistentState } from '@/hooks/useMediaQuery'
 import { useAppBadge, useNetworkState } from '@/features/pwa'
 import { useUnreadAlertCount } from '@/hooks/queries'
 import { DemoBadge, Logo } from '@/components/common'
-import { StockActionsProvider } from '@/features/stock/StockActions'
+import { ProfileConfirmDialog } from '@/features/auth/ProfileConfirmDialog'
+import { ApprovalNotifier } from '@/features/approvals'
+import { StockActionsHost } from '@/features/stock/StockActions'
 import { LanguageSelect, ThemeToggle } from '@/components/layout/HeaderControls'
 import { UserMenu } from '@/components/layout/UserMenu'
 import { BottomNav, MoreSheet } from './MobileNav'
@@ -75,7 +77,7 @@ export function AppLayout() {
   }, [tabletOpen])
 
   return (
-    <StockActionsProvider>
+    <StockActionsHost>
       <a href="#main" className="sr-only z-50 rounded-md bg-primary px-4 py-2 text-primary-foreground focus:not-sr-only focus:fixed focus:left-3 focus:top-3">
         {t('common.skipToContent')}
       </a>
@@ -95,8 +97,10 @@ export function AppLayout() {
           </div>
         </main>
       </div>
+      <ProfileConfirmDialog />
+      <ApprovalNotifier />
       <BottomNav onMore={() => setMoreOpen(true)} />
       <MoreSheet open={moreOpen} onOpenChange={setMoreOpen} />
-    </StockActionsProvider>
+    </StockActionsHost>
   )
 }

@@ -28,7 +28,8 @@ import type {
   Unit,
   UploadType,
 } from '@/types'
-import type { Permission } from '@/lib/permissions'
+import type { Permission } from '@/features/access/permissions'
+import type { GovernedAction, SubmissionMode } from '@/features/approvals/types'
 import type { IconName } from './icons'
 
 export type Tone = 'neutral' | 'primary' | 'success' | 'warning' | 'danger' | 'info' | 'navy'
@@ -86,7 +87,7 @@ export interface NavItemConfig {
   icon: IconName
   permission?: Permission
   section: 'main' | 'operations' | 'insights'
-  badge?: 'unreadAlerts'
+  badge?: 'unreadAlerts' | 'pendingApprovals'
 }
 
 export interface NavigationConfig {
@@ -126,8 +127,10 @@ export interface DashboardConfig {
 
 export interface RolesConfig {
   roles: Role[]
-  permissions: Record<Role, Permission[]>
-  permissionMatrixRows: Permission[]
+  actions: Record<GovernedAction, Record<Role, SubmissionMode>>
+  permissionAliases: Record<string, GovernedAction>
+  staticPermissions: Record<string, Partial<Record<Role, boolean>>>
+  permissionMatrixRows: string[]
 }
 
 export interface ReportConfig {

@@ -4,40 +4,31 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { ShieldAlert } from 'lucide-react'
 import { useAuth } from '@/features/auth/AuthProvider'
-import type { Permission } from '@/lib/permissions'
+import type { Permission } from '@/features/access'
 import { AppLayout } from '@/components/layout/AppLayout'
-import { EmptyState } from '@/components/common'
-import { Button, Skeleton } from '@/components/ui'
-import LoginPage from '@/pages/LoginPage'
+import { EmptyState, Loader } from '@/components/common'
+import { Button } from '@/components/ui'
+import LoginPage from '@/pages/auth/LoginPage'
 import { ROUTES, locationToString } from './routes'
 
 // Route-level code splitting: chart-heavy pages and the Excel feature load on demand.
-const NotFoundPage = React.lazy(() => import('@/pages/NotFoundPage'))
-const DashboardPage = React.lazy(() => import('@/pages/DashboardPage'))
-const SitesPage = React.lazy(() => import('@/pages/SitesPage'))
-const SiteDetailPage = React.lazy(() => import('@/pages/SiteDetailPage'))
-const InventoryPage = React.lazy(() => import('@/pages/InventoryPage'))
-const BillsPage = React.lazy(() => import('@/pages/BillsPage'))
-const UploadBillPage = React.lazy(() => import('@/pages/UploadBillPage'))
-const MovementsPage = React.lazy(() => import('@/pages/MovementsPage'))
-const AlertsPage = React.lazy(() => import('@/pages/AlertsPage'))
-const ToolsPage = React.lazy(() => import('@/pages/ToolsPage'))
-const ReportsPage = React.lazy(() => import('@/pages/ReportsPage'))
-const AdminPage = React.lazy(() => import('@/pages/AdminPage'))
+const NotFoundPage = React.lazy(() => import('@/pages/errors/NotFoundPage'))
+const DashboardPage = React.lazy(() => import('@/pages/dashboard/DashboardPage'))
+const SitesPage = React.lazy(() => import('@/pages/sites/SitesPage'))
+const SiteDetailPage = React.lazy(() => import('@/pages/sites/SiteDetailPage'))
+const InventoryPage = React.lazy(() => import('@/pages/inventory/InventoryPage'))
+const BillsPage = React.lazy(() => import('@/pages/bills/BillsPage'))
+const UploadBillPage = React.lazy(() => import('@/pages/bills/UploadBillPage'))
+const MovementsPage = React.lazy(() => import('@/pages/movements/MovementsPage'))
+const AlertsPage = React.lazy(() => import('@/pages/alerts/AlertsPage'))
+const ApprovalsPage = React.lazy(() => import('@/pages/approvals/ApprovalsPage'))
+const ApprovalDetailPage = React.lazy(() => import('@/pages/approvals/ApprovalDetailPage'))
+const ToolsPage = React.lazy(() => import('@/pages/tools/ToolsPage'))
+const ReportsPage = React.lazy(() => import('@/pages/reports/ReportsPage'))
+const AdminPage = React.lazy(() => import('@/pages/admin/AdminPage'))
 
 function PageFallback() {
-  return (
-    <div aria-busy="true" className="space-y-4">
-      <Skeleton className="h-8 w-56" />
-      <Skeleton className="h-4 w-80 max-w-full" />
-      <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
-        {Array.from({ length: 4 }, (_, i) => (
-          <Skeleton key={i} className="h-28" />
-        ))}
-      </div>
-      <Skeleton className="h-72" />
-    </div>
-  )
+  return <Loader fullPage />
 }
 
 const Lazy = ({ children }: { children: React.ReactNode }) => <React.Suspense fallback={<PageFallback />}>{children}</React.Suspense>
@@ -125,6 +116,8 @@ export const router = createBrowserRouter([
           page('upload', <UploadBillPage />, 'upload_bills'),
           page('movements', <MovementsPage />),
           page('alerts', <AlertsPage />),
+          page('approvals', <ApprovalsPage />),
+          page('approvals/:approvalId', <ApprovalDetailPage />),
           page('tools', <ToolsPage />),
           page('reports', <ReportsPage />, 'view_reports'),
           page('admin', <AdminPage />, 'manage_users'),

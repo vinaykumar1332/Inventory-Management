@@ -66,6 +66,11 @@
       "badge": "unreadAlerts"
     },
     {
+      "to": "/approvals",
+      "labelKey": "nav.approvals",
+      "badge": "pendingApprovals"
+    },
+    {
       "to": "/reports",
       "labelKey": "nav.reports",
       "icon": "BarChart3",
