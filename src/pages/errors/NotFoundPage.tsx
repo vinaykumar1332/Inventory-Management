@@ -8,7 +8,7 @@ import { ROUTES, suggestPath } from '@/app/routes'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { Button } from '@/components/ui'
 import { DemoBadge } from '@/components/common'
-import { PublicHeader } from '@/components/layout/PublicHeader'
+import { PublicHeader } from '@/components/shell/PublicHeader'
 
 /** Standalone 404 shown for any unknown address, signed in or not. */
 export default function NotFoundPage() {

@@ -9,8 +9,8 @@ import { useApiMutation, useBatches, useProducts, useSiteDirectory, useSites, us
 import * as api from '@/api/mockApi'
 import { catalog } from '@/config'
 import { cn } from '@/lib/utils'
-import { Badge, Button, Field, Input, Select, Sheet, Textarea } from '@/components/ui'
-import { Segmented } from '@/components/common'
+import { Badge, Button, Field, Input, Select, Textarea } from '@/components/ui'
+import { Segmented, SidePanel } from '@/components/common'
 import { DEFAULT_WASTAGE, expectedQuantity, isExpired, round2 } from '@/utils/calc'
 import { formatDate, formatNumber, formatQty, unitLabel } from '@/utils/format'
 import type { StockActionDefaults } from './StockActions'
@@ -210,15 +210,15 @@ export function StockMovementSheet({
   const formId = `stock-form-${mode}`
 
   return (
-    <Sheet
+    <SidePanel
       open={open}
-      onOpenChange={(o) => {
-        setOpen(o)
-        if (!o) window.setTimeout(onClose, 200)
+      onClose={() => {
+        setOpen(false)
+        window.setTimeout(onClose, 200)
       }}
       title={t(meta.title)}
       description={t(meta.hint)}
-      size="lg"
+      width="md"
       footer={
         <>
           <Button variant="secondary" onClick={close}>
@@ -397,6 +397,6 @@ export function StockMovementSheet({
           <ShieldCheck className="size-3.5" aria-hidden /> {t('stock.auditNote')}
         </p>
       </form>
-    </Sheet>
+    </SidePanel>
   )
 }

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import * as api from '@/api/mockApi'
+import { paths } from '@/app/routes'
 import { useAuth } from '@/features/auth/AuthProvider'
 
 // Approvals already announced, per signed-in user. Kept on globalThis so hot reloads
@@ -34,12 +35,12 @@ export function ApprovalNotifier() {
       const [a] = fresh
       toast.warning(t('approvals.incomingOne', { name: a.submitterName, summary: a.summary }), {
         duration,
-        action: { label: t('approvals.view'), onClick: () => navigate('/approvals/' + a.id) },
+        action: { label: t('approvals.view'), onClick: () => navigate(paths.approval(a.id)) },
       })
     } else {
       toast.warning(t('approvals.incomingMany', { count: fresh.length }), {
         duration,
-        action: { label: t('approvals.view'), onClick: () => navigate('/approvals') },
+        action: { label: t('approvals.view'), onClick: () => navigate(paths.approvals) },
       })
     }
   }, [data, user, navigate, t])

@@ -6,8 +6,8 @@ import { EditSiteSheet } from '@/features/sites/EditSiteSheet'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { useStockActions } from '@/features/stock/StockActions'
 import { useBatches, useBills, useDashboard, useMovements, useSite, useStock, useTools } from '@/hooks/queries'
-import { Button, Card, CardContent, CardHeader, CardTitle, Progress, Table, TableWrap, TBody, TD, TH, THead, TR } from '@/components/ui'
-import { EmptyState, ErrorState, ExpiryCell, KpiCard, KpiGrid, PageTabs, SitePhaseBadge, SiteStatusBadge, Loader, TabsContent } from '@/components/common'
+import { Button, Card, CardContent, CardHeader, CardTitle, Progress } from '@/components/ui'
+import { EmptyState, ErrorState, ExpiryCell, KpiCard, KpiGrid, PageTabs, ResponsiveTable, SitePhaseBadge, SiteStatusBadge, Loader, TabsContent } from '@/components/common'
 import { StockTable } from '@/features/inventory/StockTable'
 import { ProductDrawer } from '@/features/inventory/ProductDrawer'
 import { BillsTable } from '@/features/bills/BillsTable'
@@ -20,6 +20,7 @@ import { ExpiryTimeline } from '@/features/dashboard/widgets'
 import { businessConfig, catalog } from '@/config'
 import type { ReportFilters } from '@/types'
 
+import { paths } from '@/app/routes'
 import { isoDaysFromNow } from '@/utils/date'
 import { formatDate, formatINR, formatINRCompact, formatQty } from '@/utils/format'
 
@@ -123,39 +124,43 @@ function BatchesTab({ siteId }: { siteId: string }) {
   if (isLoading || !data) return <Loading />
   const c = (k: string) => t(`product.batchCols.${k}`)
   return (
-    <TableWrap>
-      <Table>
-        <THead>
-          <tr>
-            <TH>{t('common.product')}</TH>
-            <TH>{c('batchNo')}</TH>
-            <TH>{c('mfg')}</TH>
-            <TH>{c('expiry')}</TH>
-            <TH className="text-right">{c('received')}</TH>
-            <TH className="text-right">{c('available')}</TH>
-            <TH className="text-right">{t('common.value')}</TH>
-          </tr>
-        </THead>
-        <TBody>
-          {data.map((b) => (
-            <TR key={b.id} className={b.qtyAvailable <= 0 ? 'opacity-55' : undefined}>
-              <TD>
-                <p className="max-w-60 truncate font-medium">{b.productName}</p>
-                <p className="text-xs text-muted-foreground">{b.brand}</p>
-              </TD>
-              <TD className="font-mono text-xs">{b.batchNo}</TD>
-              <TD className="tabular whitespace-nowrap">{formatDate(b.mfgDate)}</TD>
-              <TD>
-                <ExpiryCell date={b.expiryDate} />
-              </TD>
-              <TD className="tabular whitespace-nowrap text-right">{formatQty(b.qtyReceived, b.unit)}</TD>
-              <TD className="tabular whitespace-nowrap text-right font-semibold">{formatQty(b.qtyAvailable, b.unit)}</TD>
-              <TD className="tabular whitespace-nowrap text-right">{formatINR(b.qtyAvailable * b.unitCost)}</TD>
-            </TR>
-          ))}
-        </TBody>
-      </Table>
-    </TableWrap>
+    <ResponsiveTable
+      rows={data}
+      rowKey={(b) => b.id}
+      caption={t('sites.tabs.batches')}
+      initialSort={{ key: 'expiry', dir: 'asc' }}
+      columns={[
+        {
+          key: 'product',
+          header: t('common.product'),
+          cell: (b) => (
+            <>
+              <p className="max-w-60 truncate font-medium">{b.productName}</p>
+              <p className="text-xs text-muted-foreground">{b.brand}</p>
+            </>
+          ),
+        },
+        { key: 'batchNo', header: c('batchNo'), cell: (b) => b.batchNo, className: 'font-mono text-xs' },
+        { key: 'mfg', header: c('mfg'), cell: (b) => formatDate(b.mfgDate), className: 'tabular whitespace-nowrap' },
+        { key: 'expiry', header: c('expiry'), sortValue: (b) => b.expiryDate, cell: (b) => <ExpiryCell date={b.expiryDate} /> },
+        { key: 'received', header: c('received'), align: 'right', cell: (b) => formatQty(b.qtyReceived, b.unit), className: 'tabular whitespace-nowrap' },
+        {
+          key: 'available',
+          header: c('available'),
+          align: 'right',
+          sortValue: (b) => b.qtyAvailable,
+          cell: (b) => formatQty(b.qtyAvailable, b.unit),
+          className: 'tabular whitespace-nowrap font-semibold',
+        },
+        {
+          key: 'value',
+          header: t('common.value'),
+          align: 'right',
+          cell: (b) => formatINR(b.qtyAvailable * b.unitCost),
+          className: 'tabular whitespace-nowrap',
+        },
+      ]}
+    />
   )
 }
 
@@ -221,7 +226,7 @@ export default function SiteDetailPage() {
 
   return (
     <>
-      <Link to="/sites" className="mb-3 inline-flex min-h-10 items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground">
+      <Link to={paths.sites} className="mb-3 inline-flex min-h-10 items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground">
         <ArrowLeft className="size-4" aria-hidden /> {t('sites.title')}
       </Link>
       {isLoading || !site ? (

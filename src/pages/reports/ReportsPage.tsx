@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { businessConfig } from '@/config'
 import { useProducts } from '@/hooks/queries'
 import { Card, CardContent, Field, Input, Select } from '@/components/ui'
-import { CategorySelect, PageHeader, SiteSelect } from '@/components/common'
+import { CategorySelect, PageLayout, SiteSelect } from '@/components/common'
 import { REPORTS, ReportCard } from '@/features/reports/ReportCard'
 import type { ReportFilters } from '@/types'
 import { isoDaysFromNow } from '@/utils/date'
@@ -24,8 +24,7 @@ export default function ReportsPage() {
   const productOptions = (products ?? []).filter((p) => filters.category === 'all' || p.category === filters.category)
 
   return (
-    <>
-      <PageHeader title={t('reports.title')} subtitle={t('reports.subtitle')} />
+    <PageLayout title={t('reports.title')} subtitle={t('reports.subtitle')}>
       <Card className="mb-5">
         <CardContent className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           <Field label={t('reports.from')} htmlFor="rf-from">
@@ -55,6 +54,6 @@ export default function ReportsPage() {
           <ReportCard key={id} id={id} filters={filters} />
         ))}
       </div>
-    </>
+    </PageLayout>
   )
 }

@@ -2,6 +2,7 @@ import * as React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { FileUp, PackageCheck } from 'lucide-react'
+import { paths } from '@/app/routes'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { Button, Dialog, DialogContent } from '@/components/ui'
 import { StockMovementSheet, type StockActionMode } from './StockMovementSheet'
@@ -100,7 +101,7 @@ function ReceiveDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o
               disabled={!can('upload_bills')}
               onClick={() => {
                 onOpenChange(false)
-                navigate('/upload')
+                navigate(paths.upload())
               }}
             >
               <FileUp /> {t('stock.receiveGo')}

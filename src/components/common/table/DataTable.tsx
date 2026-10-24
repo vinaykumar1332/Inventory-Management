@@ -23,6 +23,8 @@ export function useTableState<T, K extends string>(
 
   const sorted = React.useMemo(() => {
     const get = accessors[sort.key]
+    // A table with no sortable columns still has an initial key; keep the rows in order then.
+    if (!get) return rows
     const dir = sort.dir === 'asc' ? 1 : -1
     return [...rows].sort((a, b) => {
       const va = get(a)

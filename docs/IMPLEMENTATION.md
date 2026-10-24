@@ -114,7 +114,7 @@ Other seeded users in `users.json`: Meena Rao (`admin`, all sites), Suresh Kumar
 
 ### 4.1 Route table
 
-Defined in `src/app/router.tsx`. Paths come from `src/config/navigation.json`.
+Defined in `src/app/router.tsx`. Paths come from `src/config/navigation.json`. Guards, error handling and the typed `paths` helpers are described in [routing.md](routing.md).
 
 | Path | Access | Screen |
 |---|---|---|
@@ -123,7 +123,7 @@ Defined in `src/app/router.tsx`. Paths come from `src/config/navigation.json`.
 | `/logout` | Public | Signs out and redirects to `/login` |
 | `/dashboard` | Signed in | Dashboard: KPIs, expiry lanes, charts, activity |
 | `/sites` | Signed in | Sites list (grid or table; the choice is kept in a cookie). Create site: `manage_sites` |
-| `/sites/:siteId` | Signed in | Site detail with tabs (overview, stock, batches, bills, usage, tools, reports) |
+| `/sites/:siteId` | Signed in | Site detail with tabs (overview, stock, batches, bills, usage, tools, labour, reports) |
 | `/inventory` | Signed in | Product-wise stock across sites, product drawer |
 | `/upload` | `upload_bills` | Bill upload wizard (submits for approval for Site Managers) |
 | `/bills` | `view_bills` | Bills list |
@@ -131,6 +131,7 @@ Defined in `src/app/router.tsx`. Paths come from `src/config/navigation.json`.
 | `/tools` | Signed in | Tools list, issue, return, maintenance |
 | `/alerts` | Signed in | Alert centre: filters, read and resolve, expiry exceptions |
 | `/approvals` | Signed in | Waiting for me, My submissions, History. Badge shows waiting count |
+| `/approvals/:approvalId` | Signed in | One request: details, payload, and the approve, reject or cancel actions that apply to the user |
 | `/reports` | `view_reports` | Downloadable Excel reports |
 | `/admin` | `manage_users` | Users and access: user list, add, edit, enable or disable, permission matrix |
 | Any other path | Public | 404 page with a "did you mean" suggestion |
@@ -382,21 +383,27 @@ src/
     access/      Role-based access: permission table helpers, <Can>, access matrix
     approvals/   Approval engine (submit, approve, reject, cancel), approval hooks and UI
   components/
-    ui/                 Primitives: button, display, form, overlay
-    common/             Shared domain components: status badges, PageHeader, DataTable...
-    layout/             AppLayout, Sidebar, MobileNav, header controls, UserMenu
+    ui/                 Primitives: button, display, form, layout, overlay
+    common/             Shared components: feedback, layout (PageLayout, SidePanel...), table (ResponsiveTable), status, inputs
+    shell/              App shell (not reusable): AppLayout, Sidebar, MobileNav, header controls, UserMenu
   api/                  Mock API, in-memory DB, session, derived views
   data/                 Mock JSON and date shifting
-  config/               JSON configuration and typed accessors
+  config/               JSON configuration, typed accessors, zod schemas
   i18n/                 i18n setup and locales/
   hooks/                Shared hooks: queries, guarded action, media query
-  lib/                  Permissions, cookie storage, utilities, platform checks
+  lib/                  Cookie storage, platform checks, utilities (permissions live in features/access)
+  styles/               Generated tokens.css (do not edit)
+  test/                 Vitest setup
   theme/                Theme provider and token injection
   types/                Domain types
   utils/                Formatting, dates, calculations, Excel helpers
   sw.ts                 Service worker
   main.tsx              Entry point
+vitest.config.ts        Test configuration (jsdom); tests are *.test.ts(x) next to the code
+docs/                   architecture.md, routing.md, components.md, styling.md, refactor-audit.md
 ```
+
+For the layers and how they call each other, see [architecture.md](architecture.md).
 
 ### Where new code goes
 
@@ -404,12 +411,14 @@ src/
 |---|---|
 | A new screen | `src/pages/`, plus a route in `src/app/router.tsx` |
 | A reusable button, input or dialog | `src/components/ui/` |
+| A shared screen block (table, panel, page frame) | `src/components/common/`, documented in [components.md](components.md) |
+| A new route or a link to a screen | [routing.md](routing.md): add the route, then a `paths` builder in `src/app/routes.ts` |
 | UI used by one feature | `src/features/<name>/components/` |
 | A data call | A function in `src/api/mockApi.ts`, wrapped in a hook in `src/hooks/queries.ts` |
 | An action that sends data | Wrap it with `useGuardedAction`, and use `useApiMutation` for mutations |
 | Visible text | `src/i18n/locales/*.json` (all three languages) |
 | A number, colour, label or limit | `src/config/*.json` |
-| A new permission | `src/lib/permissions.ts` (type), `src/config/roles.json` (matrix), and the `Guard` or `can()` check where it is used |
+| A new permission | `src/features/access/permissions.ts` (type), `src/config/roles.json` (matrix), and `<Can>`, `can()` or the route `page()` guard where it is used |
 
 ---
 
@@ -425,8 +434,10 @@ src/
 Before merging a change:
 
 1. `npm run typecheck` passes.
-2. `npm run build` passes, and the bundle sizes printed are as expected.
-3. New text exists in all three locale files.
-4. New permissions are added to the type, the matrix and the API `authorize` call.
-5. Sign in as each demo role and check the screens and buttons that change.
-6. For network or PWA changes, test in `npm run preview`, with DevTools network throttling and the offline toggle.
+2. `npm test` passes.
+3. `npm run build` passes, and the bundle sizes printed are as expected.
+4. New text exists in all three locale files.
+5. New permissions are added to the type, the matrix and the API `authorize` call, and the check uses `describeAccess` so the UI and the API agree.
+6. New links use the `paths` builders, and new shared components are listed in [components.md](components.md).
+7. Sign in as each demo role and check the screens and buttons that change.
+8. For network or PWA changes, test in `npm run preview`, with DevTools network throttling and the offline toggle.

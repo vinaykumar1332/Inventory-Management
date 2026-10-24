@@ -76,8 +76,12 @@ import {
   buildToolRows,
 } from '@/api/selectors'
 
-const delay = (min = appConfig.demo.apiDelayMs.min, max = appConfig.demo.apiDelayMs.max) =>
-  new Promise<void>((resolve) => setTimeout(resolve, min + Math.random() * (max - min)))
+// One place sets the mock latency: src/config/app.json → demo.apiDelayMs. Zero means no wait, but still async.
+const delay = () => {
+  const { min, max } = appConfig.demo.apiDelayMs
+  const ms = max <= 0 ? 0 : min + Math.random() * (max - min)
+  return new Promise<void>((resolve) => setTimeout(resolve, ms))
+}
 
 const clone = <T,>(value: T): T => structuredClone(value)
 
@@ -123,7 +127,7 @@ function recordMovement(db: DemoDb, movement: Omit<StockMovement, 'id' | 'date'>
 /* ------------------------------------------------------------------ */
 
 export async function login(email: string): Promise<User> {
-  await delay(500, 900)
+  await delay()
   const db = getDb()
   const user = db.users.find((u) => u.email.toLowerCase() === email.trim().toLowerCase())
   if (!user) throw new ApiError('auth.unknownUser')
@@ -144,7 +148,7 @@ export async function getDemoAccounts(): Promise<User[]> {
 }
 
 export async function getCompany() {
-  await delay(150, 300)
+  await delay()
   const db = getDb()
   authorize(db)
   return clone(db.company)
@@ -160,14 +164,14 @@ export function getCurrentUserSync(): User | null {
 }
 
 export async function getUsers(): Promise<User[]> {
-  await delay(200, 400)
+  await delay()
   const db = getDb()
   authorize(db)
   return clone(db.users)
 }
 
 export async function resetDemoData() {
-  await delay(400, 600)
+  await delay()
   releaseAllFiles()
   resetDb()
 }
@@ -177,7 +181,7 @@ export async function resetDemoData() {
 /* ------------------------------------------------------------------ */
 
 export async function getDashboard(siteId: string | 'all' = 'all'): Promise<DashboardData> {
-  await delay(500, 900)
+  await delay()
   const db = getDb()
   const { siteIds } = authorize(db)
   const scope = siteId === 'all' ? siteIds : siteIds.filter((id) => id === siteId)
@@ -192,7 +196,7 @@ export async function getSites(): Promise<SiteSummary[]> {
 }
 
 export async function getSite(id: string): Promise<SiteSummary> {
-  await delay(250, 500)
+  await delay()
   const db = getDb()
   const { siteIds } = authorize(db)
   assertSite(siteIds, id)
@@ -202,7 +206,7 @@ export async function getSite(id: string): Promise<SiteSummary> {
 }
 
 export async function createSite(input: CreateSiteInput): Promise<Site | Submitted> {
-  await delay(500, 800)
+  await delay()
   const db = getDb()
   const { user } = authorizeAction(db, 'site.create')
   if (db.sites.some((s) => s.code.toLowerCase() === input.code.trim().toLowerCase())) {
@@ -220,14 +224,14 @@ export async function createSite(input: CreateSiteInput): Promise<Site | Submitt
 /* ------------------------------------------------------------------ */
 
 export async function getProducts(): Promise<Product[]> {
-  await delay(200, 400)
+  await delay()
   const db = getDb()
   authorize(db)
   return clone(db.products)
 }
 
 export async function getVendors(): Promise<Vendor[]> {
-  await delay(150, 300)
+  await delay()
   const db = getDb()
   authorize(db)
   return clone(db.vendors)
@@ -242,7 +246,7 @@ export async function getStock(siteId: string | 'all' = 'all'): Promise<StockRow
 }
 
 export async function getProductById(id: string, siteId: string | 'all' = 'all'): Promise<ProductDetail> {
-  await delay(300, 600)
+  await delay()
   const db = getDb()
   const { siteIds } = authorize(db)
   const scope = siteId === 'all' ? siteIds : siteIds.filter((s) => s === siteId)
@@ -263,7 +267,7 @@ export async function getProductById(id: string, siteId: string | 'all' = 'all')
 }
 
 export async function getBatches(filter: { siteId?: string; productId?: string } = {}): Promise<BatchRow[]> {
-  await delay(200, 450)
+  await delay()
   const db = getDb()
   const { siteIds } = authorize(db)
   const list = db.batches.filter(
@@ -296,7 +300,7 @@ export async function getBatches(filter: { siteId?: string; productId?: string }
 }
 
 export async function getMovements(filter: { siteId?: string; productId?: string; type?: MovementType; invoiceId?: string; limit?: number } = {}): Promise<MovementRow[]> {
-  await delay(250, 500)
+  await delay()
   const db = getDb()
   const { siteIds } = authorize(db)
   const rows = db.movements
@@ -323,7 +327,7 @@ export async function getMovements(filter: { siteId?: string; productId?: string
 }
 
 export async function issueMaterial(input: IssueMaterialInput): Promise<StockMovement | Submitted> {
-  await delay(500, 800)
+  await delay()
   const db = getDb()
   const { user, siteIds } = authorizeAction(db, 'stock.issue')
   assertSite(siteIds, input.siteId)
@@ -336,7 +340,7 @@ export async function issueMaterial(input: IssueMaterialInput): Promise<StockMov
 }
 
 export async function returnMaterial(input: ReturnMaterialInput): Promise<StockMovement | Submitted> {
-  await delay(500, 800)
+  await delay()
   const db = getDb()
   const { user, siteIds } = authorizeAction(db, 'stock.return')
   assertSite(siteIds, input.siteId)
@@ -349,7 +353,7 @@ export async function returnMaterial(input: ReturnMaterialInput): Promise<StockM
 }
 
 export async function transferStock(input: TransferStockInput): Promise<StockMovement | Submitted> {
-  await delay(600, 900)
+  await delay()
   const db = getDb()
   const { user, siteIds } = authorizeAction(db, 'stock.transfer')
   assertSite(siteIds, input.fromSiteId)
@@ -363,7 +367,7 @@ export async function transferStock(input: TransferStockInput): Promise<StockMov
 }
 
 export async function reportDamage(input: DamageInput): Promise<StockMovement | Submitted> {
-  await delay(500, 800)
+  await delay()
   const db = getDb()
   const { user, siteIds } = authorizeAction(db, 'damage.report')
   assertSite(siteIds, input.siteId)
@@ -376,7 +380,7 @@ export async function reportDamage(input: DamageInput): Promise<StockMovement | 
 }
 
 export async function adjustStock(input: AdjustmentInput): Promise<StockMovement | Submitted> {
-  await delay(500, 800)
+  await delay()
   const db = getDb()
   const { user, siteIds } = authorizeAction(db, 'stock.adjust')
   assertSite(siteIds, input.siteId)
@@ -400,7 +404,7 @@ export async function getBills(): Promise<Invoice[]> {
 }
 
 export async function getBill(id: string): Promise<Invoice> {
-  await delay(250, 450)
+  await delay()
   const db = getDb()
   const { siteIds } = authorize(db, 'view_bills')
   const inv = db.invoices.find((i) => i.id === id)
@@ -424,7 +428,7 @@ export function findDuplicateInvoice(fileName: string, invoiceNo?: string, exclu
 }
 
 export async function uploadBill(input: UploadBillInput): Promise<Invoice> {
-  await delay(700, 1100)
+  await delay()
   const db = getDb()
   const { user, siteIds } = authorizeAction(db, 'bill.upload')
   assertSite(siteIds, input.siteId)
@@ -577,7 +581,7 @@ export async function extractBill(invoiceId: string, file?: File): Promise<Invoi
   }
 
   // Elegant processing is shown client-side; keep the network part short.
-  await delay(300, 500)
+  await delay()
 
   const lineItems = rawLines.map((r) => toLine(db.products, r))
   const subtotal = round2(lineItems.reduce((s, l) => s + l.totalCost, 0))
@@ -609,7 +613,7 @@ export async function extractBill(invoiceId: string, file?: File): Promise<Invoi
 }
 
 export async function saveBillDraft(invoiceId: string, draft: BillDraftInput): Promise<Invoice> {
-  await delay(400, 700)
+  await delay()
   const db = getDb()
   const { user, siteIds } = authorizeAction(db, 'bill.upload')
   const inv = db.invoices.find((i) => i.id === invoiceId)
@@ -621,7 +625,7 @@ export async function saveBillDraft(invoiceId: string, draft: BillDraftInput): P
 }
 
 export async function approveBill(invoiceId: string, draft: BillDraftInput): Promise<ApproveBillResult | Submitted> {
-  await delay(800, 1200)
+  await delay()
   const db = getDb()
   const { user, siteIds } = authorizeAction(db, 'bill.approve')
   const inv = db.invoices.find((i) => i.id === invoiceId)
@@ -638,7 +642,7 @@ export async function approveBill(invoiceId: string, draft: BillDraftInput): Pro
 }
 
 export async function rejectBill(invoiceId: string, reason: string): Promise<void> {
-  await delay(400, 700)
+  await delay()
   const db = getDb()
   const { user } = authorize(db)
   if (user.role === 'site_manager') throw new ApiError('errors.forbidden')
@@ -649,7 +653,7 @@ export async function rejectBill(invoiceId: string, reason: string): Promise<voi
 }
 
 export async function archiveBill(invoiceId: string): Promise<void> {
-  await delay(300, 600)
+  await delay()
   const db = getDb()
   const { user } = authorize(db, 'view_bills')
   const inv = db.invoices.find((i) => i.id === invoiceId)
@@ -659,7 +663,7 @@ export async function archiveBill(invoiceId: string): Promise<void> {
 }
 
 export async function createProductRequest(name: string, brand: string, invoiceId: string | null): Promise<void> {
-  await delay(300, 600)
+  await delay()
   const db = getDb()
   const { user } = authorize(db)
   db.productRequests.push({ id: uid('pr'), name, brand, requestedBy: user.id, at: nowIso(), invoiceId })
@@ -671,21 +675,21 @@ export async function createProductRequest(name: string, brand: string, invoiceI
 /* ------------------------------------------------------------------ */
 
 export async function getAlerts(): Promise<Alert[]> {
-  await delay(300, 600)
+  await delay()
   const db = getDb()
   const { siteIds } = authorize(db)
   return clone(buildAlerts(db, siteIds))
 }
 
 export async function updateAlerts(ids: string[], patch: { read?: boolean; resolved?: boolean }): Promise<void> {
-  await delay(200, 400)
+  await delay()
   const db = getDb()
   authorize(db)
   for (const id of ids) db.alertState[id] = { ...db.alertState[id], ...patch }
 }
 
 export async function sendReminder(alertId: string): Promise<void> {
-  await delay(400, 700)
+  await delay()
   const db = getDb()
   const { user } = authorize(db)
   audit(db, user.id, 'reminder_sent', 'alert', alertId, i18n.t('system.reminderSent'))
@@ -694,7 +698,7 @@ export async function sendReminder(alertId: string): Promise<void> {
 
 /** Super Admin only: allow an expired batch to be issued (e.g. lab-tested OK). */
 export async function approveExpiryException(batchId: string): Promise<void | Submitted> {
-  await delay(400, 700)
+  await delay()
   const db = getDb()
   const { user } = authorizeAction(db, 'expiry.override')
   const batch = db.batches.find((b) => b.id === batchId)
@@ -719,7 +723,7 @@ export async function getTools(): Promise<ToolRow[]> {
 }
 
 export async function issueTool(toolId: string, input: { issuedTo: string; expectedReturnDate: string; notes: string }) {
-  await delay(400, 700)
+  await delay()
   const db = getDb()
   const { user, siteIds } = authorize(db, 'manage_tools')
   const tool = db.tools.find((t) => t.id === toolId)
@@ -743,7 +747,7 @@ export async function issueTool(toolId: string, input: { issuedTo: string; expec
 }
 
 export async function returnTool(toolId: string, input: { condition: ToolCondition; notes: string }) {
-  await delay(400, 700)
+  await delay()
   const db = getDb()
   const { user, siteIds } = authorize(db, 'manage_tools')
   const tool = db.tools.find((t) => t.id === toolId)
@@ -763,7 +767,7 @@ export async function returnTool(toolId: string, input: { condition: ToolConditi
 }
 
 export async function reportToolDamage(toolId: string, input: { notes: string }) {
-  await delay(400, 700)
+  await delay()
   const db = getDb()
   const { user, siteIds } = authorize(db, 'report_damage')
   const tool = db.tools.find((t) => t.id === toolId)
@@ -776,7 +780,7 @@ export async function reportToolDamage(toolId: string, input: { notes: string })
 }
 
 export async function completeMaintenance(toolId: string, input: { note: string; cost: number }) {
-  await delay(400, 700)
+  await delay()
   const db = getDb()
   const { user } = authorize(db, 'manage_tools')
   const tool = db.tools.find((t) => t.id === toolId)
@@ -791,7 +795,7 @@ export async function completeMaintenance(toolId: string, input: { note: string;
 /* ------------------------------------------------------------------ */
 
 export async function exportReport(id: ReportId, filters: ReportFilters): Promise<ReportResult> {
-  await delay(400, 800)
+  await delay()
   const db = getDb()
   const { siteIds: allowed } = authorize(db, 'view_reports')
   const siteIds = filters.siteId === 'all' ? allowed : allowed.filter((s) => s === filters.siteId)
@@ -949,7 +953,7 @@ export async function exportReport(id: ReportId, filters: ReportFilters): Promis
 
 /** Lightweight list of every site (for transfer destinations). */
 export async function getSiteLabour(siteId: string) {
-  await delay(250, 450)
+  await delay()
   const db = getDb()
   const { siteIds } = authorize(db)
   assertSite(siteIds, siteId)
@@ -958,7 +962,7 @@ export async function getSiteLabour(siteId: string) {
 
 /** Adds a labour member to a site roster. Name is required; everything else is optional. */
 export async function addLabourMember(siteId: string, input: { name: string; phone: string; role: StaffRole }): Promise<StaffMember> {
-  await delay(200, 400)
+  await delay()
   const db = getDb()
   const { user, siteIds } = authorize(db)
   assertSite(siteIds, siteId)
@@ -1015,7 +1019,7 @@ function applyAttendance(db: DemoDb, user: User, siteId: string, staffId: string
 }
 
 export async function setAttendance(siteId: string, staffId: string, date: string, patch: { inAt?: string | null; outAt?: string | null }): Promise<LabourAttendance> {
-  await delay(200, 400)
+  await delay()
   const db = getDb()
   const { user, siteIds } = authorize(db)
   assertSite(siteIds, siteId)
@@ -1024,7 +1028,7 @@ export async function setAttendance(siteId: string, staffId: string, date: strin
 
 /** One-tap check-in for today. */
 export async function markArrivedNow(siteId: string, staffId: string): Promise<LabourAttendance> {
-  await delay(200, 400)
+  await delay()
   const db = getDb()
   const { user, siteIds } = authorize(db)
   assertSite(siteIds, siteId)
@@ -1033,7 +1037,7 @@ export async function markArrivedNow(siteId: string, staffId: string): Promise<L
 
 /** One-tap leave time for today. The person must have checked in first. */
 export async function markLeftNow(siteId: string, staffId: string): Promise<LabourAttendance> {
-  await delay(200, 400)
+  await delay()
   const db = getDb()
   const { user, siteIds } = authorize(db)
   assertSite(siteIds, siteId)
@@ -1042,7 +1046,7 @@ export async function markLeftNow(siteId: string, staffId: string): Promise<Labo
 
 /** Labour changes for one site, newest first: who changed what, and when. */
 export async function getLabourLog(siteId: string) {
-  await delay(150, 300)
+  await delay()
   const db = getDb()
   const { siteIds } = authorize(db)
   assertSite(siteIds, siteId)
@@ -1055,7 +1059,7 @@ export async function getLabourLog(siteId: string) {
 }
 
 export async function getSiteDirectory(): Promise<{ id: string; name: string; city: string }[]> {
-  await delay(150, 300)
+  await delay()
   const db = getDb()
   authorize(db)
   return db.sites.map((s) => ({ id: s.id, name: s.name, city: s.city }))
@@ -1063,7 +1067,7 @@ export async function getSiteDirectory(): Promise<{ id: string; name: string; ci
 
 /** Public, unauthenticated figures for the home page. */
 export async function getPublicSummary(): Promise<{ sites: number; products: number; batches: number; languages: number }> {
-  await delay(150, 300)
+  await delay()
   const db = getDb()
   return {
     sites: db.sites.length,
@@ -1105,7 +1109,7 @@ function assertNoDuplicateUser(db: DemoDb, values: Partial<Pick<User, 'email' | 
 
 /** One approval, if the signed-in user submitted it or may review it. */
 export async function getApproval(approvalId: string): Promise<ApprovalRow> {
-  await delay(200, 400)
+  await delay()
   const db = getDb()
   const me = currentUser(db)
   const approval = db.approvals.find((a) => a.id === approvalId)
@@ -1116,31 +1120,31 @@ export async function getApproval(approvalId: string): Promise<ApprovalRow> {
 }
 
 export async function listApprovals(scope: ApprovalScope): Promise<ApprovalRow[]> {
-  await delay(200, 400)
+  await delay()
   const db = getDb()
   return clone(visibleApprovals(db, currentUser(db), scope))
 }
 
 export async function approveRequest(approvalId: string): Promise<void> {
-  await delay(400, 700)
+  await delay()
   const db = getDb()
   approveChange(db, currentUser(db), approvalId, APPLY)
 }
 
 export async function rejectRequest(approvalId: string, reason: string): Promise<void> {
-  await delay(300, 500)
+  await delay()
   const db = getDb()
   rejectChange(db, currentUser(db), approvalId, reason)
 }
 
 export async function cancelRequest(approvalId: string): Promise<void> {
-  await delay(300, 500)
+  await delay()
   const db = getDb()
   cancelChange(db, currentUser(db), approvalId)
 }
 
 export async function confirmProfile(): Promise<User> {
-  await delay(300, 500)
+  await delay()
   const db = getDb()
   const user = currentUser(db)
   user.firstLoginCompleted = true
@@ -1149,7 +1153,7 @@ export async function confirmProfile(): Promise<User> {
 }
 
 export async function createUser(input: CreateUserInput): Promise<User | Submitted> {
-  await delay(400, 700)
+  await delay()
   const db = getDb()
   const { user } = authorizeAction(db, 'user.create')
   if (input.role === 'super_admin') throw new ApiError('errors.forbidden')
@@ -1164,7 +1168,7 @@ export async function createUser(input: CreateUserInput): Promise<User | Submitt
 }
 
 export async function updateUser(id: string, patch: UpdateUserInput): Promise<User | Submitted> {
-  await delay(400, 700)
+  await delay()
   const db = getDb()
   const { user } = authorizeAction(db, 'user.update')
   const target = db.users.find((u) => u.id === id)
@@ -1186,7 +1190,7 @@ export async function updateUser(id: string, patch: UpdateUserInput): Promise<Us
 }
 
 export async function assignManager(siteId: string, managerId: string | null, backupManagerId: string | null): Promise<Site | Submitted> {
-  await delay(400, 700)
+  await delay()
   const db = getDb()
   const { user, siteIds } = authorizeAction(db, 'manager.assign')
   assertSite(siteIds, siteId)
@@ -1548,7 +1552,7 @@ function applySiteUpdate(db: DemoDb, user: User, payload: { siteId: string; patc
 
 /** Super Admin only: edit site details, status and the assigned admin. Applied at once. */
 export async function updateSite(siteId: string, patch: UpdateSiteInput): Promise<Site | Submitted> {
-  await delay(400, 700)
+  await delay()
   const db = getDb()
   const { user } = authorizeAction(db, 'site.update')
   if (!db.sites.some((s) => s.id === siteId)) throw new ApiError('errors.notFound')

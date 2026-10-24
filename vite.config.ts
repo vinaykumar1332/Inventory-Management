@@ -4,10 +4,25 @@ import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import fs from 'node:fs'
 import path from 'node:path'
+import { execFileSync } from 'node:child_process'
 import appConfig from './src/config/app.json' with { type: 'json' }
+
+const themeFile = path.resolve(import.meta.dirname, 'src/config/theme.json')
+const tokensScript = path.resolve(import.meta.dirname, 'scripts/build-tokens.mjs')
 
 export default defineConfig({
   plugins: [
+    // Editing theme.json regenerates src/styles/tokens.css while the dev server runs (no restart needed)
+    {
+      name: 'theme-tokens-watch',
+      configureServer(server) {
+        server.watcher.add(themeFile)
+        server.watcher.on('change', (file) => {
+          if (path.resolve(file) !== themeFile) return
+          execFileSync(process.execPath, [tokensScript], { stdio: 'inherit' })
+        })
+      },
+    },
     // Static hosts without SPA rewrites (e.g. GitHub Pages) serve 404.html for deep links like /dashboard
     {
       name: 'spa-404-fallback',

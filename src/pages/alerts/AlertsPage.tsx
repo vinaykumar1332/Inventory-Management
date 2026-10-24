@@ -20,8 +20,9 @@ import { getIcon } from '@/config/icons'
 import { TINT_CLASSES } from '@/config/tones'
 import { cn } from '@/lib/utils'
 import { Badge, Button, Card, Checkbox, ConfirmDialog, Tooltip } from '@/components/ui'
-import { EmptyState, ErrorState, Loader, PageHeader, Segmented } from '@/components/common'
+import { EmptyState, ErrorState, Loader, PageLayout, Segmented } from '@/components/common'
 import type { Alert, AlertType } from '@/types'
+import { paths } from '@/app/routes'
 import { formatINR, formatQty } from '@/utils/format'
 
 // Filters, icons, tints, severity tones and remindable types: catalog.json → alerts
@@ -99,10 +100,10 @@ function AlertItem({ alert, onException }: { alert: Alert; onException: (a: Aler
 
   const open = () => {
     if (!alert.read) update.mutate({ ids: [alert.id], patch: { read: true } })
-    if (alert.type === 'no_manager') navigate(`/sites/${alert.siteId}`)
-    else if (alert.invoiceId) navigate(`/upload?invoice=${alert.invoiceId}`)
-    else if (alert.toolId) navigate(`/tools?tool=${alert.toolId}`)
-    else if (alert.productId) navigate(`/inventory?product=${alert.productId}&productSite=${alert.siteId}`)
+    if (alert.type === 'no_manager') navigate(paths.site(alert.siteId))
+    else if (alert.invoiceId) navigate(paths.upload(alert.invoiceId))
+    else if (alert.toolId) navigate(paths.tools(alert.toolId))
+    else if (alert.productId) navigate(paths.inventory({ productId: alert.productId, siteId: alert.siteId }))
   }
 
   return (
@@ -194,16 +195,15 @@ export default function AlertsPage() {
   const unreadIds = visible.filter((a) => !a.read).map((a) => a.id)
 
   return (
-    <>
-      <PageHeader
-        title={t('alerts.title')}
-        subtitle={t('alerts.subtitle')}
-        actions={
-          <Button variant="secondary" disabled={!unreadIds.length || markAll.isPending} onClick={() => markAll.mutate(unreadIds)}>
-            <CheckCheck /> {t('alerts.markAllRead')}
-          </Button>
-        }
-      />
+    <PageLayout
+      title={t('alerts.title')}
+      subtitle={t('alerts.subtitle')}
+      actions={
+        <Button variant="secondary" disabled={!unreadIds.length || markAll.isPending} onClick={() => markAll.mutate(unreadIds)}>
+          <CheckCheck /> {t('alerts.markAllRead')}
+        </Button>
+      }
+    >
       <Card>
         {data && data.some((a) => EXPIRY_TYPES.includes(a.type) && !a.resolved) && (
           <div className="px-3 pt-3 md:px-4 md:pt-4">
@@ -256,6 +256,6 @@ export default function AlertsPage() {
           if (exceptionFor?.batchId) exception.mutate(exceptionFor.batchId, { onSuccess: () => setExceptionFor(null) })
         }}
       />
-    </>
+    </PageLayout>
   )
 }

@@ -5,8 +5,8 @@ import { ArrowRightLeft, Download, FileText, PackageMinus, Undo2 } from 'lucide-
 import { useAuth } from '@/features/auth/AuthProvider'
 import { useStockActions } from '@/features/stock/StockActions'
 import { useProduct } from '@/hooks/queries'
-import { Badge, Button, Sheet, Table, TableWrap, TBody, TD, TH, THead, TR } from '@/components/ui'
-import { EmptyState, ErrorState, ExpiryCell, MovementBadge, PageTabs, ProductIcon, TabsContent, Loader } from '@/components/common'
+import { Badge, Button } from '@/components/ui'
+import { EmptyState, ErrorState, ExpiryCell, MovementBadge, PageTabs, ProductIcon, ResponsiveTable, SidePanel, TabsContent, Loader } from '@/components/common'
 import { TINT_CLASSES } from '@/config/tones'
 import { cn } from '@/lib/utils'
 import type { ProductDetail } from '@/types'
@@ -44,10 +44,10 @@ export function ProductDrawer({
   const singleSite = siteId !== 'all' ? siteId : data?.batches.find((b) => b.qtyAvailable > 0)?.siteId
 
   return (
-    <Sheet
+    <SidePanel
       open={!!productId}
-      onOpenChange={(o) => !o && onClose()}
-      size="xl"
+      onClose={onClose}
+      width="lg"
       title={p ? p.name : t('common.loading')}
       description={p ? `${p.brand} · ${t('product.sku')} ${p.sku}` : undefined}
       footer={
@@ -79,7 +79,7 @@ export function ProductDrawer({
       ) : (
         <ProductDetailBody data={data} />
       )}
-    </Sheet>
+    </SidePanel>
   )
 }
 
@@ -185,23 +185,18 @@ function ProductDetailBody({ data }: { data: ProductDetail }) {
           {batches.length === 0 ? (
             <EmptyState title={t('product.noBatches')} />
           ) : (
-            <TableWrap className="rounded-lg border">
-              <Table>
-                <THead>
-                  <tr>
-                    <TH>{t('product.batchCols.batchNo')}</TH>
-                    <TH>{t('product.batchCols.site')}</TH>
-                    <TH>{t('product.batchCols.mfg')}</TH>
-                    <TH>{t('product.batchCols.expiry')}</TH>
-                    <TH className="text-right">{t('product.batchCols.received')}</TH>
-                    <TH className="text-right">{t('product.batchCols.available')}</TH>
-                    <TH className="text-right">{t('product.batchCols.unitCost')}</TH>
-                  </tr>
-                </THead>
-                <TBody>
-                  {batches.map((b) => (
-                    <TR key={b.id} className={b.qtyAvailable <= 0 ? 'opacity-55' : undefined}>
-                      <TD>
+            <div className="overflow-hidden rounded-lg border">
+              <ResponsiveTable
+                rows={batches}
+                rowKey={(b) => b.id}
+                caption={t('product.tabs.batches')}
+                initialSort={{ key: 'expiry', dir: 'asc' }}
+                columns={[
+                  {
+                    key: 'batchNo',
+                    header: t('product.batchCols.batchNo'),
+                    cell: (b) => (
+                      <>
                         <span className="font-mono text-xs">{b.batchNo}</span>
                         {fefo?.id === b.id && (
                           <Badge tone="primary" className="ml-1.5">
@@ -213,20 +208,25 @@ function ProductDetailBody({ data }: { data: ProductDetail }) {
                             {t('product.override')}
                           </Badge>
                         )}
-                      </TD>
-                      <TD className="whitespace-nowrap">{b.siteName}</TD>
-                      <TD className="tabular whitespace-nowrap">{formatDate(b.mfgDate)}</TD>
-                      <TD>
-                        <ExpiryCell date={b.expiryDate} />
-                      </TD>
-                      <TD className="tabular whitespace-nowrap text-right">{formatQty(b.qtyReceived, p.baseUnit)}</TD>
-                      <TD className="tabular whitespace-nowrap text-right font-semibold">{formatQty(b.qtyAvailable, p.baseUnit)}</TD>
-                      <TD className="tabular whitespace-nowrap text-right">{formatINR(b.unitCost, true)}</TD>
-                    </TR>
-                  ))}
-                </TBody>
-              </Table>
-            </TableWrap>
+                      </>
+                    ),
+                  },
+                  { key: 'site', header: t('product.batchCols.site'), cell: (b) => b.siteName, className: 'whitespace-nowrap' },
+                  { key: 'mfg', header: t('product.batchCols.mfg'), cell: (b) => formatDate(b.mfgDate), className: 'tabular whitespace-nowrap' },
+                  { key: 'expiry', header: t('product.batchCols.expiry'), sortValue: (b) => b.expiryDate, cell: (b) => <ExpiryCell date={b.expiryDate} /> },
+                  { key: 'received', header: t('product.batchCols.received'), align: 'right', cell: (b) => formatQty(b.qtyReceived, p.baseUnit), className: 'tabular whitespace-nowrap' },
+                  {
+                    key: 'available',
+                    header: t('product.batchCols.available'),
+                    align: 'right',
+                    sortValue: (b) => b.qtyAvailable,
+                    cell: (b) => formatQty(b.qtyAvailable, p.baseUnit),
+                    className: 'tabular whitespace-nowrap font-semibold',
+                  },
+                  { key: 'unitCost', header: t('product.batchCols.unitCost'), align: 'right', cell: (b) => formatINR(b.unitCost, true), className: 'tabular whitespace-nowrap' },
+                ]}
+              />
+            </div>
           )}
         </TabsContent>
 

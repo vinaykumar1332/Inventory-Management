@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { FileUp, Receipt } from 'lucide-react'
 import { useAuth } from '@/features/auth/AuthProvider'
+import { paths } from '@/app/routes'
 import { catalog } from '@/config'
 import { useBills } from '@/hooks/queries'
 import { Button, Card } from '@/components/ui'
-import { PageHeader, QueryState, SearchInput, Segmented, SiteSelect } from '@/components/common'
+import { PageLayout, QueryState, SearchInput, Segmented, SiteSelect } from '@/components/common'
 import { BillsTable } from '@/features/bills/BillsTable'
 import type { InvoiceStatus } from '@/types'
 
@@ -33,20 +34,19 @@ export default function BillsPage() {
   const count = (s: InvoiceStatus) => data?.filter((b) => b.status === s).length ?? 0
 
   return (
-    <>
-      <PageHeader
-        title={t('bills.title')}
-        subtitle={t('bills.subtitle')}
-        actions={
-          can('upload_bills') && (
-            <Button asChild>
-              <Link to="/upload">
-                <FileUp /> {t('bills.upload')}
-              </Link>
-            </Button>
-          )
-        }
-      />
+    <PageLayout
+      title={t('bills.title')}
+      subtitle={t('bills.subtitle')}
+      actions={
+        can('upload_bills') && (
+          <Button asChild>
+            <Link to={paths.upload()}>
+              <FileUp /> {t('bills.upload')}
+            </Link>
+          </Button>
+        )
+      }
+    >
       <Card>
         <div className="space-y-3 border-b p-3 md:p-4">
           <Segmented
@@ -72,6 +72,6 @@ export default function BillsPage() {
           <BillsTable bills={filtered} hideSite={site !== 'all'} />
         </QueryState>
       </Card>
-    </>
+    </PageLayout>
   )
 }

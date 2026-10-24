@@ -8,6 +8,8 @@ import catalogJson from './catalog.json'
 import dashboard from './dashboard.json'
 import navigation from './navigation.json'
 import roles from './roles.json'
+import ui from './ui.json'
+import layout from './layout.json'
 import theme from './theme.json'
 import type {
   AlertSeverity,
@@ -192,3 +194,22 @@ export const dashboardConfig = dashboard as DashboardConfig
 export const navigationConfig = navigation as NavigationConfig
 export const rolesConfig = roles as RolesConfig
 export const themeConfig = theme as ThemeConfig
+
+export interface UiConfig {
+  breakpoints: { mobile: number; tablet: number; desktop: number; wide: number }
+  sidePanel: { defaultWidth: 'sm' | 'md' | 'lg' }
+  table: { mobileCards: boolean; skeletonRows: number }
+  skeleton: { rows: number }
+  toast: { durationMs: number }
+}
+
+export interface LayoutConfig {
+  contentMaxWidth: string
+  sidebar: { defaultCollapsed: boolean }
+  aside: { width: 'sm' | 'md' | 'lg'; defaultOpen: boolean }
+  /** Columns each widget takes in its row (default 1). The row's column count is the sum of its spans. */
+  dashboard: { rows: string[][]; spans?: Record<string, number> }
+}
+
+export const uiConfig = ui as UiConfig
+export const layoutConfig = layout as LayoutConfig

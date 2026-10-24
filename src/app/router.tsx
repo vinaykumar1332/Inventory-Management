@@ -1,13 +1,11 @@
 import * as React from 'react'
-import { Link, Navigate, Outlet, createBrowserRouter, useLocation, useNavigate, type RouteObject } from 'react-router-dom'
+import { Navigate, Outlet, createBrowserRouter, useLocation, useNavigate, type RouteObject } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { ShieldAlert } from 'lucide-react'
 import { useAuth } from '@/features/auth/AuthProvider'
 import type { Permission } from '@/features/access'
-import { AppLayout } from '@/components/layout/AppLayout'
-import { EmptyState, Loader } from '@/components/common'
-import { Button } from '@/components/ui'
+import { AppLayout } from '@/components/shell/AppLayout'
+import { AccessMessage, Loader } from '@/components/common'
 import LoginPage from '@/pages/auth/LoginPage'
 import { ROUTES, locationToString } from './routes'
 
@@ -49,23 +47,8 @@ function RequireAuth() {
 
 /** UI-only demo authorization — not real security. */
 function Guard({ permission, children }: { permission?: Permission; children: React.ReactNode }) {
-  const { t } = useTranslation()
-  const { can, user } = useAuth()
-  if (permission && !can(permission)) {
-    return (
-      <EmptyState
-        icon={ShieldAlert}
-        title={t('auth.accessDenied')}
-        description={t('auth.accessDeniedBody', { role: user ? t(`roles.${user.role}`) : '' })}
-        action={
-          <Button asChild>
-            <Link to={ROUTES.afterLogin}>{t('auth.goToDashboard')}</Link>
-          </Button>
-        }
-        className="py-24"
-      />
-    )
-  }
+  const { can } = useAuth()
+  if (permission && !can(permission)) return <AccessMessage kind="forbidden" />
   return <Lazy>{children}</Lazy>
 }
 

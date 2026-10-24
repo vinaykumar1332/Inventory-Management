@@ -2,9 +2,10 @@ import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Bell, Languages, Monitor, Moon, Sun } from 'lucide-react'
 import { appConfig, type LanguageCode, type ThemeMode } from '@/config'
-import { LANGUAGES } from '@/i18n'
+import { LANGUAGES, setLanguage } from '@/i18n'
 import { useAlerts } from '@/hooks/queries'
 import { useTheme } from '@/theme/ThemeProvider'
+import { paths } from '@/app/routes'
 import { cn } from '@/lib/utils'
 import { Button, DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from '@/components/ui'
 
@@ -29,7 +30,7 @@ export function LanguageSelect({ variant = 'default' }: { variant?: 'default' | 
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>{t('header.language')}</DropdownMenuLabel>
-        <DropdownMenuRadioGroup value={current.code} onValueChange={(v) => void i18n.changeLanguage(v as LanguageCode)}>
+        <DropdownMenuRadioGroup value={current.code} onValueChange={(v) => void setLanguage(v as LanguageCode)}>
           {LANGUAGES.map((l) => (
             <DropdownMenuRadioItem key={l.code} value={l.code} lang={l.code}>
               {l.label}
@@ -85,7 +86,7 @@ export function AlertsBell() {
       variant="ghost"
       size="icon"
       className="relative"
-      onClick={() => navigate('/alerts')}
+      onClick={() => navigate(paths.alerts)}
       aria-label={unread ? t('header.unreadAlerts', { count: unread }) : t('header.notifications')}
     >
       <Bell className="!size-5" />

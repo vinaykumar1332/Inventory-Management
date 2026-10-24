@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { Check, X } from 'lucide-react'
 import { Button } from '@/components/ui'
+import { paths } from '@/app/routes'
 import { formatDateTime } from '@/utils/format'
 import type { ApprovalScope } from '../engine'
 import type { ApprovalRow } from '../types'
@@ -32,7 +33,7 @@ export function ApprovalCard({
     <li className="space-y-3 px-4 py-4 md:px-5">
       <div className="flex flex-wrap items-center gap-2">
         <span className="font-semibold">{t(`approvals.actionKeys.${actionKey(row.action)}`)}</span>
-        <Link to={`/approvals/${row.id}`} className="text-xs font-medium text-primary hover:underline">{t('approvals.details')}</Link>
+        <Link to={paths.approval(row.id)} className="text-xs font-medium text-primary hover:underline">{t('approvals.details')}</Link>
         <ApprovalStatusBadge status={row.status} />
         {row.siteName && <span className="text-xs text-muted-foreground">· {row.siteName}</span>}
       </div>

@@ -69,7 +69,8 @@
     "poweredByMock": "Data shown is generated for this demo.",
     "skipToContent": "Skip to content",
     "other": "Other",
-    "serial": "#"
+    "serial": "#",
+    "backToDashboard": "Back to dashboard"
   },
   "nav": {
     "main": "Main navigation",
@@ -128,7 +129,8 @@
     "backHome": "Back to home",
     "openDashboard": "Open dashboard",
     "accountDisabled": "This account is disabled. Ask an admin to enable it.",
-    "demoPasswordNote": "Demo: the password is not checked."
+    "demoPasswordNote": "Demo: the password is not checked.",
+    "accessDeniedHint": "Your role does not include this screen. Ask an admin if you need access."
   },
   "header": {
     "language": "Language",

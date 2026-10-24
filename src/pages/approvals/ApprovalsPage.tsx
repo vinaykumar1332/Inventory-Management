@@ -4,7 +4,7 @@ import { CalendarClock } from 'lucide-react'
 import type { ApprovalScope, ApprovalRow } from '@/features/approvals'
 import { ApprovalCard, RejectDialog, useApprovalActions, useApprovals } from '@/features/approvals'
 import { Card, CardContent } from '@/components/ui'
-import { EmptyState, ErrorState, Loader, PageHeader, PageTabs, TabsContent } from '@/components/common'
+import { EmptyState, ErrorState, Loader, PageLayout, PageTabs, TabsContent } from '@/components/common'
 
 const SCOPES: ApprovalScope[] = ['waiting_for_me', 'my_submissions', 'history']
 const TAB_KEY: Record<ApprovalScope, string> = { waiting_for_me: 'waiting', my_submissions: 'mine', history: 'history' }
@@ -17,8 +17,7 @@ export default function ApprovalsPage() {
   const [rejecting, setRejecting] = React.useState<ApprovalRow | null>(null)
 
   return (
-    <>
-      <PageHeader title={t('approvals.title')} subtitle={t('approvals.subtitle')} />
+    <PageLayout title={t('approvals.title')} subtitle={t('approvals.subtitle')}>
       <Card>
         <CardContent className="p-0">
           <PageTabs
@@ -65,6 +64,6 @@ export default function ApprovalsPage() {
           reject.mutate({ id: rejecting.id, reason }, { onSuccess: () => setRejecting(null) })
         }}
       />
-    </>
+    </PageLayout>
   )
 }

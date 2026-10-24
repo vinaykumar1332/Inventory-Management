@@ -1,0 +1,30 @@
+/* DashboardGrid: rows of widgets. Stacks on phones; from the lg breakpoint each row is --row-units columns wide. */
+
+.grid {
+  display: grid;
+  gap: var(--space-5);
+  min-width: 0;
+}
+
+.row {
+  display: grid;
+  gap: var(--space-5);
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+}
+
+.cell {
+  min-width: 0;
+}
+
+@media (min-width: 1024px) {
+  .row {
+    grid-template-columns: repeat(var(--row-units, 1), minmax(0, 1fr));
+  }
+  .cell[data-span='2'] {
+    grid-column: span 2;
+  }
+  .cell[data-span='3'] {
+    grid-column: span 3;
+  }
+}

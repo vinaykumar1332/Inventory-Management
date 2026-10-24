@@ -2,29 +2,33 @@ import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import { appConfig, type LanguageCode } from '@/config'
 import en from '@/i18n/locales/en.json'
-import hi from '@/i18n/locales/hi.json'
-import te from '@/i18n/locales/te.json'
 import { readStorage, storageKeys, writeStorage } from '@/lib/storage'
 
-// Labels live in src/i18n/locales/*.json. Hindi and Telugu are type-checked
-// against English so a missing key fails the build.
+// Labels live in src/i18n/locales/*.json. English ships with the app. Hindi and Telugu load only
+// when a user picks them, so nobody downloads languages they do not use. Each file is checked
+// against English with `satisfies`, so a missing key still fails the build.
 type DeepMessages<T> = { [K in keyof T]: T[K] extends string ? string : DeepMessages<T[K]> }
 export type LocaleMessages = DeepMessages<typeof en>
-const resources: Record<LanguageCode, LocaleMessages> = { en, hi, te }
 
 export const LANGUAGES = appConfig.locale.languages
 export type { LanguageCode }
 
-const stored = readStorage<string>(storageKeys.language, appConfig.locale.defaultLanguage)
-const initial = (LANGUAGES.some((l) => l.code === stored) ? stored : appConfig.locale.defaultLanguage) as LanguageCode
+async function loadLocale(lng: LanguageCode): Promise<LocaleMessages> {
+  switch (lng) {
+    case 'hi':
+      return (await import('@/i18n/locales/hi.json')).default satisfies LocaleMessages
+    case 'te':
+      return (await import('@/i18n/locales/te.json')).default satisfies LocaleMessages
+    default:
+      return en
+  }
+}
 
-void i18n.use(initReactI18next).init({
-  resources: Object.fromEntries(Object.entries(resources).map(([k, v]) => [k, { translation: v }])),
-  lng: initial,
-  fallbackLng: 'en',
-  interpolation: { escapeValue: false },
-  returnNull: false,
-})
+async function ensureLocale(lng: LanguageCode) {
+  if (!i18n.hasResourceBundle(lng, 'translation')) {
+    i18n.addResourceBundle(lng, 'translation', await loadLocale(lng), true, true)
+  }
+}
 
 // Indic scripts are large, so each font is fetched only when its language is selected.
 const SCRIPT_FONTS: Partial<Record<LanguageCode, () => Promise<unknown>>> = {
@@ -50,6 +54,28 @@ function loadScriptFont(lng: string) {
   if (!load || loadedScripts.has(lng)) return
   loadedScripts.add(lng)
   void load()
+}
+
+const stored = readStorage<string>(storageKeys.language, appConfig.locale.defaultLanguage)
+const initial = (LANGUAGES.some((l) => l.code === stored) ? stored : appConfig.locale.defaultLanguage) as LanguageCode
+
+/** Resolves once the first language is loaded. main.tsx waits for it before rendering. */
+export const i18nReady = (async () => {
+  await i18n.use(initReactI18next).init({
+    resources: { en: { translation: en } },
+    lng: 'en',
+    fallbackLng: 'en',
+    interpolation: { escapeValue: false },
+    returnNull: false,
+  })
+  await ensureLocale(initial)
+  await i18n.changeLanguage(initial)
+})()
+
+/** Switches language, loading its messages first so no key shows untranslated. */
+export async function setLanguage(lng: LanguageCode) {
+  await ensureLocale(lng)
+  await i18n.changeLanguage(lng)
 }
 
 document.documentElement.lang = initial

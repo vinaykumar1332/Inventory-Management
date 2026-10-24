@@ -6,7 +6,7 @@ import { getIcon } from '@/config/icons'
 import { useUser } from '@/features/auth/AuthProvider'
 import { useDashboard, useSites } from '@/hooks/queries'
 import { Card } from '@/components/ui'
-import { ErrorState, KpiCard, KpiGrid, Loader, PageHeader, SectionCard, SiteSelect } from '@/components/common'
+import { DashboardGrid, ErrorState, KpiCard, KpiGrid, Loader, PageLayout, SectionCard, SiteSelect } from '@/components/common'
 import { CategoryDonut, ConsumptionChart, StockBySiteChart } from '@/features/dashboard/charts'
 import { ActivityTimeline, ExpiryTimeline, QuickActions, TopMaterials } from '@/features/dashboard/widgets'
 import type { DashboardKpis } from '@/types'
@@ -45,13 +45,11 @@ export default function DashboardPage() {
   const { kpis, widgets, limits } = dashboardConfig
 
   return (
-    <>
-      <PageHeader
-        title={t('dashboard.greeting', { name: user.name.split(' ')[0] })}
-        subtitle={seesAll ? t('dashboard.subtitleAll') : t('dashboard.subtitleAssigned')}
-        actions={(sites?.length ?? 0) > 1 && <SiteSelect className="w-full sm:w-60" value={siteId} onChange={setSiteId} />}
-      />
-
+    <PageLayout
+      title={t('dashboard.greeting', { name: user.name.split(' ')[0] })}
+      subtitle={seesAll ? t('dashboard.subtitleAll') : t('dashboard.subtitleAssigned')}
+      actions={(sites?.length ?? 0) > 1 && <SiteSelect className="w-full sm:w-60" value={siteId} onChange={setSiteId} />}
+    >
       {isError ? (
         <Card>
           <ErrorState onRetry={() => void refetch()} />
@@ -63,9 +61,9 @@ export default function DashboardPage() {
               <Loader className="col-span-full" />
             ) : (
               kpis.map((k) => {
-                  const content = kpiContent(k.id, data.kpis, t)
-                  return <KpiCard key={k.id} label={t(k.labelKey)} icon={getIcon(k.icon)} tone={k.tone} to={k.to} {...content} />
-                })
+                const content = kpiContent(k.id, data.kpis, t)
+                return <KpiCard key={k.id} label={t(k.labelKey)} icon={getIcon(k.icon)} tone={k.tone} to={k.to} {...content} />
+              })
             )}
           </KpiGrid>
 
@@ -76,47 +74,46 @@ export default function DashboardPage() {
           {isLoading || !data ? (
             <Loader />
           ) : (
-            <m.div className="space-y-5" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: 'easeOut' }}>
-              {widgets.expiryTimeline && (
-                <SectionCard title={t('dashboard.expiryTimeline')}>
-                  <ExpiryTimeline groups={data.expiryGroups} />
-                </SectionCard>
-              )}
-
-              <div className="grid gap-5 lg:grid-cols-3">
-                {widgets.consumptionTrend && (
-                  <SectionCard title={t('dashboard.consumption')} description={t('dashboard.consumptionHint')} className="lg:col-span-2">
-                    <ConsumptionChart data={data.consumptionTrend} />
-                  </SectionCard>
-                )}
-                {widgets.categoryMix && (
-                  <SectionCard title={t('dashboard.categoryMix')}>
-                    <CategoryDonut data={data.categoryDistribution} />
-                  </SectionCard>
-                )}
-              </div>
-
-              <div className="grid gap-5 lg:grid-cols-3">
-                {widgets.stockBySite && (
-                  <SectionCard title={t('dashboard.stockBySite')}>
-                    <StockBySiteChart data={data.stockBySite} />
-                  </SectionCard>
-                )}
-                {widgets.topMaterials && (
-                  <SectionCard title={t('dashboard.topMaterials')}>
-                    <TopMaterials items={data.topMaterials} />
-                  </SectionCard>
-                )}
-                {widgets.recentActivity && (
-                  <SectionCard title={t('dashboard.recentActivity')}>
-                    <ActivityTimeline items={data.recentActivity.slice(0, limits.recentActivity)} />
-                  </SectionCard>
-                )}
-              </div>
+            <m.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: 'easeOut' }}>
+              {/* Rows, spans and which widgets appear come from layout.json and dashboard.json */}
+              <DashboardGrid
+                widgets={{
+                  expiryTimeline: widgets.expiryTimeline && (
+                    <SectionCard title={t('dashboard.expiryTimeline')}>
+                      <ExpiryTimeline groups={data.expiryGroups} />
+                    </SectionCard>
+                  ),
+                  consumptionTrend: widgets.consumptionTrend && (
+                    <SectionCard title={t('dashboard.consumption')} description={t('dashboard.consumptionHint')}>
+                      <ConsumptionChart data={data.consumptionTrend} />
+                    </SectionCard>
+                  ),
+                  categoryMix: widgets.categoryMix && (
+                    <SectionCard title={t('dashboard.categoryMix')}>
+                      <CategoryDonut data={data.categoryDistribution} />
+                    </SectionCard>
+                  ),
+                  stockBySite: widgets.stockBySite && (
+                    <SectionCard title={t('dashboard.stockBySite')}>
+                      <StockBySiteChart data={data.stockBySite} />
+                    </SectionCard>
+                  ),
+                  topMaterials: widgets.topMaterials && (
+                    <SectionCard title={t('dashboard.topMaterials')}>
+                      <TopMaterials items={data.topMaterials} />
+                    </SectionCard>
+                  ),
+                  recentActivity: widgets.recentActivity && (
+                    <SectionCard title={t('dashboard.recentActivity')}>
+                      <ActivityTimeline items={data.recentActivity.slice(0, limits.recentActivity)} />
+                    </SectionCard>
+                  ),
+                }}
+              />
             </m.div>
           )}
         </div>
       )}
-    </>
+    </PageLayout>
   )
 }

@@ -1,0 +1,58 @@
+/* PageLayout: spacing and column rules come from tokens. Aside widths follow layout.json (sm / md / lg). */
+
+.page {
+  width: 100%;
+  min-width: 0;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.body {
+  display: grid;
+  gap: var(--space-5);
+  min-width: 0;
+}
+
+.content {
+  min-width: 0;
+}
+
+.withAside {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 1024px) {
+  .withAside {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+  }
+}
+
+.aside {
+  display: grid;
+  gap: var(--space-4);
+  align-content: start;
+  min-width: 0;
+}
+
+.aside_sm {
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .aside_sm {
+    width: 14rem;
+  }
+  .aside_md {
+    width: 18rem;
+  }
+  .aside_lg {
+    width: 22rem;
+  }
+}

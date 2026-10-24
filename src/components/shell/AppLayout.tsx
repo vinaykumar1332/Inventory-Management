@@ -8,12 +8,12 @@ import { storageKeys } from '@/lib/storage'
 import { useMediaQuery, usePersistentState } from '@/hooks/useMediaQuery'
 import { useAppBadge, useNetworkState } from '@/features/pwa'
 import { useUnreadAlertCount } from '@/hooks/queries'
-import { DemoBadge, Logo } from '@/components/common'
+import { DemoBadge, ErrorBoundary, Logo } from '@/components/common'
 import { ProfileConfirmDialog } from '@/features/auth/ProfileConfirmDialog'
 import { ApprovalNotifier } from '@/features/approvals'
 import { StockActionsHost } from '@/features/stock/StockActions'
-import { LanguageSelect, ThemeToggle } from '@/components/layout/HeaderControls'
-import { UserMenu } from '@/components/layout/UserMenu'
+import { LanguageSelect, ThemeToggle } from '@/components/shell/HeaderControls'
+import { UserMenu } from '@/components/shell/UserMenu'
 import { BottomNav, MoreSheet } from './MobileNav'
 import { Sidebar } from './Sidebar'
 
@@ -92,7 +92,9 @@ export function AppLayout() {
         <main id="main" tabIndex={-1} className="min-w-0 flex-1 px-4 pb-28 pt-5 outline-none md:px-6 md:pb-10 md:pt-6 xl:px-8">
           <div className="mx-auto w-full min-w-0 max-w-[1440px]">
             <m.div key={location.pathname} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, ease: "easeOut" }}>
-              <Outlet />
+              <ErrorBoundary resetKey={location.pathname}>
+                <Outlet />
+              </ErrorBoundary>
             </m.div>
           </div>
         </main>

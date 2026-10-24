@@ -7,7 +7,8 @@ import { useAuth } from '@/features/auth/AuthProvider'
 import * as api from '@/api/mockApi'
 import { useApiMutation, useSiteDirectory } from '@/hooks/queries'
 import type { CreateUserInput, Role, User } from '@/types'
-import { Button, Checkbox, Field, Input, Select, Sheet } from '@/components/ui'
+import { Button, Checkbox, Field, Input, Select } from '@/components/ui'
+import { SidePanel } from '@/components/common'
 
 const schema = z
   .object({
@@ -81,10 +82,10 @@ export function UserSheet({ open, onOpenChange, user }: { open: boolean; onOpenC
     setValue('siteIds', on ? [...selected, id] : selected.filter((s) => s !== id), { shouldValidate: true })
 
   return (
-    <Sheet
+    <SidePanel
       open={open}
-      onOpenChange={onOpenChange}
-      size="lg"
+      onClose={() => onOpenChange(false)}
+      width="md"
       title={user ? t('users.edit') : t('users.add')}
       description={t('users.sheetHint')}
       footer={
@@ -136,6 +137,6 @@ export function UserSheet({ open, onOpenChange, user }: { open: boolean; onOpenC
           </fieldset>
         )}
       </form>
-    </Sheet>
+    </SidePanel>
   )
 }

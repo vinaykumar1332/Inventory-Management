@@ -2,7 +2,8 @@ import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAddLabourMember } from '@/hooks/queries'
 import type { StaffRole } from '@/types'
-import { Button, Field, Input, Select, Sheet } from '@/components/ui'
+import { Button, Field, Input, Select } from '@/components/ui'
+import { SidePanel } from '@/components/common'
 
 const ROLES: StaffRole[] = ['foreman', 'supervisor', 'worker', 'quality_checker']
 
@@ -37,11 +38,12 @@ export function AddLabourSheet({ open, onOpenChange, siteId }: { open: boolean; 
   }
 
   return (
-    <Sheet
+    <SidePanel
       open={open}
-      onOpenChange={(o) => {
-        if (!o) reset()
-        onOpenChange(o)
+      width="sm"
+      onClose={() => {
+        reset()
+        onOpenChange(false)
       }}
       title={t('labour.addMember')}
       description={t('labour.addHint')}
@@ -72,6 +74,6 @@ export function AddLabourSheet({ open, onOpenChange, siteId }: { open: boolean; 
           <Input id="lab-phone" inputMode="tel" value={phone} onChange={(e) => setPhone(e.target.value)} />
         </Field>
       </div>
-    </Sheet>
+    </SidePanel>
   )
 }

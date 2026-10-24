@@ -5,7 +5,7 @@ import { Clock, LogOut, PackageCheck, Wrench } from 'lucide-react'
 import { catalog } from '@/config'
 import { useTools } from '@/hooks/queries'
 import { Card, Select } from '@/components/ui'
-import { FilterBar, KpiCard, KpiGrid, Loader, PageHeader, QueryState, SearchInput, SiteSelect } from '@/components/common'
+import { FilterBar, KpiCard, KpiGrid, Loader, PageLayout, QueryState, SearchInput, SiteSelect } from '@/components/common'
 import { ToolDrawer, ToolsTable } from '@/features/tools/ToolComponents'
 import type { ToolStatus } from '@/types'
 
@@ -32,8 +32,7 @@ export default function ToolsPage() {
   const count = (fn: (r: NonNullable<typeof data>[number]) => boolean) => data?.filter(fn).length ?? 0
 
   return (
-    <>
-      <PageHeader title={t('tools.title')} subtitle={t('tools.subtitle')} />
+    <PageLayout title={t('tools.title')} subtitle={t('tools.subtitle')}>
       <KpiGrid className="mb-5 grid-cols-2 lg:grid-cols-4">
         {isLoading ? (
           <Loader className="col-span-full" />
@@ -66,6 +65,6 @@ export default function ToolsPage() {
         </QueryState>
       </Card>
       <ToolDrawer tool={openTool} onClose={() => setParams({}, { replace: true })} />
-    </>
+    </PageLayout>
   )
 }

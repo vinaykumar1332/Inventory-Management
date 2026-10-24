@@ -59,8 +59,8 @@
       "manager@demo.com"
     ],
     "apiDelayMs": {
-      "min": 2500,
-      "max": 3500
+      "min": 0,
+      "max": 0
     },
     "storagePrefix": "siteseal:"
   },

@@ -6,13 +6,12 @@ import { Archive, Download, Eye, MoreHorizontal, PackageCheck, PencilLine } from
 import { useApiMutation, useSites, useUsers } from '@/hooks/queries'
 import { archiveBill } from '@/api/mockApi'
 import { getCachedFile } from '@/features/bills/fileCache'
-import { Button, ConfirmDialog, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, Table, TableWrap, TBody, TD, TH, THead, TR } from '@/components/ui'
-import { BillStatusBadge, Pagination, SortHeader, UploadTypeBadge, useTableState } from '@/components/common'
+import { Button, ConfirmDialog, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui'
+import { BillStatusBadge, ResponsiveTable, UploadTypeBadge, type Column } from '@/components/common'
 import type { Invoice } from '@/types'
+import { paths } from '@/app/routes'
 import { formatDate, formatINR, unitLabel } from '@/utils/format'
 import { BillDocumentDialog, StockEntriesDialog } from './BillDialogs'
-
-type SortKey = 'invoiceNo' | 'vendor' | 'site' | 'date' | 'amount' | 'status'
 
 async function downloadOriginal(inv: Invoice, t: (k: string) => string) {
   const cached = getCachedFile(inv.id)
@@ -54,19 +53,57 @@ export function BillsTable({ bills, hideSite }: { bills: Invoice[]; hideSite?: b
   const siteName = (id: string) => sites?.find((s) => s.id === id)?.name ?? '—'
   const userName = (id: string) => users?.find((u) => u.id === id)?.name ?? '—'
 
-  const table = useTableState<Invoice, SortKey>(
-    bills,
+  const siteColumn: Column<Invoice> = {
+    key: 'site',
+    header: t('bills.cols.site'),
+    sortValue: (b) => siteName(b.siteId),
+    cell: (b) => siteName(b.siteId),
+    className: 'whitespace-nowrap',
+  }
+
+  const columns: Column<Invoice>[] = [
     {
-      invoiceNo: (b) => b.invoiceNo,
-      vendor: (b) => b.vendorName,
-      site: (b) => siteName(b.siteId),
-      date: (b) => b.uploadedAt,
-      amount: (b) => b.billAmount,
-      status: (b) => b.status,
+      key: 'invoiceNo',
+      header: t('bills.cols.invoiceNo'),
+      sortValue: (b) => b.invoiceNo,
+      cell: (b) => (
+        <>
+          <button
+            type="button"
+            className="text-left font-mono text-xs font-semibold hover:text-primary hover:underline"
+            onClick={(e) => {
+              e.stopPropagation()
+              setDocFor(b)
+            }}
+          >
+            {b.invoiceNo || '—'}
+          </button>
+          <p className="max-w-44 truncate text-xs text-muted-foreground">{b.fileName}</p>
+        </>
+      ),
     },
-    { key: 'date', dir: 'desc' },
-  )
-  const sh = { sort: table.sort, onSort: table.toggleSort }
+    { key: 'vendor', header: t('bills.cols.vendor'), sortValue: (b) => b.vendorName, cell: (b) => b.vendorName || '—', className: 'max-w-52 truncate' },
+    ...(hideSite ? [] : [siteColumn]),
+    { key: 'uploadType', header: t('bills.cols.uploadType'), cell: (b) => <UploadTypeBadge type={b.uploadType} /> },
+    { key: 'date', header: t('bills.cols.date'), sortValue: (b) => b.uploadedAt, cell: (b) => formatDate(b.uploadedAt), className: 'tabular whitespace-nowrap' },
+    {
+      key: 'amount',
+      header: t('bills.cols.amount'),
+      align: 'right',
+      sortValue: (b) => b.billAmount,
+      cell: (b) => (b.billAmount ? formatINR(b.billAmount) : '—'),
+      className: 'tabular whitespace-nowrap',
+    },
+    { key: 'items', header: t('bills.cols.items'), align: 'right', cell: (b) => b.lineItems.length, className: 'tabular' },
+    { key: 'status', header: t('bills.cols.status'), sortValue: (b) => b.status, cell: (b) => <BillStatusBadge status={b.status} /> },
+    {
+      key: 'uploadedBy',
+      header: t('bills.cols.uploadedBy'),
+      cell: (b) => userName(b.uploadedBy),
+      className: 'hidden whitespace-nowrap 2xl:table-cell',
+      hideOnMobile: true,
+    },
+  ]
 
   const actions = (b: Invoice) => (
     <DropdownMenu>
@@ -80,7 +117,7 @@ export function BillsTable({ bills, hideSite }: { bills: Invoice[]; hideSite?: b
           <Eye /> {t('bills.viewDocument')}
         </DropdownMenuItem>
         {b.status !== 'approved' && b.status !== 'rejected' && (
-          <DropdownMenuItem onSelect={() => navigate(`/upload?invoice=${b.id}`)}>
+          <DropdownMenuItem onSelect={() => navigate(paths.upload(b.id))}>
             <PencilLine /> {t('bills.continueReview')}
           </DropdownMenuItem>
         )}
@@ -100,76 +137,16 @@ export function BillsTable({ bills, hideSite }: { bills: Invoice[]; hideSite?: b
 
   return (
     <>
-      <TableWrap className="hidden md:block">
-        <Table>
-          <THead>
-            <tr>
-              <SortHeader label={t('bills.cols.invoiceNo')} sortKey="invoiceNo" {...sh} />
-              <SortHeader label={t('bills.cols.vendor')} sortKey="vendor" {...sh} />
-              {!hideSite && <SortHeader label={t('bills.cols.site')} sortKey="site" {...sh} />}
-              <TH>{t('bills.cols.uploadType')}</TH>
-              <SortHeader label={t('bills.cols.date')} sortKey="date" {...sh} />
-              <SortHeader label={t('bills.cols.amount')} sortKey="amount" {...sh} className="text-right" align="right" />
-              <TH className="text-right">{t('bills.cols.items')}</TH>
-              <SortHeader label={t('bills.cols.status')} sortKey="status" {...sh} />
-              <TH className="hidden 2xl:table-cell">{t('bills.cols.uploadedBy')}</TH>
-              <TH className="text-right">
-                <span className="sr-only">{t('bills.cols.actions')}</span>
-              </TH>
-            </tr>
-          </THead>
-          <TBody>
-            {table.pageRows.map((b) => (
-              <TR key={b.id}>
-                <TD>
-                  <button type="button" className="text-left font-mono text-xs font-semibold hover:text-primary hover:underline" onClick={() => setDocFor(b)}>
-                    {b.invoiceNo || '—'}
-                  </button>
-                  <p className="max-w-44 truncate text-xs text-muted-foreground">{b.fileName}</p>
-                </TD>
-                <TD className="max-w-52 truncate">{b.vendorName || '—'}</TD>
-                {!hideSite && <TD className="whitespace-nowrap">{siteName(b.siteId)}</TD>}
-                <TD>
-                  <UploadTypeBadge type={b.uploadType} />
-                </TD>
-                <TD className="tabular whitespace-nowrap">{formatDate(b.uploadedAt)}</TD>
-                <TD className="tabular whitespace-nowrap text-right">{b.billAmount ? formatINR(b.billAmount) : '—'}</TD>
-                <TD className="tabular text-right">{b.lineItems.length}</TD>
-                <TD>
-                  <BillStatusBadge status={b.status} />
-                </TD>
-                <TD className="hidden whitespace-nowrap 2xl:table-cell">{userName(b.uploadedBy)}</TD>
-                <TD className="text-right">{actions(b)}</TD>
-              </TR>
-            ))}
-          </TBody>
-        </Table>
-      </TableWrap>
-
-      <ul className="divide-y md:hidden">
-        {table.pageRows.map((b) => (
-          <li key={b.id} className="flex gap-3 px-4 py-3">
-            <button type="button" className="min-w-0 flex-1 text-left" onClick={() => setDocFor(b)}>
-              <div className="flex items-center gap-2">
-                <span className="truncate font-mono text-sm font-semibold">{b.invoiceNo || b.fileName}</span>
-              </div>
-              <p className="truncate text-sm">{b.vendorName || '—'}</p>
-              <p className="text-xs text-muted-foreground">
-                {!hideSite && `${siteName(b.siteId)} · `}
-                {formatDate(b.uploadedAt)}
-              </p>
-              <div className="mt-2 flex flex-wrap items-center gap-1.5">
-                <BillStatusBadge status={b.status} />
-                <UploadTypeBadge type={b.uploadType} />
-                <span className="tabular text-sm font-semibold">{b.billAmount ? formatINR(b.billAmount) : ''}</span>
-              </div>
-            </button>
-            {actions(b)}
-          </li>
-        ))}
-      </ul>
-
-      <Pagination page={table.page} pages={table.pages} total={table.total} pageSize={table.pageSize} onPage={table.setPage} />
+      <ResponsiveTable
+        columns={columns}
+        rows={bills}
+        rowKey={(b) => b.id}
+        initialSort={{ key: 'date', dir: 'desc' }}
+        caption={t('bills.title')}
+        onRowClick={(b) => setDocFor(b)}
+        rowActions={actions}
+        actionsLabel={t('bills.cols.actions')}
+      />
 
       <BillDocumentDialog invoice={docFor} onClose={() => setDocFor(null)} />
       <StockEntriesDialog invoice={entriesFor} onClose={() => setEntriesFor(null)} />

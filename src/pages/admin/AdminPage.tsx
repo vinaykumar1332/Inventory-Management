@@ -9,8 +9,8 @@ import * as api from '@/api/mockApi'
 import { useApiMutation, useCompany, useSiteDirectory, useUsers } from '@/hooks/queries'
 import { AccessMatrix } from '@/features/access'
 import type { User } from '@/types'
-import { Badge, Button, Table, TableWrap, TBody, TD, TH, THead, TR } from '@/components/ui'
-import { Loader, PageHeader, SectionCard } from '@/components/common'
+import { Badge, Button } from '@/components/ui'
+import { Loader, PageLayout, ResponsiveTable, SectionCard, type Column } from '@/components/common'
 
 export default function AdminPage() {
   const { t } = useTranslation()
@@ -24,9 +24,42 @@ export default function AdminPage() {
     successKey: 'users.updated',
   })
 
+  const userColumns: Column<User>[] = [
+    {
+      key: 'name',
+      header: t('users.cols.name'),
+      cell: (u) => (
+        <>
+          <p className="font-medium">{u.name}</p>
+          <p className="text-xs text-muted-foreground">{u.email}</p>
+        </>
+      ),
+      className: 'whitespace-nowrap',
+    },
+    { key: 'employeeId', header: t('users.cols.employeeId'), cell: (u) => u.employeeId, className: 'font-mono text-xs' },
+    { key: 'designation', header: t('users.cols.designation'), cell: (u) => u.designation, className: 'text-xs' },
+    {
+      key: 'role',
+      header: t('users.cols.role'),
+      cell: (u) => <Badge tone={u.role === 'super_admin' ? 'navy' : u.role === 'admin' ? 'primary' : 'neutral'}>{t(`roles.${u.role}`)}</Badge>,
+    },
+    {
+      key: 'sites',
+      header: t('users.cols.sites'),
+      cell: (u) => (u.role === 'site_manager' ? u.siteIds.map((id) => sites?.find((s) => s.id === id)?.name ?? id).join(', ') : t('users.allSites')),
+      className: 'text-xs',
+    },
+    {
+      key: 'status',
+      header: t('users.cols.status'),
+      cell: (u) => (
+        <Badge tone={u.status === 'active' ? 'success' : 'neutral'}>{u.status === 'active' ? t('users.statusActive') : t('users.statusDisabled')}</Badge>
+      ),
+    },
+  ]
+
   return (
-    <>
-      <PageHeader title={t('users.title')} subtitle={t('users.subtitle')} />
+    <PageLayout title={t('users.title')} subtitle={t('users.subtitle')}>
       <p role="note" className="mb-5 flex items-start gap-2 rounded-lg border border-warning/30 bg-warning-soft px-4 py-3 text-sm text-warning">
         <ShieldAlert className="mt-0.5 size-4 shrink-0" aria-hidden /> {t('admin.securityNote')}
       </p>
@@ -70,72 +103,37 @@ export default function AdminPage() {
           </Button>
         }
       >
-        <TableWrap>
-          <Table>
-            <THead>
-              <tr>
-                <TH>{t('users.cols.name')}</TH>
-                <TH>{t('users.cols.employeeId')}</TH>
-                <TH>{t('users.cols.designation')}</TH>
-                <TH>{t('users.cols.role')}</TH>
-                <TH>{t('users.cols.sites')}</TH>
-                <TH>{t('users.cols.status')}</TH>
-                <TH aria-label={t('common.actions')} />
-              </tr>
-            </THead>
-            <TBody>
-              {users?.map((u) => {
-                const editable = me?.role === 'super_admin' || (me?.role === 'admin' && u.role !== 'admin')
-                return (
-                  <TR key={u.id}>
-                    <TD className="whitespace-nowrap">
-                      <p className="font-medium">{u.name}</p>
-                      <p className="text-xs text-muted-foreground">{u.email}</p>
-                    </TD>
-                    <TD className="font-mono text-xs">{u.employeeId}</TD>
-                    <TD className="text-xs">{u.designation}</TD>
-                    <TD>
-                      <Badge tone={u.role === 'super_admin' ? 'navy' : u.role === 'admin' ? 'primary' : 'neutral'}>{t(`roles.${u.role}`)}</Badge>
-                    </TD>
-                    <TD className="text-xs">
-                      {u.role === 'site_manager'
-                        ? u.siteIds.map((id) => sites?.find((s) => s.id === id)?.name ?? id).join(', ')
-                        : t('users.allSites')}
-                    </TD>
-                    <TD>
-                      <Badge tone={u.status === 'active' ? 'success' : 'neutral'}>
-                        {u.status === 'active' ? t('users.statusActive') : t('users.statusDisabled')}
-                      </Badge>
-                    </TD>
-                    <TD className="whitespace-nowrap text-right">
-                      {editable && (
-                        <>
-                          <Button size="sm" variant="ghost" onClick={() => setSheet({ open: true, user: u })} aria-label={t('users.edit')}>
-                            <Pencil /> <span className="hidden lg:inline">{t('users.edit')}</span>
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            disabled={setStatus.isPending}
-                            onClick={() => setStatus.mutate({ id: u.id, status: u.status === 'active' ? 'disabled' : 'active' })}
-                          >
-                            {u.status === 'active' ? t('users.disable') : t('users.enable')}
-                          </Button>
-                        </>
-                      )}
-                    </TD>
-                  </TR>
-                )
-              })}
-            </TBody>
-          </Table>
-        </TableWrap>
+        <ResponsiveTable
+          caption={t('admin.users')}
+          loading={!users}
+          rows={users ?? []}
+          rowKey={(u) => u.id}
+          columns={userColumns}
+          actionsLabel={t('common.actions')}
+          rowActions={(u) =>
+            me?.role === 'super_admin' || (me?.role === 'admin' && u.role !== 'admin') ? (
+              <>
+                <Button size="sm" variant="ghost" onClick={() => setSheet({ open: true, user: u })} aria-label={t('users.edit')}>
+                  <Pencil /> <span className="hidden lg:inline">{t('users.edit')}</span>
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  disabled={setStatus.isPending}
+                  onClick={() => setStatus.mutate({ id: u.id, status: u.status === 'active' ? 'disabled' : 'active' })}
+                >
+                  {u.status === 'active' ? t('users.disable') : t('users.enable')}
+                </Button>
+              </>
+            ) : null
+          }
+        />
       </SectionCard>
 
       <AccessMatrix />
 
       <UserSheet open={sheet.open} user={sheet.user} onOpenChange={(open) => setSheet((s) => ({ ...s, open }))} />
       <ResetDemoDialog open={confirm} onOpenChange={setConfirm} />
-    </>
+    </PageLayout>
   )
 }

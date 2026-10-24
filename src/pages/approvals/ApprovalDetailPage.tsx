@@ -6,7 +6,8 @@ import { useAuth } from '@/features/auth/AuthProvider'
 import { canApprove } from '@/features/access'
 import { ApprovalStatusBadge, RejectDialog, actionKey, useApprovalActions, useApprovalDetail } from '@/features/approvals'
 import { Button, Card, CardContent } from '@/components/ui'
-import { ErrorState, Loader, PageHeader } from '@/components/common'
+import { ErrorState, Loader, PageLayout } from '@/components/common'
+import { paths } from '@/app/routes'
 import { formatDateTime } from '@/utils/format'
 
 /** Values to show from the submitted payload, skipping nested objects. */
@@ -29,14 +30,14 @@ export default function ApprovalDetailPage() {
   const pending = data.status === 'pending'
   const mayReview = pending && data.submittedBy !== user?.id && canApprove(user?.role, data.requiredApproverRole)
   const isMine = pending && data.submittedBy === user?.id
-  const backToList = () => navigate('/approvals')
+  const backToList = () => navigate(paths.approvals)
 
   return (
     <>
-      <Link to="/approvals" className="mb-3 inline-flex min-h-10 items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground">
+      <Link to={paths.approvals} className="mb-3 inline-flex min-h-10 items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground">
         <ArrowLeft className="size-4" aria-hidden /> {t('approvals.title')}
       </Link>
-      <PageHeader title={t(`approvals.actionKeys.${actionKey(data.action)}`)} subtitle={data.summary} />
+      <PageLayout title={t(`approvals.actionKeys.${actionKey(data.action)}`)} subtitle={data.summary}>
 
       <Card>
         <CardContent className="space-y-5 p-5">
@@ -116,6 +117,7 @@ export default function ApprovalDetailPage() {
         onClose={() => setRejecting(false)}
         onConfirm={(reason) => reject.mutate({ id: data.id, reason }, { onSuccess: () => { setRejecting(false); backToList() } })}
       />
+      </PageLayout>
     </>
   )
 }

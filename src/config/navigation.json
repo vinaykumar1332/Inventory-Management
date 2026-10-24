@@ -68,6 +68,8 @@
     {
       "to": "/approvals",
       "labelKey": "nav.approvals",
+      "icon": "CircleCheck",
+      "section": "insights",
       "badge": "pendingApprovals"
     },
     {

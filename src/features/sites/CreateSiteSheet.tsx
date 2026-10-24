@@ -7,7 +7,9 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { useApiMutation, useCompany, useUsers } from '@/hooks/queries'
 import { createSite } from '@/api/mockApi'
-import { Button, Field, Input, Select, Sheet, Textarea } from '@/components/ui'
+import { Button, Field, Input, Select, Textarea } from '@/components/ui'
+import { SidePanel } from '@/components/common'
+import { paths } from '@/app/routes'
 import { isoDaysFromNow } from '@/utils/date'
 
 const schema = z
@@ -66,7 +68,7 @@ export function CreateSiteSheet({ open, onOpenChange }: { open: boolean; onOpenC
       onOpenChange(false)
       if ('id' in result) {
         toast.success(t('sites.created', { name: result.name }))
-        navigate(`/sites/${result.id}`)
+        navigate(paths.site(result.id))
       }
     } catch {
       /* toast handled by mutation */
@@ -79,10 +81,10 @@ export function CreateSiteSheet({ open, onOpenChange }: { open: boolean; onOpenC
     .map((u) => ({ value: u.id, label: u.name }))
 
   return (
-    <Sheet
+    <SidePanel
       open={open}
-      onOpenChange={onOpenChange}
-      size="lg"
+      onClose={() => onOpenChange(false)}
+      width="md"
       title={t('sites.createTitle')}
       description={t('sites.createHint')}
       footer={
@@ -128,6 +130,6 @@ export function CreateSiteSheet({ open, onOpenChange }: { open: boolean; onOpenC
           <Input id="cs-storename" placeholder={t('placeholders.storeName')} {...register('storeName')} />
         </Field>
       </form>
-    </Sheet>
+    </SidePanel>
   )
 }

@@ -36,6 +36,31 @@ export function locationToString(loc: { pathname: string; search?: string; hash?
   return `${loc.pathname}${loc.search ?? ''}${loc.hash ?? ''}`
 }
 
+/**
+ * Typed builders for in-app links. Use these instead of writing path strings in components,
+ * so a renamed route or query key changes in one place.
+ */
+export const paths = {
+  dashboard: '/dashboard',
+  sites: '/sites',
+  site: (siteId: string) => `/sites/${encodeURIComponent(siteId)}`,
+  inventory: (opts?: { productId: string; siteId?: string }) => {
+    if (!opts) return '/inventory'
+    const query = new URLSearchParams({ product: opts.productId })
+    if (opts.siteId) query.set('productSite', opts.siteId)
+    return `/inventory?${query.toString()}`
+  },
+  bills: '/bills',
+  upload: (invoiceId?: string) => (invoiceId ? `/upload?invoice=${encodeURIComponent(invoiceId)}` : '/upload'),
+  movements: '/movements',
+  alerts: '/alerts',
+  approvals: '/approvals',
+  approval: (approvalId: string) => `/approvals/${encodeURIComponent(approvalId)}`,
+  tools: (toolId?: string) => (toolId ? `/tools?tool=${encodeURIComponent(toolId)}` : '/tools'),
+  reports: '/reports',
+  admin: '/admin',
+} as const
+
 /** Only allow in-app redirects (never an external URL) */
 export function safeRedirect(target: unknown, fallback = ROUTES.afterLogin): string {
   if (typeof target !== 'string' || !target.startsWith('/') || target.startsWith('//')) return fallback

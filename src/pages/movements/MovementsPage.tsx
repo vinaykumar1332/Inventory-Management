@@ -5,7 +5,7 @@ import { FileSpreadsheet, History } from 'lucide-react'
 import { catalog } from '@/config'
 import { useMovements } from '@/hooks/queries'
 import { Button, Card, Select } from '@/components/ui'
-import { FilterBar, PageHeader, QueryState, SearchInput, SiteSelect } from '@/components/common'
+import { FilterBar, PageLayout, QueryState, SearchInput, SiteSelect } from '@/components/common'
 import { MovementsTable } from '@/features/stock/MovementsTable'
 import type { MovementType } from '@/types'
 import { formatDateTime, unitLabel } from '@/utils/format'
@@ -42,16 +42,15 @@ export default function MovementsPage() {
   }
 
   return (
-    <>
-      <PageHeader
-        title={t('movements.title')}
-        subtitle={t('movements.subtitle')}
-        actions={
-          <Button variant="secondary" onClick={() => void exportExcel()} disabled={!rows.length}>
-            <FileSpreadsheet /> {t('common.exportExcel')}
-          </Button>
-        }
-      />
+    <PageLayout
+      title={t('movements.title')}
+      subtitle={t('movements.subtitle')}
+      actions={
+        <Button variant="secondary" onClick={() => void exportExcel()} disabled={!rows.length}>
+          <FileSpreadsheet /> {t('common.exportExcel')}
+        </Button>
+      }
+    >
       <Card>
         <FilterBar className="lg:grid-cols-[2fr_1fr_1fr]">
           <SearchInput value={search} onChange={setSearch} placeholder={t('common.search')} className="sm:col-span-2 lg:col-span-1" />
@@ -67,6 +66,6 @@ export default function MovementsPage() {
           <MovementsTable rows={rows} />
         </QueryState>
       </Card>
-    </>
+    </PageLayout>
   )
 }

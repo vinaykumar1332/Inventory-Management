@@ -10,7 +10,7 @@ import { useAuth } from '@/features/auth/AuthProvider'
 import { DemoRoleList, useSignIn } from '@/features/auth/DemoRoles'
 import { Button, Field, Input } from '@/components/ui'
 import { DemoBadge, Logo, Spinner } from '@/components/common'
-import { LanguageSelect, ThemeToggle } from '@/components/layout/HeaderControls'
+import { LanguageSelect, ThemeToggle } from '@/components/shell/HeaderControls'
 
 const schema = z.object({
   email: z.string().trim().min(1, 'validation.required').pipe(z.email('validation.email')),
@@ -59,7 +59,7 @@ export default function LoginPage() {
               { icon: ShieldCheck, text: t('auth.heroPoint3') },
             ].map(({ icon: Icon, text }) => (
               <li key={text} className="flex items-center gap-3">
-                <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-white/10 text-teal-300">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-white/10 text-sidebar-accent">
                   <Icon className="size-5" aria-hidden />
                 </span>
                 <span className="text-white/90">{text}</span>

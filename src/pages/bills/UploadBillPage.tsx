@@ -10,7 +10,7 @@ import { errorMessage, useApiMutation, useBill, useSites } from '@/hooks/queries
 import * as api from '@/api/mockApi'
 import { cacheFile } from '@/features/bills/fileCache'
 import { Button, Card, CardContent, ConfirmDialog, Field, Input } from '@/components/ui'
-import { PageHeader, Loader, Spinner } from '@/components/common'
+import { Loader, PageLayout, Spinner } from '@/components/common'
 import { FileStep, ProcessingStep, SiteStep, Stepper, uploadTypeOf } from '@/features/bills/upload/Steps'
 import { InvoiceFields, LineItemsCard } from '@/features/bills/upload/ReviewStep'
 import { ConfirmStep, SuccessState } from '@/features/bills/upload/ConfirmStep'
@@ -159,16 +159,16 @@ export default function UploadBillPage() {
 
   if (result) {
     return (
-      <>
-        <PageHeader title={t('upload.title')} subtitle={t('upload.subtitle')} />
+      <PageLayout title={t('upload.title')} subtitle={t('upload.subtitle')}>
         <SuccessState result={result} siteName={siteName} onAnother={restart} />
-      </>
+      </PageLayout>
     )
   }
 
   return (
-    <div ref={topRef} className="scroll-mt-20">
-      <PageHeader title={resumeId ? t('upload.resumeTitle') : t('upload.title')} subtitle={t('upload.subtitle')} />
+    <PageLayout title={resumeId ? t('upload.resumeTitle') : t('upload.title')} subtitle={t('upload.subtitle')}>
+      {/* Scroll target for each step change */}
+      <div ref={topRef} className="scroll-mt-20" aria-hidden />
       <Stepper step={step} />
 
       {step === 1 && (
@@ -277,6 +277,6 @@ export default function UploadBillPage() {
           <Input id="reject-reason" value={rejectReason} onChange={(e) => setRejectReason(e.target.value)} />
         </Field>
       </ConfirmDialog>
-    </div>
+    </PageLayout>
   )
 }

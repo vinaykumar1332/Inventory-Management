@@ -5,7 +5,8 @@ import { useTranslation } from 'react-i18next'
 import * as api from '@/api/mockApi'
 import { useApiMutation, useUsers } from '@/hooks/queries'
 import type { SiteStatus, SiteSummary } from '@/types'
-import { Button, Field, Input, Select, Sheet, Textarea } from '@/components/ui'
+import { Button, Field, Input, Select, Textarea } from '@/components/ui'
+import { SidePanel } from '@/components/common'
 
 const STATUSES: SiteStatus[] = ['setup', 'active', 'on_hold', 'completed']
 const STATUS_KEY: Record<SiteStatus, string> = {
@@ -97,10 +98,10 @@ export function EditSiteSheet({ open, onOpenChange, site }: { open: boolean; onO
   const statusOptions = STATUSES.map((s) => ({ value: s, label: t(STATUS_KEY[s]) }))
 
   return (
-    <Sheet
+    <SidePanel
       open={open}
-      onOpenChange={onOpenChange}
-      size="lg"
+      onClose={() => onOpenChange(false)}
+      width="md"
       title={t('sites.edit')}
       description={t('sites.editHint')}
       footer={
@@ -152,6 +153,6 @@ export function EditSiteSheet({ open, onOpenChange, site }: { open: boolean; onO
           <Select id="es-backup" placeholder={t('common.selectPlaceholder')} options={managers} {...register('backupManagerId')} />
         </Field>
       </form>
-    </Sheet>
+    </SidePanel>
   )
 }

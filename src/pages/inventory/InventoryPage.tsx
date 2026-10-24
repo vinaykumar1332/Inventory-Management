@@ -7,7 +7,7 @@ import { useAuth } from '@/features/auth/AuthProvider'
 import { useStockActions } from '@/features/stock/StockActions'
 import { useStock } from '@/hooks/queries'
 import { Button, Card, Select } from '@/components/ui'
-import { CategorySelect, FilterBar, PageHeader, QueryState, SearchInput, SiteSelect } from '@/components/common'
+import { CategorySelect, FilterBar, PageLayout, QueryState, SearchInput, SiteSelect } from '@/components/common'
 import { ProductDrawer } from '@/features/inventory/ProductDrawer'
 import { StockTable } from '@/features/inventory/StockTable'
 import type { MaterialCategory, StockRow } from '@/types'
@@ -80,33 +80,32 @@ export default function InventoryPage() {
   }
 
   return (
-    <>
-      <PageHeader
-        title={t('inventory.title')}
-        subtitle={t('inventory.subtitle')}
-        actions={
-          <>
-            {can('upload_bills') && (
-              <Button variant="secondary" onClick={() => stock.open('receive')}>
-                <PackagePlus /> {t('inventory.receiveStock')}
-              </Button>
-            )}
-            {can('transfer_stock') && (
-              <Button variant="secondary" onClick={() => stock.open('transfer', { siteId: site !== 'all' ? site : undefined })}>
-                <ArrowRightLeft /> {t('inventory.transfer')}
-              </Button>
-            )}
-            <Button variant="secondary" onClick={() => void exportExcel()} disabled={!filtered.length}>
-              <FileSpreadsheet /> {t('common.exportExcel')}
+    <PageLayout
+      title={t('inventory.title')}
+      subtitle={t('inventory.subtitle')}
+      actions={
+        <>
+          {can('upload_bills') && (
+            <Button variant="secondary" onClick={() => stock.open('receive')}>
+              <PackagePlus /> {t('inventory.receiveStock')}
             </Button>
-            {can('issue_material') && (
-              <Button onClick={() => stock.open('issue', { siteId: site !== 'all' ? site : undefined })}>
-                <PackageMinus /> {t('quick.issueMaterial')}
-              </Button>
-            )}
-          </>
-        }
-      />
+          )}
+          {can('transfer_stock') && (
+            <Button variant="secondary" onClick={() => stock.open('transfer', { siteId: site !== 'all' ? site : undefined })}>
+              <ArrowRightLeft /> {t('inventory.transfer')}
+            </Button>
+          )}
+          <Button variant="secondary" onClick={() => void exportExcel()} disabled={!filtered.length}>
+            <FileSpreadsheet /> {t('common.exportExcel')}
+          </Button>
+          {can('issue_material') && (
+            <Button onClick={() => stock.open('issue', { siteId: site !== 'all' ? site : undefined })}>
+              <PackageMinus /> {t('quick.issueMaterial')}
+            </Button>
+          )}
+        </>
+      }
+    >
 
       <Card>
         <FilterBar className="lg:grid-cols-[minmax(240px,2fr)_repeat(4,minmax(0,1fr))]">
@@ -185,6 +184,6 @@ export default function InventoryPage() {
           setParams(next, { replace: true })
         }}
       />
-    </>
+    </PageLayout>
   )
 }
