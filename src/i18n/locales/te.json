@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "SiteSeal Inventory",
+    "name": "JAYA BHARATHI CONSTRUCTIONS",
     "tagline": "వాటర్‌ప్రూఫింగ్ మెటీరియల్స్, బ్యాచ్‌లు, టూల్స్ — అన్ని సైట్‌లలో ఒకే చోట.",
     "demoBadge": "క్లయింట్ డెమో • నమూనా డేటా • అసలు డేటా ఏదీ సేవ్ కాదు",
     "demoShort": "డెమో • నమూనా డేటా",
@@ -731,7 +731,19 @@
     "summaryIssued": "జారీ",
     "summaryAvailable": "అందుబాటులో",
     "summaryMaintenance": "నిర్వహణ",
-    "summaryOverdue": "ఆలస్యం"
+    "summaryOverdue": "ఆలస్యం",
+    "addSummary": "{{count}} సాధనం(లు) జోడించండి",
+    "add": "సాధనాలను జోడించండి",
+    "added": "సాధనాలు జోడించబడ్డాయి",
+    "addRow": "మరో సాధనం జోడించండి",
+    "fieldName": "సాధనం పేరు",
+    "fieldCode": "సాధనం కోడ్",
+    "fieldBrand": "బ్రాండ్",
+    "fieldCost": "కొనుగోలు ధర (₹)",
+    "fieldSite": "సైట్",
+    "submitAdd": "సమర్పించు",
+    "removeRow": "తీసివేయి",
+    "noSites": "సైట్లు అందుబాటులో లేవు"
   },
   "reports": {
     "title": "రిపోర్టులు",
@@ -879,7 +891,8 @@
     "invalidTime": "సరైన సమయం నమోదు చేయండి (HH:mm)",
     "leaveBeforeArrival": "వెళ్లిన సమయం వచ్చిన సమయం తర్వాత ఉండాలి",
     "noCheckIn": "వెళ్లిన సమయానికి ముందు హాజరు నమోదు చేయండి",
-    "dateOutOfRange": "గత 7 రోజులు మాత్రమే మార్చగలరు"
+    "dateOutOfRange": "గత 7 రోజులు మాత్రమే మార్చగలరు",
+    "duplicateToolCode": "ఈ కోడ్ {{code}} ఉన్న సాధనం ఇప్పటికే ఉంది లేదా ఈ జాబితాలో పునరావృతమైంది."
   },
   "placeholders": {
     "email": "name@company.com",
@@ -986,7 +999,8 @@
       "site_create": "కొత్త సైట్",
       "manager_assign": "సైట్ మేనేజర్ మార్పు",
       "user_create": "కొత్త వినియోగదారు",
-      "user_update": "వినియోగదారు మార్పు"
+      "user_update": "వినియోగదారు మార్పు",
+      "tool_create": "కొత్త సాధనాలు"
     },
     "submittedBy": "సమర్పించినవారు",
     "submittedAt": "సమర్పించిన సమయం",
@@ -1137,5 +1151,14 @@
     "avgHours": "సగటు గంటలు (ఎంచుకున్న రోజు)",
     "arrived": "హాజరు సేవ్ అయింది",
     "leftNow": "వెళ్లిన సమయం సేవ్ అయింది"
+  },
+  "images": {
+    "notImage": "దయచేసి ఇమేజ్ ఫైల్ ఎంచుకోండి (JPG, PNG లేదా WebP).",
+    "tooLarge": "కంప్రెస్ చేసిన తర్వాత కూడా ఈ ఫోటో చాలా పెద్దది. చిన్న ఫోటో ఎంచుకోండి.",
+    "saved": "ఫోటో సేవ్ అయింది",
+    "upload": "ఫోటో జోడించండి",
+    "replace": "ఫోటో మార్చండి",
+    "remove": "ఫోటో తీసివేయి",
+    "none": "ఇంకా ఫోటో లేదు"
   }
 }

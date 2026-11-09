@@ -8,11 +8,11 @@ import { businessConfig, catalog } from '@/config'
 import { getIcon } from '@/config/icons'
 import { TINT_CLASSES } from '@/config/tones'
 import { useAuth } from '@/features/auth/AuthProvider'
-import { useApiMutation } from '@/hooks/queries'
+import { useApiMutation, useSetRecordImage } from '@/hooks/queries'
 import * as api from '@/api/mockApi'
 import { cn } from '@/lib/utils'
 import { Button, Dialog, DialogContent, Field, Input, Select, Textarea } from '@/components/ui'
-import { ConditionBadge, ResponsiveTable, SidePanel, ToolStatusBadge, type Column } from '@/components/common'
+import { ConditionBadge, ImageField, ResponsiveTable, SidePanel, ToolStatusBadge, type Column } from '@/components/common'
 import type { ToolCategory, ToolRow } from '@/types'
 import { isoDaysFromNow } from '@/utils/date'
 import { formatDate, formatINR } from '@/utils/format'
@@ -230,6 +230,7 @@ export function ToolDrawer({ tool, onClose }: { tool: ToolRow | null; onClose: (
   const { can } = useAuth()
   const [action, setAction] = React.useState<ToolAction | null>(null)
   const manage = can('manage_tools')
+  const setImage = useSetRecordImage()
 
   return (
     <>
@@ -275,6 +276,12 @@ export function ToolDrawer({ tool, onClose }: { tool: ToolRow | null; onClose: (
                 <ConditionBadge condition={tool.condition} />
               </div>
             </div>
+            <ImageField
+              src={tool.imageUrl}
+              alt={tool.name}
+              canEdit={can('add_tools')}
+              onChange={(imageUrl) => setImage.mutate({ kind: 'tool', id: tool.id, imageUrl })}
+            />
             <dl className="grid grid-cols-2 gap-3 text-sm">
               {[
                 [t('tools.cols.category'), t(`tools.categories.${tool.category}`)],

@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "SiteSeal Inventory",
+    "name": "JAYA BHARATHI CONSTRUCTIONS",
     "tagline": "Waterproofing materials, batches and tools — across every site.",
     "demoBadge": "Client Demo • Mock Data • No real data is stored",
     "demoShort": "Demo • Mock data",
@@ -731,7 +731,19 @@
     "summaryIssued": "Issued",
     "summaryAvailable": "Available",
     "summaryMaintenance": "Maintenance",
-    "summaryOverdue": "Overdue"
+    "summaryOverdue": "Overdue",
+    "addSummary": "Add {{count}} tool(s)",
+    "add": "Add tools",
+    "added": "Tools added",
+    "addRow": "Add another tool",
+    "fieldName": "Tool name",
+    "fieldCode": "Tool code",
+    "fieldBrand": "Brand",
+    "fieldCost": "Purchase cost (₹)",
+    "fieldSite": "Site",
+    "submitAdd": "Submit",
+    "removeRow": "Remove",
+    "noSites": "No sites available"
   },
   "reports": {
     "title": "Reports",
@@ -879,7 +891,8 @@
     "invalidTime": "Enter a valid time (HH:mm)",
     "leaveBeforeArrival": "Leave time must be after check-in",
     "noCheckIn": "Record check-in before leave time",
-    "dateOutOfRange": "Only the last 7 days can be changed"
+    "dateOutOfRange": "Only the last 7 days can be changed",
+    "duplicateToolCode": "A tool with code {{code}} already exists or is repeated in this list."
   },
   "placeholders": {
     "email": "name@company.com",
@@ -986,7 +999,8 @@
       "site_create": "New site",
       "manager_assign": "Site manager change",
       "user_create": "New user",
-      "user_update": "User change"
+      "user_update": "User change",
+      "tool_create": "New tools"
     },
     "submittedBy": "Submitted by",
     "submittedAt": "Submitted",
@@ -1137,5 +1151,14 @@
     "avgHours": "Average hours (selected day)",
     "arrived": "Check-in saved",
     "leftNow": "Leave time saved"
+  },
+  "images": {
+    "notImage": "Please choose an image file (JPG, PNG or WebP).",
+    "tooLarge": "This photo is too large even after compression. Choose a smaller photo.",
+    "saved": "Photo saved",
+    "upload": "Add photo",
+    "replace": "Replace photo",
+    "remove": "Remove photo",
+    "none": "No photo yet"
   }
 }

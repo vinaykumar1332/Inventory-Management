@@ -18,11 +18,17 @@ type Translate = ReturnType<typeof useTranslation>['t']
 function kpiContent(id: KpiId, k: DashboardKpis, t: Translate): { value: React.ReactNode; sub: React.ReactNode } {
   switch (id) {
     case 'totalStockValue':
-      return { value: formatINRCompact(k.totalStockValue), sub: t('kpi.batchesActive', { count: k.activeBatches }) }
+      return {
+        value: formatINRCompact(k.totalStockValue),
+        sub: t('kpi.batchesActive', { count: k.activeBatches }),
+      }
     case 'availableQty': {
       const [first, ...rest] = dashboardConfig.quantityUnitsOrder.filter((u) => k.qtyByUnit[u])
       const fmt = (u: typeof first) => `${formatNumber(Math.round(k.qtyByUnit[u] ?? 0))} ${unitLabel(u)}`
-      return { value: first ? fmt(first) : '—', sub: rest.map(fmt).join(' · ') }
+      return {
+        value: first ? fmt(first) : '—',
+        sub: rest.map(fmt).join(' · '),
+      }
     }
     case 'expiringIn30':
       return { value: k.expiringIn30, sub: t('kpi.needsAction') }
@@ -31,7 +37,10 @@ function kpiContent(id: KpiId, k: DashboardKpis, t: Translate): { value: React.R
     case 'lowStockItems':
       return { value: k.lowStockItems, sub: t('kpi.belowReorder') }
     case 'toolsIssued':
-      return { value: k.toolsIssued, sub: t('kpi.ofTotal', { total: k.toolsTotal }) }
+      return {
+        value: k.toolsIssued,
+        sub: t('kpi.ofTotal', { total: k.toolsTotal }),
+      }
   }
 }
 

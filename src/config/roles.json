@@ -69,6 +69,11 @@
       "super_admin": "direct",
       "admin": "forbidden",
       "site_manager": "forbidden"
+    },
+    "tool.create": {
+      "super_admin": "direct",
+      "admin": "direct",
+      "site_manager": "needs_approval"
     }
   },
   "permissionAliases": {
@@ -83,7 +88,8 @@
     "manage_sites": "site.create",
     "assign_managers": "manager.assign",
     "manage_users": "user.update",
-    "edit_sites": "site.update"
+    "edit_sites": "site.update",
+    "add_tools": "tool.create"
   },
   "staticPermissions": {
     "view_bills": {

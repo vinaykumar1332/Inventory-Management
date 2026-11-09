@@ -22,6 +22,7 @@ export type Permission =
   | 'view_bills'
   | 'view_reports'
   | 'manage_tools'
+  | 'add_tools'
   | 'view_audit_log'
   | 'create_admin'
 

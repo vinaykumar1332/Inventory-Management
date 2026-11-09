@@ -3,8 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { clearAppData } from '@/features/admin/appReset'
 import { ConfirmDialog } from '@/components/ui'
 
-/** Confirm-and-clear flow for offline cache and all locally stored app data. */
-export function ClearAppDataDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
+export function ClearAppData({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
   const { t } = useTranslation()
   const [busy, setBusy] = React.useState(false)
 

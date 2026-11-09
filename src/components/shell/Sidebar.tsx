@@ -238,6 +238,7 @@ export function Sidebar({
           layout
         >
           <m.div
+            className={cn('min-w-0 overflow-hidden', !compact && 'flex-1')}
             animate={{ scale: compact ? 0.8 : 1 }}
             transition={{ type: 'spring', stiffness: 300, damping: 25 }}
           >

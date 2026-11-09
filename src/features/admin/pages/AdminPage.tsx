@@ -3,14 +3,14 @@ import { useTranslation } from 'react-i18next'
 import { Building2, Pencil, Plus, RotateCcw, ShieldAlert } from 'lucide-react'
 import { appConfig } from '@/config'
 import { useAuth } from '@/features/auth/AuthProvider'
-import { ResetDemoDialog } from '@/features/admin/ResetDemo'
-import { UserSheet } from '@/features/admin/UserSheet'
-import * as api from '@/api/mockApi'
+import { UserSheet, ResetDemoDialog } from '../components'
+import { adminApi } from '../api'
 import { useApiMutation, useCompany, useSiteDirectory, useUsers } from '@/hooks/queries'
 import { AccessMatrix } from '@/features/access'
 import type { User } from '@/types'
 import { Badge, Button } from '@/components/ui'
 import { Loader, PageLayout, ResponsiveTable, SectionCard, type Column } from '@/components/common'
+import type { AdminSheetState, UserStatusUpdate } from '../types'
 
 export default function AdminPage() {
   const { t } = useTranslation()
@@ -19,44 +19,67 @@ export default function AdminPage() {
   const { data: sites } = useSiteDirectory()
   const { data: company } = useCompany()
   const [confirm, setConfirm] = React.useState(false)
-  const [sheet, setSheet] = React.useState<{ open: boolean; user: User | null }>({ open: false, user: null })
-  const setStatus = useApiMutation((v: { id: string; status: 'active' | 'disabled' }) => api.updateUser(v.id, { status: v.status }), {
+  const [sheet, setSheet] = React.useState<AdminSheetState>({ open: false, user: null })
+  const setStatus = useApiMutation((v: UserStatusUpdate) => adminApi.updateUserStatus(v), {
     successKey: 'users.updated',
   })
 
-  const userColumns: Column<User>[] = [
-    {
-      key: 'name',
-      header: t('users.cols.name'),
-      cell: (u) => (
+  const userColumns = React.useMemo(() => {
+    const columns: Column<User>[] = [
+      {
+        key: 'name',
+        header: t('users.cols.name'),
+        cell: (u) => (
+          <>
+            <p className="font-medium">{u.name}</p>
+            <p className="text-xs text-muted-foreground">{u.email}</p>
+          </>
+        ),
+        className: 'whitespace-nowrap',
+      },
+      { key: 'employeeId', header: t('users.cols.employeeId'), cell: (u) => u.employeeId, className: 'font-mono text-xs' },
+      { key: 'designation', header: t('users.cols.designation'), cell: (u) => u.designation, className: 'text-xs' },
+      {
+        key: 'role',
+        header: t('users.cols.role'),
+        cell: (u) => <Badge tone={u.role === 'super_admin' ? 'navy' : u.role === 'admin' ? 'primary' : 'neutral'}>{t(`roles.${u.role}`)}</Badge>,
+      },
+      {
+        key: 'sites',
+        header: t('users.cols.sites'),
+        cell: (u) => (u.role === 'site_manager' ? u.siteIds.map((id) => sites?.find((s) => s.id === id)?.name ?? id).join(', ') : t('users.allSites')),
+        className: 'text-xs',
+      },
+      {
+        key: 'status',
+        header: t('users.cols.status'),
+        cell: (u) => (
+          <Badge tone={u.status === 'active' ? 'success' : 'neutral'}>{u.status === 'active' ? t('users.statusActive') : t('users.statusDisabled')}</Badge>
+        ),
+      },
+    ]
+    return columns
+  }, [t, sites])
+
+  const handleRowActions = React.useCallback(
+    (u: User) =>
+      me?.role === 'super_admin' || (me?.role === 'admin' && u.role !== 'admin') ? (
         <>
-          <p className="font-medium">{u.name}</p>
-          <p className="text-xs text-muted-foreground">{u.email}</p>
+          <Button size="sm" variant="ghost" onClick={() => setSheet({ open: true, user: u })} aria-label={t('users.edit')}>
+            <Pencil /> <span className="hidden lg:inline">{t('users.edit')}</span>
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            disabled={setStatus.isPending}
+            onClick={() => setStatus.mutate({ id: u.id, status: u.status === 'active' ? 'disabled' : 'active' })}
+          >
+            {u.status === 'active' ? t('users.disable') : t('users.enable')}
+          </Button>
         </>
-      ),
-      className: 'whitespace-nowrap',
-    },
-    { key: 'employeeId', header: t('users.cols.employeeId'), cell: (u) => u.employeeId, className: 'font-mono text-xs' },
-    { key: 'designation', header: t('users.cols.designation'), cell: (u) => u.designation, className: 'text-xs' },
-    {
-      key: 'role',
-      header: t('users.cols.role'),
-      cell: (u) => <Badge tone={u.role === 'super_admin' ? 'navy' : u.role === 'admin' ? 'primary' : 'neutral'}>{t(`roles.${u.role}`)}</Badge>,
-    },
-    {
-      key: 'sites',
-      header: t('users.cols.sites'),
-      cell: (u) => (u.role === 'site_manager' ? u.siteIds.map((id) => sites?.find((s) => s.id === id)?.name ?? id).join(', ') : t('users.allSites')),
-      className: 'text-xs',
-    },
-    {
-      key: 'status',
-      header: t('users.cols.status'),
-      cell: (u) => (
-        <Badge tone={u.status === 'active' ? 'success' : 'neutral'}>{u.status === 'active' ? t('users.statusActive') : t('users.statusDisabled')}</Badge>
-      ),
-    },
-  ]
+      ) : null,
+    [me?.role, setStatus, t],
+  )
 
   return (
     <PageLayout title={t('users.title')} subtitle={t('users.subtitle')}>
@@ -110,23 +133,7 @@ export default function AdminPage() {
           rowKey={(u) => u.id}
           columns={userColumns}
           actionsLabel={t('common.actions')}
-          rowActions={(u) =>
-            me?.role === 'super_admin' || (me?.role === 'admin' && u.role !== 'admin') ? (
-              <>
-                <Button size="sm" variant="ghost" onClick={() => setSheet({ open: true, user: u })} aria-label={t('users.edit')}>
-                  <Pencil /> <span className="hidden lg:inline">{t('users.edit')}</span>
-                </Button>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  disabled={setStatus.isPending}
-                  onClick={() => setStatus.mutate({ id: u.id, status: u.status === 'active' ? 'disabled' : 'active' })}
-                >
-                  {u.status === 'active' ? t('users.disable') : t('users.enable')}
-                </Button>
-              </>
-            ) : null
-          }
+          rowActions={handleRowActions}
         />
       </SectionCard>
 

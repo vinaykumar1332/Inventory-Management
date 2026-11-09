@@ -1,11 +1,13 @@
 import * as React from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Clock, LogOut, PackageCheck, Wrench } from 'lucide-react'
+import { Clock, LogOut, PackageCheck, Plus, Wrench } from 'lucide-react'
 import { catalog } from '@/config'
 import { useTools } from '@/hooks/queries'
-import { Card, Select } from '@/components/ui'
+import { useAuth } from '@/features/auth/AuthProvider'
+import { Button, Card, Select } from '@/components/ui'
 import { FilterBar, KpiCard, KpiGrid, Loader, PageLayout, QueryState, SearchInput, SiteSelect } from '@/components/common'
+import { AddToolsSheet } from '@/features/tools/AddToolsSheet'
 import { ToolDrawer, ToolsTable } from '@/features/tools/ToolComponents'
 import type { ToolStatus } from '@/types'
 
@@ -16,6 +18,8 @@ export default function ToolsPage() {
   const [search, setSearch] = React.useState('')
   const [site, setSite] = React.useState('all')
   const [status, setStatus] = React.useState<ToolStatus | 'overdue' | 'all'>('all')
+  const { can } = useAuth()
+  const [adding, setAdding] = React.useState(false)
   const openId = params.get('tool')
   const openTool = data?.find((x) => x.id === openId) ?? null
 
@@ -32,7 +36,17 @@ export default function ToolsPage() {
   const count = (fn: (r: NonNullable<typeof data>[number]) => boolean) => data?.filter(fn).length ?? 0
 
   return (
-    <PageLayout title={t('tools.title')} subtitle={t('tools.subtitle')}>
+    <PageLayout
+      title={t('tools.title')}
+      subtitle={t('tools.subtitle')}
+      actions={
+        can('add_tools') && (
+          <Button onClick={() => setAdding(true)}>
+            <Plus /> {t('tools.add', { defaultValue: 'Add tools' })}
+          </Button>
+        )
+      }
+    >
       <KpiGrid className="mb-5 grid-cols-2 lg:grid-cols-4">
         {isLoading ? (
           <Loader className="col-span-full" />
@@ -65,6 +79,7 @@ export default function ToolsPage() {
         </QueryState>
       </Card>
       <ToolDrawer tool={openTool} onClose={() => setParams({}, { replace: true })} />
+      <AddToolsSheet open={adding} onOpenChange={setAdding} siteId={site !== 'all' ? site : undefined} />
     </PageLayout>
   )
 }

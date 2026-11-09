@@ -8,9 +8,11 @@ export const BRAND_MARK_SRC = '/favicon.svg'
 export function Logo({ className, light }: { className?: string; light?: boolean }) {
   const { t } = useTranslation()
   return (
-    <span className={cn('flex items-center gap-2.5', className)}>
+    <span className={cn('flex min-w-0 items-center gap-2.5', className)}>
       <img src={BRAND_MARK_SRC} alt="" width={32} height={32} className={cn('size-8 shrink-0 rounded-lg', light && 'ring-1 ring-white/15')} />
-      <span className="logo-text truncate text-base font-semibold tracking-tight">{t('app.name')}</span>
+      <span className="logo-text min-w-0 truncate text-base font-semibold tracking-tight" title={t('app.name')}>
+        {t('app.name')}
+      </span>
     </span>
   )
 }

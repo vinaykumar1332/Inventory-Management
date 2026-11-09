@@ -23,7 +23,7 @@ const ApprovalsPage = React.lazy(() => import('@/pages/approvals/ApprovalsPage')
 const ApprovalDetailPage = React.lazy(() => import('@/pages/approvals/ApprovalDetailPage'))
 const ToolsPage = React.lazy(() => import('@/pages/tools/ToolsPage'))
 const ReportsPage = React.lazy(() => import('@/pages/reports/ReportsPage'))
-const AdminPage = React.lazy(() => import('@/pages/admin/AdminPage'))
+const AdminPage = React.lazy(() => import('@/features/admin').then(m => ({ default: m.AdminPage })))
 
 function PageFallback() {
   return <Loader fullPage />

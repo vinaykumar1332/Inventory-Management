@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "SiteSeal Inventory",
+    "name": "JAYA BHARATHI CONSTRUCTIONS",
     "tagline": "वॉटरप्रूफिंग सामग्री, बैच और औज़ार — हर साइट पर एक साथ।",
     "demoBadge": "क्लाइंट डेमो • नमूना डेटा • कोई असली डेटा सेव नहीं होता",
     "demoShort": "डेमो • नमूना डेटा",
@@ -731,7 +731,19 @@
     "summaryIssued": "जारी",
     "summaryAvailable": "उपलब्ध",
     "summaryMaintenance": "रखरखाव",
-    "summaryOverdue": "देरी"
+    "summaryOverdue": "देरी",
+    "addSummary": "{{count}} उपकरण जोड़ें",
+    "add": "उपकरण जोड़ें",
+    "added": "उपकरण जोड़े गए",
+    "addRow": "एक और उपकरण जोड़ें",
+    "fieldName": "उपकरण का नाम",
+    "fieldCode": "उपकरण कोड",
+    "fieldBrand": "ब्रांड",
+    "fieldCost": "खरीद मूल्य (₹)",
+    "fieldSite": "साइट",
+    "submitAdd": "जमा करें",
+    "removeRow": "हटाएं",
+    "noSites": "कोई साइट उपलब्ध नहीं"
   },
   "reports": {
     "title": "रिपोर्ट",
@@ -879,7 +891,8 @@
     "invalidTime": "सही समय दर्ज करें (HH:mm)",
     "leaveBeforeArrival": "जाने का समय आने के बाद होना चाहिए",
     "noCheckIn": "जाने का समय दर्ज करने से पहले आने का समय दर्ज करें",
-    "dateOutOfRange": "केवल पिछले 7 दिन बदले जा सकते हैं"
+    "dateOutOfRange": "केवल पिछले 7 दिन बदले जा सकते हैं",
+    "duplicateToolCode": "कोड {{code}} वाला उपकरण पहले से मौजूद है या सूची में दोहराया गया है।"
   },
   "placeholders": {
     "email": "name@company.com",
@@ -986,7 +999,8 @@
       "site_create": "नई साइट",
       "manager_assign": "साइट मैनेजर बदलाव",
       "user_create": "नया उपयोगकर्ता",
-      "user_update": "उपयोगकर्ता बदलाव"
+      "user_update": "उपयोगकर्ता बदलाव",
+      "tool_create": "नए उपकरण"
     },
     "submittedBy": "भेजा गया",
     "submittedAt": "भेजने का समय",
@@ -1137,5 +1151,14 @@
     "avgHours": "औसत घंटे (चुना हुआ दिन)",
     "arrived": "आने का समय सहेजा गया",
     "leftNow": "जाने का समय सहेजा गया"
+  },
+  "images": {
+    "notImage": "कृपया कोई इमेज फ़ाइल चुनें (JPG, PNG या WebP)।",
+    "tooLarge": "यह फ़ोटो संपीड़न के बाद भी बहुत बड़ी है। छोटी फ़ोटो चुनें।",
+    "saved": "फ़ोटो सहेजी गई",
+    "upload": "फ़ोटो जोड़ें",
+    "replace": "फ़ोटो बदलें",
+    "remove": "फ़ोटो हटाएं",
+    "none": "अभी कोई फ़ोटो नहीं"
   }
 }

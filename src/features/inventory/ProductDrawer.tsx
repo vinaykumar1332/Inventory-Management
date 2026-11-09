@@ -4,9 +4,9 @@ import { toast } from 'sonner'
 import { ArrowRightLeft, Download, FileText, PackageMinus, Undo2 } from 'lucide-react'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { useStockActions } from '@/features/stock/StockActions'
-import { useProduct } from '@/hooks/queries'
+import { useProduct, useSetRecordImage } from '@/hooks/queries'
 import { Badge, Button } from '@/components/ui'
-import { EmptyState, ErrorState, ExpiryCell, MovementBadge, PageTabs, ProductIcon, ResponsiveTable, SidePanel, TabsContent, Loader } from '@/components/common'
+import { EmptyState, ErrorState, ExpiryCell, ImageField, MovementBadge, PageTabs, ProductIcon, ResponsiveTable, SidePanel, TabsContent, Loader } from '@/components/common'
 import { TINT_CLASSES } from '@/config/tones'
 import { cn } from '@/lib/utils'
 import type { ProductDetail } from '@/types'
@@ -22,26 +22,20 @@ function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
   )
 }
 
-export function ProductDrawer({
-  productId,
-  siteId = 'all',
-  onClose,
-}: {
-  productId: string | null
-  siteId?: string
-  onClose: () => void
-}) {
+export function ProductDrawer({ productId, siteId = 'all', onClose }: { productId: string | null; siteId?: string; onClose: () => void }) {
   const { t } = useTranslation()
   const { can } = useAuth()
   const stock = useStockActions()
-  // Close this drawer before a stock sheet opens: only one overlay is ever open, so nothing reopens afterwards.
-  const openStock = (mode: Parameters<typeof stock.open>[0], defaults: Parameters<typeof stock.open>[1]) => {
-    onClose()
-    stock.open(mode, defaults)
-  }
+  const openStock = React.useCallback(
+    (mode: Parameters<typeof stock.open>[0], defaults: Parameters<typeof stock.open>[1]) => {
+      onClose()
+      stock.open(mode, defaults)
+    },
+    [stock, onClose],
+  )
   const { data, isLoading, isError, refetch } = useProduct(productId, siteId)
   const p = data?.product
-  const singleSite = siteId !== 'all' ? siteId : data?.batches.find((b) => b.qtyAvailable > 0)?.siteId
+  const singleSite = React.useMemo(() => (siteId !== 'all' ? siteId : data?.batches.find((b) => b.qtyAvailable > 0)?.siteId), [siteId, data?.batches])
 
   return (
     <SidePanel
@@ -72,19 +66,15 @@ export function ProductDrawer({
         )
       }
     >
-      {isError ? (
-        <ErrorState onRetry={() => void refetch()} />
-      ) : isLoading || !data || !p ? (
-        <Loader />
-      ) : (
-        <ProductDetailBody data={data} />
-      )}
+      {isError ? <ErrorState onRetry={() => void refetch()} /> : isLoading || !data || !p ? <Loader /> : <ProductDetailBody data={data} />}
     </SidePanel>
   )
 }
 
 function ProductDetailBody({ data }: { data: ProductDetail }) {
   const { t } = useTranslation()
+  const { can, user: me } = useAuth()
+  const setImage = useSetRecordImage()
   const [productTab, setProductTab] = React.useState('overview')
   const { product: p, batches, movements } = data
   const fefo = fefoSort(batches)[0]
@@ -96,6 +86,12 @@ function ProductDetailBody({ data }: { data: ProductDetail }) {
 
   return (
     <div className="space-y-5">
+      <ImageField
+        src={p.imageUrl}
+        alt={p.name}
+        canEdit={me?.role === 'super_admin' || me?.role === 'admin'}
+        onChange={(imageUrl) => setImage.mutate({ kind: 'product', id: p.id, imageUrl })}
+      />
       <div className="flex items-start gap-4">
         <ProductIcon icon={p.icon} size="lg" />
         <div className="min-w-0 flex-1">
@@ -127,14 +123,17 @@ function ProductDetailBody({ data }: { data: ProductDetail }) {
         onChange={setProductTab}
         tabs={[
           { value: 'overview', label: t('product.tabs.overview') },
-          { value: 'batches', label: t('product.tabs.batches'), count: batches.length },
+          {
+            value: 'batches',
+            label: t('product.tabs.batches'),
+            count: batches.length,
+          },
           { value: 'movements', label: t('product.tabs.movements') },
           { value: 'usage', label: t('product.tabs.usage') },
           { value: 'documents', label: t('product.tabs.documents') },
         ]}
         listClassName="mb-0"
       >
-
         <TabsContent value="overview" className="pt-4">
           <div className="grid gap-x-8 md:grid-cols-2">
             <dl>
@@ -151,7 +150,14 @@ function ProductDetailBody({ data }: { data: ProductDetail }) {
               />
               <InfoRow
                 label={t('product.coverage')}
-                value={p.coveragePerM2 ? t('product.coverageValue', { value: p.coveragePerM2, unit }) : '—'}
+                value={
+                  p.coveragePerM2
+                    ? t('product.coverageValue', {
+                        value: p.coveragePerM2,
+                        unit,
+                      })
+                    : '—'
+                }
               />
               <InfoRow label={t('product.coats')} value={p.recommendedCoats ?? '—'} />
               <InfoRow label={t('product.costPerUnit', { unit })} value={formatINR(p.costPerBaseUnit, true)} />
@@ -193,6 +199,19 @@ function ProductDetailBody({ data }: { data: ProductDetail }) {
                 initialSort={{ key: 'expiry', dir: 'asc' }}
                 columns={[
                   {
+                    key: 'photo',
+                    header: t('images.boxPhoto', { defaultValue: 'Photo' }),
+                    cell: (b) => (
+                      <ImageField
+                        compact
+                        src={b.imageUrl}
+                        alt={b.batchNo}
+                        canEdit={can('upload_bills')}
+                        onChange={(imageUrl) => setImage.mutate({ kind: 'batch', id: b.id, imageUrl })}
+                      />
+                    ),
+                  },
+                  {
                     key: 'batchNo',
                     header: t('product.batchCols.batchNo'),
                     cell: (b) => (
@@ -211,10 +230,31 @@ function ProductDetailBody({ data }: { data: ProductDetail }) {
                       </>
                     ),
                   },
-                  { key: 'site', header: t('product.batchCols.site'), cell: (b) => b.siteName, className: 'whitespace-nowrap' },
-                  { key: 'mfg', header: t('product.batchCols.mfg'), cell: (b) => formatDate(b.mfgDate), className: 'tabular whitespace-nowrap' },
-                  { key: 'expiry', header: t('product.batchCols.expiry'), sortValue: (b) => b.expiryDate, cell: (b) => <ExpiryCell date={b.expiryDate} /> },
-                  { key: 'received', header: t('product.batchCols.received'), align: 'right', cell: (b) => formatQty(b.qtyReceived, p.baseUnit), className: 'tabular whitespace-nowrap' },
+                  {
+                    key: 'site',
+                    header: t('product.batchCols.site'),
+                    cell: (b) => b.siteName,
+                    className: 'whitespace-nowrap',
+                  },
+                  {
+                    key: 'mfg',
+                    header: t('product.batchCols.mfg'),
+                    cell: (b) => formatDate(b.mfgDate),
+                    className: 'tabular whitespace-nowrap',
+                  },
+                  {
+                    key: 'expiry',
+                    header: t('product.batchCols.expiry'),
+                    sortValue: (b) => b.expiryDate,
+                    cell: (b) => <ExpiryCell date={b.expiryDate} />,
+                  },
+                  {
+                    key: 'received',
+                    header: t('product.batchCols.received'),
+                    align: 'right',
+                    cell: (b) => formatQty(b.qtyReceived, p.baseUnit),
+                    className: 'tabular whitespace-nowrap',
+                  },
                   {
                     key: 'available',
                     header: t('product.batchCols.available'),
@@ -223,7 +263,13 @@ function ProductDetailBody({ data }: { data: ProductDetail }) {
                     cell: (b) => formatQty(b.qtyAvailable, p.baseUnit),
                     className: 'tabular whitespace-nowrap font-semibold',
                   },
-                  { key: 'unitCost', header: t('product.batchCols.unitCost'), align: 'right', cell: (b) => formatINR(b.unitCost, true), className: 'tabular whitespace-nowrap' },
+                  {
+                    key: 'unitCost',
+                    header: t('product.batchCols.unitCost'),
+                    align: 'right',
+                    cell: (b) => formatINR(b.unitCost, true),
+                    className: 'tabular whitespace-nowrap',
+                  },
                 ]}
               />
             </div>
@@ -277,7 +323,9 @@ function ProductDetailBody({ data }: { data: ProductDetail }) {
               </p>
               {p.coveragePerM2 && p.recommendedCoats && (
                 <p className="text-xs text-muted-foreground">
-                  {t('product.vsStandard', { value: `${round2(p.coveragePerM2 * p.recommendedCoats)} ${unit}/m²` })}
+                  {t('product.vsStandard', {
+                    value: `${round2(p.coveragePerM2 * p.recommendedCoats)} ${unit}/m²`,
+                  })}
                 </p>
               )}
             </div>

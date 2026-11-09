@@ -1,9 +1,10 @@
 import { useTranslation } from 'react-i18next'
 import { FileSpreadsheet } from 'lucide-react'
-import { useMovements, useSites } from '@/hooks/queries'
+import { useMovements, useSetRecordImage, useSites } from '@/hooks/queries'
+import { useAuth } from '@/features/auth/AuthProvider'
 import { getCachedFile } from '@/features/bills/fileCache'
 import { Badge, Dialog, DialogContent, Table, TableWrap, TBody, TD, TH, THead, TR } from '@/components/ui'
-import { BillStatusBadge, EmptyState, MovementBadge, Loader } from '@/components/common'
+import { BillStatusBadge, EmptyState, ImageField, MovementBadge, Loader } from '@/components/common'
 import { TINT_CLASSES } from '@/config/tones'
 import { cn } from '@/lib/utils'
 import type { Invoice } from '@/types'
@@ -14,6 +15,8 @@ export function BillDocumentDialog({ invoice, onClose }: { invoice: Invoice | nu
   const { t } = useTranslation()
   const { data: sites } = useSites()
   const cached = invoice ? getCachedFile(invoice.id) : undefined
+  const { can } = useAuth()
+  const setImage = useSetRecordImage()
   const site = sites?.find((s) => s.id === invoice?.siteId)
   const subtotal = invoice?.lineItems.reduce((s, l) => s + l.totalCost, 0) ?? 0
 
@@ -25,6 +28,13 @@ export function BillDocumentDialog({ invoice, onClose }: { invoice: Invoice | nu
           title={`${t('bills.documentPreview')} · ${invoice.invoiceNo || invoice.fileName}`}
           description={cached ? invoice.fileName : t('bills.mockDocument')}
         >
+          <ImageField
+            className="mb-4"
+            src={invoice.imageUrl}
+            alt={invoice.invoiceNo || invoice.fileName}
+            canEdit={can('upload_bills')}
+            onChange={(imageUrl) => setImage.mutate({ kind: 'bill', id: invoice.id, imageUrl })}
+          />
           {cached && invoice.uploadType === 'image' ? (
             <img src={cached.url} alt={invoice.fileName} className="mx-auto max-h-[65vh] rounded-md border object-contain" />
           ) : cached && invoice.uploadType === 'pdf' ? (
