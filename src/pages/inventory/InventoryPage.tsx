@@ -13,7 +13,6 @@ import { StockTable } from '@/features/inventory/StockTable'
 import type { MaterialCategory, StockRow } from '@/types'
 import { formatDate, unitLabel } from '@/utils/format'
 
-
 export default function InventoryPage() {
   const { t } = useTranslation()
   const { can } = useAuth()
@@ -54,13 +53,35 @@ export default function InventoryPage() {
 
   const hasFilters = search || site !== 'all' || category !== 'all' || stockFilter !== 'all' || expiry !== 'all'
 
+  const handleOpenProduct = React.useCallback(
+    (r: StockRow) => {
+      const next = new URLSearchParams(params)
+      next.set('product', r.productId)
+      next.set('productSite', r.siteId)
+      setParams(next, { replace: true })
+    },
+    [params, setParams],
+  )
+
   const exportExcel = async () => {
     const { downloadWorkbook } = await import('@/utils/excel')
     const c = (k: string) => t(`inventory.cols.${k}`)
     downloadWorkbook(`SiteSeal_Inventory_${new Date().toISOString().slice(0, 10)}.xlsx`, [
       {
         name: t('inventory.title'),
-        header: [c('product'), 'SKU', c('brand'), c('category'), c('availableQty'), c('unit'), c('stockValue'), c('nearestExpiry'), c('lowStock'), c('site'), c('status')],
+        header: [
+          c('product'),
+          'SKU',
+          c('brand'),
+          c('category'),
+          c('availableQty'),
+          c('unit'),
+          c('stockValue'),
+          c('nearestExpiry'),
+          c('lowStock'),
+          c('site'),
+          c('status'),
+        ],
         rows: filtered.map((r: StockRow) => [
           r.productName,
           r.sku,
@@ -91,7 +112,14 @@ export default function InventoryPage() {
             </Button>
           )}
           {can('transfer_stock') && (
-            <Button variant="secondary" onClick={() => stock.open('transfer', { siteId: site !== 'all' ? site : undefined })}>
+            <Button
+              variant="secondary"
+              onClick={() =>
+                stock.open('transfer', {
+                  siteId: site !== 'all' ? site : undefined,
+                })
+              }
+            >
               <ArrowRightLeft /> {t('inventory.transfer')}
             </Button>
           )}
@@ -99,14 +127,19 @@ export default function InventoryPage() {
             <FileSpreadsheet /> {t('common.exportExcel')}
           </Button>
           {can('issue_material') && (
-            <Button onClick={() => stock.open('issue', { siteId: site !== 'all' ? site : undefined })}>
+            <Button
+              onClick={() =>
+                stock.open('issue', {
+                  siteId: site !== 'all' ? site : undefined,
+                })
+              }
+            >
               <PackageMinus /> {t('quick.issueMaterial')}
             </Button>
           )}
         </>
       }
     >
-
       <Card>
         <FilterBar className="lg:grid-cols-[minmax(240px,2fr)_repeat(4,minmax(0,1fr))]">
           <SearchInput value={search} onChange={setSearch} placeholder={t('inventory.searchPlaceholder')} className="sm:col-span-2 lg:col-span-1" />
@@ -142,7 +175,7 @@ export default function InventoryPage() {
 
         <QueryState
           query={{ isLoading, isError, refetch }}
-         
+
           isEmpty={filtered.length === 0}
           empty={{
             icon: PackageSearch,
@@ -161,16 +194,7 @@ export default function InventoryPage() {
             ),
           }}
         >
-          <StockTable
-            rows={filtered}
-            hideSite={site !== 'all'}
-            onOpen={(r) => {
-              const next = new URLSearchParams(params)
-              next.set('product', r.productId)
-              next.set('productSite', r.siteId)
-              setParams(next, { replace: true })
-            }}
-          />
+          <StockTable rows={filtered} hideSite={site !== 'all'} onOpen={handleOpenProduct} />
         </QueryState>
       </Card>
 

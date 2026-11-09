@@ -1,14 +1,13 @@
 import * as React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Check, Download, Eraser, LogOut, MapPin, RotateCcw } from 'lucide-react'
+import { Check, Download, Eraser, LogOut, RotateCcw } from 'lucide-react'
 import { appConfig } from '@/config'
 import { ROUTES } from '@/app/routes'
 import { useUser } from '@/features/auth/AuthProvider'
-import { ResetDemoDialog } from '@/features/admin/ResetDemo'
-import { ClearAppDataDialog } from '@/features/admin/ClearAppData'
+import { ResetDemoDialog, ClearAppData } from '@/features/admin'
 import { useSites } from '@/hooks/queries'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, Select } from '@/components/ui'
 import { InstallGuideDialog } from '@/features/pwa/components/InstallGuide'
 import { useInstallAction } from '@/features/pwa/components/InstallAppButton'
 
@@ -30,7 +29,11 @@ export function UserMenu() {
   const [confirmClear, setConfirmClear] = React.useState(false)
   const install = useInstallAction()
 
-  const assigned = user.siteIds.length ? sites?.filter((s) => user.siteIds.includes(s.id)).map((s) => s.name) : [t('common.allSites')]
+  const [activeSite, setActiveSite] = React.useState('')
+  const siteOptions = user.siteIds.length
+    ? (sites ?? []).filter((s) => user.siteIds.includes(s.id)).map((s) => ({ value: s.id, label: s.name }))
+    : [{ value: 'all', label: t('common.allSites') }, ...(sites ?? []).map((s) => ({ value: s.id, label: s.name }))]
+  const selectedSite = siteOptions.some((o) => o.value === activeSite) ? activeSite : (siteOptions[0]?.value ?? '')
 
   return (
     <>
@@ -57,12 +60,15 @@ export function UserMenu() {
           </div>
           <DropdownMenuSeparator />
           <DropdownMenuLabel>{t('header.assignedSites')}</DropdownMenuLabel>
-          {assigned?.map((name) => (
-            <div key={name} className="flex items-center gap-2 px-2.5 py-1 text-sm">
-              <MapPin className="size-3.5 text-muted-foreground" aria-hidden />
-              {name}
-            </div>
-          ))}
+          <div className="px-2.5 pb-2">
+            <Select
+              aria-label={t('header.assignedSites')}
+              value={selectedSite}
+              onChange={(e) => setActiveSite(e.target.value)}
+              options={siteOptions}
+              className="w-full"
+            />
+          </div>
           <DropdownMenuSeparator />
           {install.visible && (
             <DropdownMenuItem disabled={install.offline} onSelect={install.run}>
@@ -90,7 +96,7 @@ export function UserMenu() {
         </DropdownMenuContent>
       </DropdownMenu>
       <ResetDemoDialog open={confirmReset} onOpenChange={setConfirmReset} />
-      <ClearAppDataDialog open={confirmClear} onOpenChange={setConfirmClear} />
+      <ClearAppData open={confirmClear} onOpenChange={setConfirmClear} />
       <InstallGuideDialog open={install.guideOpen} onClose={install.closeGuide} />
     </>
   )

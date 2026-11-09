@@ -75,6 +75,10 @@ export default defineConfig({
   resolve: {
     alias: { '@': path.resolve(import.meta.dirname, 'src') },
   },
+  optimizeDeps: {
+    // Pre-bundle recharts eagerly so dev server has it ready before first page visit
+    include: ['recharts'],
+  },
   build: {
     chunkSizeWarningLimit: 700,
     rollupOptions: {
@@ -82,6 +86,7 @@ export default defineConfig({
         manualChunks(id: string) {
           if (!id.includes('node_modules')) return undefined
           if (id.includes('xlsx')) return 'xlsx'
+          if (id.includes('recharts') || id.includes('victory-vendor')) return 'charts'
           if (id.includes('@radix-ui')) return 'radix'
           if (id.includes('i18next')) return 'i18n'
           return undefined

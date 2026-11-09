@@ -2,10 +2,9 @@ import * as React from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { resetDemoData } from '@/api/mockApi'
+import { adminApi } from '../api'
 import { ConfirmDialog } from '@/components/ui'
 
-/** Shared confirm-and-reset flow (user menu, Users & Settings page). */
 export function ResetDemoDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
   const { t } = useTranslation()
   const qc = useQueryClient()
@@ -13,7 +12,7 @@ export function ResetDemoDialog({ open, onOpenChange }: { open: boolean; onOpenC
 
   const reset = async () => {
     setBusy(true)
-    await resetDemoData()
+    await adminApi.resetDemoData()
     await qc.invalidateQueries()
     setBusy(false)
     onOpenChange(false)

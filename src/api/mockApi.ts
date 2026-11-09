@@ -14,6 +14,7 @@ import type {
   BatchRow,
   BillDraftInput,
   CreateSiteInput,
+  CreateToolsInput,
   DamageInput,
   DashboardData,
   Invoice,
@@ -33,6 +34,7 @@ import type {
   SiteSummary,
   StockMovement,
   StockRow,
+  Tool,
   ToolCondition,
   ToolRow,
   TransferStockInput,
@@ -60,6 +62,7 @@ import { audit } from '@/api/audit'
 
 export { ApiError }
 import { uid } from '@/lib/utils'
+import { MAX_IMAGE_CHARS } from '@/utils/image'
 import { expiryBucket, fefoSort, isExpired, round2 } from '@/utils/calc'
 import { addMonthsIso, daysUntil, isoDaysFromNow, nowIso, todayIso } from '@/utils/date'
 import { coverageLabel } from '@/utils/format'
@@ -720,6 +723,49 @@ export async function getTools(): Promise<ToolRow[]> {
   const db = getDb()
   const { siteIds } = authorize(db)
   return clone(buildToolRows(db, siteIds))
+}
+
+/** Adds a batch of tools to one site. Site managers' batches wait for approval as one request. */
+export async function createTools(input: CreateToolsInput): Promise<ToolRow[] | Submitted> {
+  await delay()
+  const db = getDb()
+  const { user, siteIds } = authorizeAction(db, 'tool.create')
+  assertSite(siteIds, input.siteId)
+  const codes = input.tools.map((t) => t.code.trim().toUpperCase())
+  const taken = new Set(db.tools.map((t) => t.code.toUpperCase()))
+  const seen = new Set<string>()
+  for (const code of codes) {
+    if (taken.has(code) || seen.has(code)) throw new ApiError('errors.duplicateToolCode', { code })
+    seen.add(code)
+  }
+  return submit<ToolRow[]>(db, user, 'tool.create', {
+    siteId: input.siteId,
+    summary: i18n.t('tools.addSummary', { count: input.tools.length }),
+    payload: input as unknown as Record<string, unknown>,
+  })
+}
+
+export type RecordImageKind = 'tool' | 'product' | 'batch' | 'bill'
+
+/** Saves or removes the photo of a tool, product, batch (box) or bill. Photos are not approval-gated. */
+export async function setRecordImage(kind: RecordImageKind, id: string, imageUrl: string | null): Promise<void> {
+  await delay()
+  const db = getDb()
+  const { user, siteIds } = authorize(db)
+  if (imageUrl !== null && (!imageUrl.startsWith('data:image/') || imageUrl.length > MAX_IMAGE_CHARS)) throw new ApiError('images.tooLarge')
+  if (kind === 'product' && user.role !== 'super_admin' && user.role !== 'admin') throw new ApiError('errors.forbidden')
+  const record =
+    kind === 'tool'
+      ? db.tools.find((t) => t.id === id)
+      : kind === 'batch'
+        ? db.batches.find((b) => b.id === id)
+        : kind === 'bill'
+          ? db.invoices.find((i) => i.id === id)
+          : db.products.find((p) => p.id === id)
+  if (!record) throw new ApiError('errors.notFound')
+  if ('siteId' in record) assertSite(siteIds, record.siteId)
+  record.imageUrl = imageUrl
+  audit(db, user.id, 'image_updated', kind, id, imageUrl ? 'photo set' : 'photo removed')
 }
 
 export async function issueTool(toolId: string, input: { issuedTo: string; expectedReturnDate: string; notes: string }) {
@@ -1507,6 +1553,32 @@ function applyUserUpdate(db: DemoDb, user: User, payload: { id: string; patch: U
   return clone(target)
 }
 
+function applyToolCreate(db: DemoDb, user: User, input: CreateToolsInput): ToolRow[] {
+  const created = input.tools.map((t) => {
+    const tool: Tool = {
+      id: uid('t'),
+      code: t.code.trim().toUpperCase(),
+      name: t.name.trim(),
+      brand: t.brand.trim(),
+      category: t.category,
+      condition: 'new',
+      siteId: input.siteId,
+      status: 'available',
+      assignedTo: null,
+      issuedDate: null,
+      expectedReturnDate: null,
+      maintenanceDue: addMonthsIso(todayIso(), 6),
+      purchaseCost: t.purchaseCost,
+      maintenanceHistory: [],
+    }
+    db.tools.push(tool)
+    audit(db, user.id, 'tool_created', 'tool', tool.id, `${tool.code} · ${tool.name}`)
+    return tool
+  })
+  const createdIds = new Set(created.map((t) => t.id))
+  return buildToolRows(db, [input.siteId]).filter((r) => createdIds.has(r.id))
+}
+
 const APPLY: Record<GovernedAction, (db: DemoDb, user: User, payload: never) => unknown> = {
   'bill.upload': applyBillUpload,
   'bill.approve': applyBillApprove,
@@ -1521,6 +1593,7 @@ const APPLY: Record<GovernedAction, (db: DemoDb, user: User, payload: never) => 
   'manager.assign': applyManagerAssign,
   'user.create': applyUserCreate,
   'user.update': applyUserUpdate,
+  'tool.create': applyToolCreate,
 }
 
 function applySiteUpdate(db: DemoDb, user: User, payload: { siteId: string; patch: UpdateSiteInput }): Site {

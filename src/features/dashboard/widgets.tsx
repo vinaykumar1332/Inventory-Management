@@ -46,7 +46,10 @@ export function ExpiryTimeline({ groups }: { groups: DashboardData['expiryGroups
             <ul className="space-y-1.5">
               {groups[lane.key].slice(0, perLane).map((e) => (
                 <li key={e.batchId}>
-                  <Link to={paths.inventory({ productId: e.productId })} className="block rounded-md bg-surface px-2.5 py-2 text-xs shadow-xs hover:ring-1 hover:ring-primary/40">
+                  <Link
+                    to={paths.inventory({ productId: e.productId })}
+                    className="block rounded-md bg-surface px-2.5 py-2 text-xs shadow-xs hover:ring-1 hover:ring-primary/40"
+                  >
                     <span className="block truncate font-medium text-foreground">{e.productName}</span>
                     <span className="mt-0.5 flex justify-between gap-2 text-muted-foreground">
                       <span className="truncate font-mono">{e.batchNo}</span>
@@ -114,7 +117,10 @@ export function ActivityTimeline({ items }: { items: StockMovement[] }) {
         const user = users?.find((u) => u.id === mv.userId)
         return (
           <li key={mv.id} className="relative flex gap-3">
-            <span className={cn('relative z-10 flex size-8 shrink-0 items-center justify-center rounded-full ring-4 ring-surface', TONE_CHIP_CLASSES[meta.tone])} aria-hidden>
+            <span
+              className={cn('relative z-10 flex size-8 shrink-0 items-center justify-center rounded-full ring-4 ring-surface', TONE_CHIP_CLASSES[meta.tone])}
+              aria-hidden
+            >
               <Icon className="size-4" />
             </span>
             <div className="min-w-0 flex-1 pt-0.5">

@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/features/auth/AuthProvider'
-import * as api from '@/api/mockApi'
+import { adminApi } from '../api'
 import { useApiMutation, useSiteDirectory } from '@/hooks/queries'
 import type { CreateUserInput, Role, User } from '@/types'
 import { Button, Checkbox, Field, Input, Select } from '@/components/ui'
@@ -26,7 +26,6 @@ type Values = z.infer<typeof schema>
 
 const EMPTY: Values = { name: '', email: '', phone: '', employeeId: '', designation: '', role: 'site_manager', siteIds: [] }
 
-/** Create or edit a user. Super Admins can add Admins and Site Managers; Admins can add Site Managers only. */
 export function UserSheet({ open, onOpenChange, user }: { open: boolean; onOpenChange: (o: boolean) => void; user: User | null }) {
   const { t } = useTranslation()
   const { user: me } = useAuth()
@@ -60,8 +59,8 @@ export function UserSheet({ open, onOpenChange, user }: { open: boolean; onOpenC
     )
   }, [open, user, reset])
 
-  const create = useApiMutation((v: CreateUserInput) => api.createUser(v), { successKey: 'users.created' })
-  const update = useApiMutation((v: { id: string; patch: Partial<CreateUserInput> }) => api.updateUser(v.id, v.patch), {
+  const create = useApiMutation((v: CreateUserInput) => adminApi.createUser(v), { successKey: 'users.created' })
+  const update = useApiMutation((v: { id: string; patch: Partial<CreateUserInput> }) => adminApi.updateUser(v.id, v.patch), {
     successKey: 'users.updated',
   })
   const pending = create.isPending || update.isPending

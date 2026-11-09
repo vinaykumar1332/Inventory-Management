@@ -17,6 +17,7 @@ export type GovernedAction =
   | 'manager.assign'
   | 'user.create'
   | 'user.update'
+  | 'tool.create'
 
 export type ApprovalStatus = 'pending' | 'approved' | 'rejected' | 'cancelled' | 'conflict'
 

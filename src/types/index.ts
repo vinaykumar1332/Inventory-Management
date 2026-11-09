@@ -103,6 +103,8 @@ export interface Product {
   reorderLevel: number
   icon: ProductIconKey
   description: string
+  /** Photo as a data URL. Optional. */
+  imageUrl?: string | null
   documents: ProductDocument[]
 }
 
@@ -121,6 +123,8 @@ export interface ProductBatch {
   receivedAt: ISODate
   /** Super Admin may allow an expired batch to be issued */
   expiryOverride?: boolean
+  /** Photo of this box or batch, as a data URL. Optional. */
+  imageUrl?: string | null
 }
 
 export type InvoiceStatus = 'draft' | 'processing' | 'needs_review' | 'approved' | 'rejected'
@@ -164,6 +168,8 @@ export interface Invoice extends InvoiceHeader {
   fileName: string
   fileSizeKb: number
   uploadedAt: ISODate
+  /** Photo or scan of the bill as a data URL. Optional. */
+  imageUrl?: string | null
   uploadedBy: ID
   status: InvoiceStatus
   lineItems: InvoiceLineItem[]
@@ -228,6 +234,8 @@ export interface Tool {
   maintenanceDue: ISODate
   purchaseCost: number
   maintenanceHistory: MaintenanceRecord[]
+  /** Photo as a data URL. Optional. */
+  imageUrl?: string | null
 }
 
 export interface ToolIssue {
@@ -383,6 +391,19 @@ export interface ToolRow extends Tool {
 }
 
 /* ---------- Mutation payloads ---------- */
+
+export interface NewToolInput {
+  name: string
+  code: string
+  brand: string
+  category: ToolCategory
+  purchaseCost: number
+}
+
+export interface CreateToolsInput {
+  siteId: ID
+  tools: NewToolInput[]
+}
 
 export interface IssueMaterialInput {
   siteId: ID

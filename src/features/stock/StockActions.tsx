@@ -21,35 +21,43 @@ interface StockSheetRequest {
   key: number
 }
 
-interface StockActionsStore {
+interface StockActionsState {
   request: StockSheetRequest | null
   receiveOpen: boolean
+}
+
+interface StockActionsStore {
+  state: StockActionsState
   listeners: Set<() => void>
 }
 
 // The store lives on globalThis rather than in a React context. A context object is
 // recreated on every hot reload, which made screens lose their provider in development.
 const STORE_KEY = '__siteseal_stock_actions__'
-const globalStore = globalThis as typeof globalThis & { [STORE_KEY]?: StockActionsStore }
-const store: StockActionsStore = (globalStore[STORE_KEY] ??= { request: null, receiveOpen: false, listeners: new Set() })
+const globalStore = globalThis as typeof globalThis & {
+  [STORE_KEY]?: StockActionsStore
+}
+const store: StockActionsStore = (globalStore[STORE_KEY] ??= {
+  state: { request: null, receiveOpen: false },
+  listeners: new Set(),
+})
 
-function notify() {
+// useSyncExternalStore compares snapshots by reference, so every change must produce a new state object.
+function update(patch: Partial<StockActionsState>) {
+  store.state = { ...store.state, ...patch }
   store.listeners.forEach((listener) => listener())
 }
 
 const stockActions = {
   open(mode: StockActionMode | 'receive', defaults: StockActionDefaults = {}) {
-    if (mode === 'receive') store.receiveOpen = true
-    else store.request = { mode, defaults, key: Date.now() }
-    notify()
+    if (mode === 'receive') update({ receiveOpen: true })
+    else update({ request: { mode, defaults, key: Date.now() } })
   },
   closeSheet() {
-    store.request = null
-    notify()
+    update({ request: null })
   },
   setReceiveOpen(open: boolean) {
-    store.receiveOpen = open
-    notify()
+    update({ receiveOpen: open })
   },
   subscribe(listener: () => void) {
     store.listeners.add(listener)
@@ -57,7 +65,7 @@ const stockActions = {
       store.listeners.delete(listener)
     }
   },
-  snapshot: () => store,
+  snapshot: () => store.state,
 }
 
 /** Opens the shared stock sheets from any screen: dashboard, inventory rows, product drawer, site detail. */
@@ -72,29 +80,25 @@ export function StockActionsHost({ children }: { children: React.ReactNode }) {
     <>
       {children}
       {state.request && (
-        <StockMovementSheet
-          key={state.request.key}
-          mode={state.request.mode}
-          defaults={state.request.defaults}
-          onClose={stockActions.closeSheet}
-        />
+        <StockMovementSheet key={state.request.key} mode={state.request.mode} defaults={state.request.defaults} onClose={stockActions.closeSheet} />
       )}
       <ReceiveDialog open={state.receiveOpen} onOpenChange={stockActions.setReceiveOpen} />
     </>
   )
 }
 
-function ReceiveDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
+const ReceiveDialog = React.memo(function ReceiveDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { can } = useAuth()
+  const handleClose = React.useCallback(() => onOpenChange(false), [onOpenChange])
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         title={t('stock.receiveTitle')}
         footer={
           <>
-            <Button variant="secondary" onClick={() => onOpenChange(false)}>
+            <Button variant="secondary" onClick={handleClose}>
               {t('common.cancel')}
             </Button>
             <Button
@@ -118,4 +122,4 @@ function ReceiveDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o
       </DialogContent>
     </Dialog>
   )
-}
+})

@@ -179,4 +179,9 @@ export const useDemoAccounts = () => useQuery({ queryKey: ['demoAccounts'], quer
 
 export const useCompany = () => useQuery({ queryKey: ['company'], queryFn: api.getCompany, staleTime: 5 * 60_000 })
 
+export const useSetRecordImage = () =>
+  useApiMutation((v: { kind: api.RecordImageKind; id: string; imageUrl: string | null }) => api.setRecordImage(v.kind, v.id, v.imageUrl), {
+    successKey: 'images.saved',
+  })
+
 export const usePublicSummary = () => useQuery({ queryKey: ['publicSummary'], queryFn: api.getPublicSummary, staleTime: 60_000 })

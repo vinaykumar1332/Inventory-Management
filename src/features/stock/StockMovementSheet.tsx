@@ -5,7 +5,7 @@ import { z } from 'zod'
 import { useTranslation } from 'react-i18next'
 import { Calculator, ShieldCheck, Sparkles } from 'lucide-react'
 import { useUser } from '@/features/auth/AuthProvider'
-import { useApiMutation, useBatches, useProducts, useSiteDirectory, useSites, useStock } from '@/hooks/queries'
+import { useApiMutation, useBatches, useProducts, useSiteDirectory, useSites } from '@/hooks/queries'
 import * as api from '@/api/mockApi'
 import { catalog } from '@/config'
 import { cn } from '@/lib/utils'
@@ -18,11 +18,36 @@ import type { StockActionDefaults } from './StockActions'
 export type StockActionMode = 'issue' | 'return' | 'transfer' | 'damage' | 'adjust'
 
 const META: Record<StockActionMode, { title: string; hint: string; submit: string; success: string }> = {
-  issue: { title: 'stock.issueTitle', hint: 'stock.issueHint', submit: 'stock.submitIssue', success: 'stock.successIssue' },
-  return: { title: 'stock.returnTitle', hint: 'stock.returnHint', submit: 'stock.submitReturn', success: 'stock.successReturn' },
-  transfer: { title: 'stock.transferTitle', hint: 'stock.transferHint', submit: 'stock.submitTransfer', success: 'stock.successTransfer' },
-  damage: { title: 'stock.damageTitle', hint: 'stock.damageHint', submit: 'stock.submitDamage', success: 'stock.successDamage' },
-  adjust: { title: 'stock.adjustTitle', hint: 'stock.adjustHint', submit: 'stock.submitAdjust', success: 'stock.successAdjust' },
+  issue: {
+    title: 'stock.issueTitle',
+    hint: 'stock.issueHint',
+    submit: 'stock.submitIssue',
+    success: 'stock.successIssue',
+  },
+  return: {
+    title: 'stock.returnTitle',
+    hint: 'stock.returnHint',
+    submit: 'stock.submitReturn',
+    success: 'stock.successReturn',
+  },
+  transfer: {
+    title: 'stock.transferTitle',
+    hint: 'stock.transferHint',
+    submit: 'stock.submitTransfer',
+    success: 'stock.successTransfer',
+  },
+  damage: {
+    title: 'stock.damageTitle',
+    hint: 'stock.damageHint',
+    submit: 'stock.submitDamage',
+    success: 'stock.successDamage',
+  },
+  adjust: {
+    title: 'stock.adjustTitle',
+    hint: 'stock.adjustHint',
+    submit: 'stock.submitAdjust',
+    success: 'stock.successAdjust',
+  },
 }
 
 const num = (v: string) => (v.trim() === '' ? NaN : Number(v))
@@ -45,24 +70,46 @@ function buildSchema(mode: StockActionMode, maxQty: number | null) {
     .superRefine((v, ctx) => {
       const limited = mode !== 'return' && !(mode === 'adjust' && v.direction === '1')
       if (limited && maxQty !== null && num(v.qty) > maxQty) {
-        ctx.addIssue({ code: 'custom', path: ['qty'], message: 'validation.maxQty' })
+        ctx.addIssue({
+          code: 'custom',
+          path: ['qty'],
+          message: 'validation.maxQty',
+        })
       }
       if ((mode === 'issue' || mode === 'return') && !v.workArea.trim()) {
-        ctx.addIssue({ code: 'custom', path: ['workArea'], message: 'validation.required' })
+        ctx.addIssue({
+          code: 'custom',
+          path: ['workArea'],
+          message: 'validation.required',
+        })
       }
       if (mode === 'transfer') {
-        if (!v.toSiteId) ctx.addIssue({ code: 'custom', path: ['toSiteId'], message: 'validation.required' })
-        else if (v.toSiteId === v.siteId) ctx.addIssue({ code: 'custom', path: ['toSiteId'], message: 'validation.differentSite' })
+        if (!v.toSiteId)
+          ctx.addIssue({
+            code: 'custom',
+            path: ['toSiteId'],
+            message: 'validation.required',
+          })
+        else if (v.toSiteId === v.siteId)
+          ctx.addIssue({
+            code: 'custom',
+            path: ['toSiteId'],
+            message: 'validation.differentSite',
+          })
       }
       if ((mode === 'damage' || mode === 'adjust' || mode === 'return') && !v.notes.trim()) {
-        ctx.addIssue({ code: 'custom', path: ['notes'], message: 'validation.required' })
+        ctx.addIssue({
+          code: 'custom',
+          path: ['notes'],
+          message: 'validation.required',
+        })
       }
     })
 }
 
 type FormValues = z.infer<ReturnType<typeof buildSchema>>
 
-export function StockMovementSheet({
+export const StockMovementSheet = React.memo(function StockMovementSheet({
   mode,
   defaults,
   onClose,
@@ -76,14 +123,22 @@ export function StockMovementSheet({
   const [open, setOpen] = React.useState(true)
   const meta = META[mode]
 
-  const { data: sites } = useSites()
-  const { data: directory } = useSiteDirectory()
-  const { data: products } = useProducts()
+  // Load queries but don't block rendering - form works even while loading
+  const sitesQuery = useSites()
+  const directoryQuery = useSiteDirectory()
+  const productsQuery = useProducts()
 
-  const accessible = sites ?? []
-  const firstSite = defaults.siteId ?? (accessible.length === 1 ? accessible[0].id : (user.siteIds[0] ?? accessible[0]?.id ?? ''))
+  const sites = sitesQuery.data ?? []
+  const directory = directoryQuery.data
+  const products = productsQuery.data ?? []
+
+  const firstSite = React.useMemo(
+    () => defaults.siteId ?? (sites.length === 1 ? sites[0].id : (user.siteIds[0] ?? sites[0]?.id ?? '')),
+    [defaults.siteId, sites, user.siteIds],
+  )
 
   const [maxQty, setMaxQty] = React.useState<number | null>(null)
+  // Pre-build schema object to avoid rebuilding
   const schema = React.useMemo(() => buildSchema(mode, maxQty), [mode, maxQty])
 
   const form = useForm<FormValues>({
@@ -113,11 +168,14 @@ export function StockMovementSheet({
     if (!siteId && firstSite) setValue('siteId', firstSite)
   }, [firstSite, siteId, setValue])
 
-  const { data: stockRows } = useStock(siteId || 'all')
+  // Only load batches when both siteId and productId are selected
   const { data: batches, isFetching: batchesLoading } = useBatches(siteId, productId, !!siteId && !!productId)
 
-  const product = products?.find((p) => p.id === productId)
-  const batch = batches?.find((b) => b.id === batchId)
+  // Fall back to empty array if batches not loaded yet - form still works
+  const batchList = batches ?? []
+
+  const product = products.find((p) => p.id === productId)
+  const batch = batchList.find((b) => b.id === batchId)
   const allowExpired = (b: { expiryDate: string | null; expiryOverride?: boolean }) => !isExpired(b) || !!b.expiryOverride
 
   // FEFO default batch whenever product/site changes
@@ -136,12 +194,16 @@ export function StockMovementSheet({
     if (product?.recommendedCoats && mode === 'issue') setValue('coats', String(product.recommendedCoats))
   }, [product, mode, setValue])
 
-  const productOptions = React.useMemo(() => {
-    const rows = (stockRows ?? []).filter((r) => r.siteId === siteId && (mode === 'return' || mode === 'adjust' || r.availableQty > 0))
-    return rows.map((r) => ({ value: r.productId, label: `${r.productName} — ${r.brand} (${formatQty(r.availableQty, r.unit)})` }))
-  }, [stockRows, siteId, mode])
+  const productOptions = React.useMemo(
+    () =>
+      (products ?? []).map((p) => ({
+        value: p.id,
+        label: `${p.name} — ${p.brand}`,
+      })),
+    [products],
+  )
 
-  const batchOptions = (batches ?? [])
+  const batchOptions = batchList
     .filter((b) => mode === 'return' || mode === 'adjust' || b.qtyAvailable > 0)
     .map((b) => {
       const blocked = mode === 'issue' && !allowExpired(b)
@@ -161,10 +223,7 @@ export function StockMovementSheet({
     })
 
   // Expected = Area × Coverage × Coats × Wastage
-  const expected =
-    mode === 'issue' && product?.coveragePerM2
-      ? expectedQuantity(num(areaM2) || 0, product.coveragePerM2, num(coats) || 0, DEFAULT_WASTAGE)
-      : 0
+  const expected = mode === 'issue' && product?.coveragePerM2 ? expectedQuantity(num(areaM2) || 0, product.coveragePerM2, num(coats) || 0, DEFAULT_WASTAGE) : 0
   const variancePct = expected > 0 && num(qty) > 0 ? Math.round(((num(qty) - expected) / expected) * 100) : null
 
   const mutation = useApiMutation(
@@ -184,13 +243,41 @@ export function StockMovementSheet({
             notes: v.notes.trim(),
           })
         case 'return':
-          return api.returnMaterial({ siteId: v.siteId, productId: v.productId, batchId: v.batchId, qty: q, workArea: v.workArea.trim(), reason: v.notes.trim() })
+          return api.returnMaterial({
+            siteId: v.siteId,
+            productId: v.productId,
+            batchId: v.batchId,
+            qty: q,
+            workArea: v.workArea.trim(),
+            reason: v.notes.trim(),
+          })
         case 'transfer':
-          return api.transferStock({ fromSiteId: v.siteId, toSiteId: v.toSiteId, productId: v.productId, batchId: v.batchId, qty: q, reason: v.notes.trim() || t('system.siteRequirement') })
+          return api.transferStock({
+            fromSiteId: v.siteId,
+            toSiteId: v.toSiteId,
+            productId: v.productId,
+            batchId: v.batchId,
+            qty: q,
+            reason: v.notes.trim() || t('system.siteRequirement'),
+          })
         case 'damage':
-          return api.reportDamage({ siteId: v.siteId, productId: v.productId, batchId: v.batchId, qty: q, kind: v.kind, reason: v.notes.trim() })
+          return api.reportDamage({
+            siteId: v.siteId,
+            productId: v.productId,
+            batchId: v.batchId,
+            qty: q,
+            kind: v.kind,
+            reason: v.notes.trim(),
+          })
         case 'adjust':
-          return api.adjustStock({ siteId: v.siteId, productId: v.productId, batchId: v.batchId, qty: q, direction: v.direction === '1' ? 1 : -1, reason: v.notes.trim() })
+          return api.adjustStock({
+            siteId: v.siteId,
+            productId: v.productId,
+            batchId: v.batchId,
+            qty: q,
+            direction: v.direction === '1' ? 1 : -1,
+            reason: v.notes.trim(),
+          })
       }
     },
     { successKey: meta.success },
@@ -198,7 +285,9 @@ export function StockMovementSheet({
 
   const close = () => setOpen(false)
   const onSubmit = handleSubmit(async (v) => {
-    await mutation.mutateAsync(v).then(close).catch(() => undefined)
+    await mutation.mutateAsync(v).then(() => {
+      close()
+    })
   })
 
   const err = (name: keyof FormValues) => {
@@ -214,7 +303,7 @@ export function StockMovementSheet({
       open={open}
       onClose={() => {
         setOpen(false)
-        window.setTimeout(onClose, 200)
+        onClose()
       }}
       title={t(meta.title)}
       description={t(meta.hint)}
@@ -235,7 +324,10 @@ export function StockMovementSheet({
           <Select
             id="sm-site"
             placeholder={t('common.selectPlaceholder')}
-            options={accessible.map((s) => ({ value: s.id, label: `${s.name} · ${s.storeName}` }))}
+            options={sites.map((s) => ({
+              value: s.id,
+              label: `${s.name} · ${s.storeName}`,
+            }))}
             {...register('siteId', {
               onChange: () => {
                 setValue('productId', '')
@@ -250,7 +342,9 @@ export function StockMovementSheet({
             id="sm-product"
             placeholder={t('common.selectPlaceholder')}
             options={productOptions}
-            {...register('productId', { onChange: () => setValue('batchId', '') })}
+            {...register('productId', {
+              onChange: () => setValue('batchId', ''),
+            })}
           />
         </Field>
 
@@ -279,7 +373,11 @@ export function StockMovementSheet({
 
         {batch && (
           <div className="flex flex-wrap items-center gap-2 rounded-md bg-muted px-3 py-2 text-sm sm:col-span-2">
-            <span className="text-muted-foreground">{t('stock.availableInBatch', { qty: formatQty(batch.qtyAvailable, batch.unit) })}</span>
+            <span className="text-muted-foreground">
+              {t('stock.availableInBatch', {
+                qty: formatQty(batch.qtyAvailable, batch.unit),
+              })}
+            </span>
             {batch.suggested && <Badge tone="primary">{t('product.suggested')}</Badge>}
             {isExpired(batch) && <Badge tone="danger">{t('stock.expiredBatch')}</Badge>}
             {batch.expiryOverride && <Badge tone="warning">{t('product.override')}</Badge>}
@@ -316,7 +414,10 @@ export function StockMovementSheet({
           <Field label={t('stock.damageKind')} htmlFor="sm-kind" className="sm:col-span-2">
             <Select
               id="sm-kind"
-              options={catalog.damageKinds.map((k) => ({ value: k, label: t(`stock.kinds.${k}`) }))}
+              options={catalog.damageKinds.map((k) => ({
+                value: k,
+                label: t(`stock.kinds.${k}`),
+              }))}
               {...register('kind')}
             />
           </Field>
@@ -352,8 +453,20 @@ export function StockMovementSheet({
                 <strong className="text-base text-foreground">{formatQty(round2(expected), product.baseUnit)}</strong>
               </p>
               {expected > 0 && (
-                <Button type="button" variant="link" size="sm" className="mt-1 h-auto" onClick={() => setValue('qty', String(round2(expected)), { shouldValidate: true })}>
-                  {t('stock.useExpected', { qty: formatQty(round2(expected), product.baseUnit) })}
+                <Button
+                  type="button"
+                  variant="link"
+                  size="sm"
+                  className="mt-1 h-auto"
+                  onClick={() =>
+                    setValue('qty', String(round2(expected)), {
+                      shouldValidate: true,
+                    })
+                  }
+                >
+                  {t('stock.useExpected', {
+                    qty: formatQty(round2(expected), product.baseUnit),
+                  })}
                 </Button>
               )}
             </div>
@@ -399,4 +512,4 @@ export function StockMovementSheet({
       </form>
     </SidePanel>
   )
-}
+})

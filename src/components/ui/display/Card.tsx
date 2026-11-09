@@ -4,13 +4,14 @@ import { cn } from '@/lib/utils'
 
 // default: bordered surface. outlined: bordered, no shadow. flat: tinted, no border.
 // interactive: hover lift for clickable cards (use with a link or onClick).
-const cardVariants = cva('rounded-lg bg-surface', {
+const cardVariants = cva('rounded-xl bg-surface', {
   variants: {
     variant: {
-      default: 'border shadow-card',
-      outlined: 'border',
-      flat: 'bg-muted/60',
-      interactive: 'border shadow-card transition-all hover:border-primary/40 hover:shadow-md focus-visible:outline-2 focus-visible:outline-ring',
+      default: 'border border-border/70 shadow-sm',
+      outlined: 'border border-border/70',
+      flat: 'bg-muted/70',
+      interactive:
+        'border border-border/70 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md focus-visible:outline-2 focus-visible:outline-ring',
     },
   },
   defaultVariants: { variant: 'default' },
